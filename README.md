@@ -1,238 +1,73 @@
-# The Ultimate Closers
+# Welcome to your Lovable project
 
-> Closing éthique & IA consciente – Monorepo sécurisé avec Next.js 14 & NestJS 10
+## Project info
 
-## 🏗️ Architecture
+**URL**: https://lovable.dev/projects/764836c7-4acb-4f95-864f-ce0a767d6c78
 
-```
-the-ultimate-closers/
-├─ apps/
-│  ├─ web/            # Next.js 14 (App Router)
-│  └─ api/            # NestJS 10 (REST API)
-├─ packages/
-│  └─ eslint-config/  # Configuration ESLint partagée
-├─ .github/workflows/ # CI/CD (CodeQL, Semgrep, OSV, Preview)
-├─ pnpm-workspace.yaml
-└─ README.md
-```
+## How can I edit this code?
 
-## 🔒 Fonctionnalités de Sécurité
+There are several ways of editing your application.
 
-### Frontend (Next.js)
+**Use Lovable**
 
-- ✅ **CSP strict** avec nonce dynamique (`'strict-dynamic'`)
-- ✅ **Headers de sécurité** : HSTS, X-Frame-Options, X-Content-Type-Options, Permissions-Policy
-- ✅ **Referrer-Policy** : `strict-origin-when-cross-origin`
-- ✅ Middleware Next.js pour injection automatique des headers
-- ✅ Support TypeScript strict
+Simply visit the [Lovable Project](https://lovable.dev/projects/764836c7-4acb-4f95-864f-ce0a767d6c78) and start prompting.
 
-### Backend (NestJS)
+Changes made via Lovable will be committed automatically to this repo.
 
-- ✅ **Helmet.js** : Protection des headers HTTP
-- ✅ **Rate limiting** : 300 requêtes / 15 minutes par défaut
-- ✅ **CORS** configuré avec whitelist de domaines
-- ✅ **Compression** gzip automatique
-- ✅ Endpoints `/health` et `/ready` pour monitoring
-- ✅ Guard d'authentification JWT (placeholder)
-- ✅ Support TypeScript strict
+**Use your preferred IDE**
 
-### CI/CD & Scans de Sécurité
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-- ✅ **CodeQL** : Analyse statique hebdomadaire + sur chaque PR
-- ✅ **Semgrep** : SAST rapide avec règles `p/ci`
-- ✅ **OSV Scanner** : Détection de vulnérabilités dans les dépendances (quotidien)
-- ✅ **Preview Deployments** : Vercel (web) + Docker GHCR (API)
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-## 🚀 Démarrage Rapide
+Follow these steps:
 
-### Prérequis
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
 
-- Node.js 20.x
-- pnpm 9.x
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
 
-```bash
-# Installation des dépendances
-pnpm install
+# Step 3: Install the necessary dependencies.
+npm i
 
-# Démarrer le frontend (dev)
-pnpm -C apps/web dev
-
-# Démarrer l'API (dev)
-pnpm -C apps/api start:dev
+# Step 4: Start the development server with auto-reloading and an instant preview.
+npm run dev
 ```
 
-### URLs de développement
+**Edit a file directly in GitHub**
 
-- **Frontend**: http://localhost:3000
-- **API**: http://localhost:4000
-- **API Health**: http://localhost:4000/health
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-## 🏗️ Build & Production
+**Use GitHub Codespaces**
 
-```bash
-# Build tout le monorepo
-pnpm -C apps/web build
-pnpm -C apps/api build
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-# Production
-pnpm -C apps/web start
-pnpm -C apps/api start:prod
-```
+## What technologies are used for this project?
 
-### Docker (API)
+This project is built with:
 
-```bash
-docker build -t tuc-api -f apps/api/Dockerfile .
-docker run -p 4000:4000 tuc-api
-```
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
 
-## 🔐 Variables d'Environnement
+## How can I deploy this project?
 
-### API (`apps/api/.env`)
+Simply open [Lovable](https://lovable.dev/projects/764836c7-4acb-4f95-864f-ce0a767d6c78) and click on Share -> Publish.
 
-```env
-PORT=4000
-# TODO: Ajouter JWT_SECRET, DATABASE_URL, etc.
-```
+## Can I connect a custom domain to my Lovable project?
 
-### Web (`apps/web/.env.local`)
+Yes, you can!
 
-```env
-NEXT_PUBLIC_API_URL=https://api.theultimateclosers.com
-# TODO: Ajouter Sentry DSN, Analytics IDs, etc.
-```
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
-**⚠️ IMPORTANT** : Ne jamais commit de fichiers `.env` ! Tous sont exclus via `.gitignore`.
-
-## 🛡️ Checklist de Sécurité
-
-### Avant le déploiement en production :
-
-- [ ] Configurer JWT dans `apps/api/src/guards/auth.guard.ts`
-- [ ] Ajouter les domaines réels dans CSP (`apps/web/src/middleware.ts`)
-- [ ] Configurer Sentry / monitoring (Datadog, New Relic, etc.)
-- [ ] Activer les secrets GitHub :
-  - `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` (si Vercel)
-  - Variables d'environnement pour l'API (DATABASE_URL, etc.)
-- [ ] Configurer les webhooks de scan (optional: report-uri pour CSP)
-- [ ] Tester les endpoints `/health` et `/ready` en production
-- [ ] Vérifier que HSTS est actif (max-age=31536000)
-- [ ] Audit final avec `npm audit` / `pnpm audit`
-
-## 📊 Vérification Post-Déploiement
-
-### Frontend
-
-1. Ouvrir DevTools → Network → Headers
-2. Vérifier la présence de :
-   - `Content-Security-Policy` avec `nonce-`
-   - `Strict-Transport-Security`
-   - `X-Frame-Options: DENY`
-   - `X-Content-Type-Options: nosniff`
-
-### API
-
-```bash
-# Health check
-curl https://api.theultimateclosers.com/health
-
-# Ready check
-curl https://api.theultimateclosers.com/ready
-
-# Vérifier les headers
-curl -I https://api.theultimateclosers.com/health
-```
-
-## 🧪 Tests
-
-```bash
-# Tests frontend
-pnpm -C apps/web test
-
-# Tests API
-pnpm -C apps/api test
-
-# Coverage
-pnpm -C apps/api test:cov
-```
-
-## 📦 Gestion des Dépendances
-
-```bash
-# Ajouter une dépendance au frontend
-pnpm -C apps/web add <package>
-
-# Ajouter une dépendance à l'API
-pnpm -C apps/api add <package>
-
-# Mettre à jour toutes les dépendances
-pnpm update -r
-```
-
-## 🔄 Workflow de Contribution
-
-1. Créer une branche depuis `main`
-2. Développer et tester localement
-3. Créer une Pull Request
-4. Les workflows CI s'exécutent automatiquement :
-   - CodeQL (SAST)
-   - Semgrep (règles de sécurité)
-   - OSV Scanner (vulnérabilités)
-   - Build & tests
-   - Preview deployment (si configuré)
-5. Merger après validation
-
-## 📚 Documentation Technique
-
-### CSP (Content Security Policy)
-
-Le middleware Next.js génère un nonce unique par requête et l'injecte dans :
-
-- L'en-tête CSP (`script-src 'nonce-XXX'`)
-- Le header `x-nonce` accessible via `headers().get('x-nonce')`
-
-Pour charger un script externe avec le nonce :
-
-```tsx
-<Script id="analytics" nonce={nonce} src="https://cdn.example.com/script.js" />
-```
-
-### Rate Limiting API
-
-Configuration par défaut : 300 requêtes / 15 minutes.
-Pour personnaliser par route, utiliser un guard dédié :
-
-```typescript
-@UseGuards(StrictRateLimitGuard)
-@Post('auth/login')
-```
-
-### Authentification JWT (TODO)
-
-Le `AuthGuard` est un placeholder. Implémenter :
-
-1. Validation du token JWT (signature, expiration)
-2. Extraction des scopes/roles
-3. Vérification des permissions par route
-
-## 🐛 Dépannage
-
-### Erreur CSP "refused to execute inline script"
-
-→ Vérifier que le nonce est bien passé au composant `<Script>`
-
-### API retourne 429 (Too Many Requests)
-
-→ Rate limit atteint, attendre ou ajuster la config dans `main.ts`
-
-### Build échoue avec erreur TypeScript
-
-→ Vérifier les versions de TypeScript dans tous les `package.json`
-
-## 📞 Support
-
-Pour toute question ou problème de sécurité, contacter : security@theultimateclosers.com
-
-## 📄 Licence
-
-Propriétaire – The Ultimate Closers © 2025
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
