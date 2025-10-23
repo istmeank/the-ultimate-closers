@@ -4,6 +4,7 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowLeft, User } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FormStep2IdentityProps {
   form: UseFormReturn<CallBookingFormData>;
@@ -12,6 +13,8 @@ interface FormStep2IdentityProps {
 }
 
 const FormStep2Identity = ({ form, onNext, onPrevious }: FormStep2IdentityProps) => {
+  const { t } = useLanguage();
+  
   const validateStep = async () => {
     const fields = ['firstName', 'lastName', 'jobTitle', 'companyName', 'companyWebsite', 'companyLinkedin', 'email', 'phone'] as const;
     const isValid = await form.trigger(fields);
@@ -24,8 +27,8 @@ const FormStep2Identity = ({ form, onNext, onPrevious }: FormStep2IdentityProps)
         <div className="inline-block p-3 bg-gradient-to-br from-secondary/20 to-primary/20 rounded-full mb-3">
           <User className="w-8 h-8 text-secondary" />
         </div>
-        <h3 className="text-2xl font-display font-bold">Qui êtes-vous ?</h3>
-        <p className="text-muted-foreground mt-2">Commençons par faire connaissance</p>
+        <h3 className="text-2xl font-display font-bold">{t('booking.step2.title')}</h3>
+        <p className="text-muted-foreground mt-2">{t('booking.step2.subtitle')}</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">
@@ -34,7 +37,7 @@ const FormStep2Identity = ({ form, onNext, onPrevious }: FormStep2IdentityProps)
           name="firstName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Prénom *</FormLabel>
+              <FormLabel>{t('booking.step2.firstName')} *</FormLabel>
               <FormControl>
                 <Input placeholder="Jean" {...field} />
               </FormControl>
@@ -48,7 +51,7 @@ const FormStep2Identity = ({ form, onNext, onPrevious }: FormStep2IdentityProps)
           name="lastName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nom *</FormLabel>
+              <FormLabel>{t('booking.step2.lastName')} *</FormLabel>
               <FormControl>
                 <Input placeholder="Dupont" {...field} />
               </FormControl>
@@ -63,7 +66,7 @@ const FormStep2Identity = ({ form, onNext, onPrevious }: FormStep2IdentityProps)
         name="jobTitle"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Poste occupé *</FormLabel>
+            <FormLabel>{t('booking.step2.jobTitle')} *</FormLabel>
             <FormControl>
               <Input placeholder="Directeur Commercial" {...field} />
             </FormControl>
@@ -77,7 +80,7 @@ const FormStep2Identity = ({ form, onNext, onPrevious }: FormStep2IdentityProps)
         name="companyName"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Nom de l'entreprise *</FormLabel>
+            <FormLabel>{t('booking.step2.companyName')} *</FormLabel>
             <FormControl>
               <Input placeholder="TechCorp SAS" {...field} />
             </FormControl>
@@ -92,7 +95,7 @@ const FormStep2Identity = ({ form, onNext, onPrevious }: FormStep2IdentityProps)
           name="companyWebsite"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Site web de l'entreprise</FormLabel>
+              <FormLabel>{t('booking.step2.companyWebsite')}</FormLabel>
               <FormControl>
                 <Input placeholder="https://www.exemple.com" {...field} />
               </FormControl>
@@ -106,7 +109,7 @@ const FormStep2Identity = ({ form, onNext, onPrevious }: FormStep2IdentityProps)
           name="companyLinkedin"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Page LinkedIn</FormLabel>
+              <FormLabel>{t('booking.step2.companyLinkedin')}</FormLabel>
               <FormControl>
                 <Input placeholder="https://linkedin.com/company/exemple" {...field} />
               </FormControl>
@@ -121,7 +124,7 @@ const FormStep2Identity = ({ form, onNext, onPrevious }: FormStep2IdentityProps)
         name="email"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Email professionnel *</FormLabel>
+            <FormLabel>{t('booking.step2.email')} *</FormLabel>
             <FormControl>
               <Input type="email" placeholder="j.dupont@entreprise.com" {...field} />
             </FormControl>
@@ -135,7 +138,7 @@ const FormStep2Identity = ({ form, onNext, onPrevious }: FormStep2IdentityProps)
         name="phone"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Téléphone / WhatsApp *</FormLabel>
+            <FormLabel>{t('booking.step2.phone')} *</FormLabel>
             <FormControl>
               <Input placeholder="+33 6 12 34 56 78" {...field} />
             </FormControl>
@@ -152,14 +155,14 @@ const FormStep2Identity = ({ form, onNext, onPrevious }: FormStep2IdentityProps)
           className="flex-1"
         >
           <ArrowLeft className="mr-2 w-4 h-4" />
-          Retour
+          {t('booking.button.back')}
         </Button>
         <Button
           type="button"
           onClick={validateStep}
           className="flex-1 bg-gradient-to-r from-secondary to-primary"
         >
-          Continuer
+          {t('booking.button.continue')}
           <ArrowRight className="ml-2 w-4 h-4" />
         </Button>
       </div>
