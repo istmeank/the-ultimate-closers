@@ -11,7 +11,7 @@ const FormStep1Intro = ({ onNext }: FormStep1IntroProps) => {
     <div className="space-y-8 animate-fade-in">
       <div className="text-center space-y-4">
         <div className="flex flex-col items-center gap-3 mb-4">
-          <img src={logoTUC} alt="The Ultimate Closers" className="w-20 h-20 object-contain" />
+          <img src={logoTUC} alt="The Ultimate Closers" className="w-24 h-24 object-contain" />
           <p className="font-playfair text-2xl font-semibold text-green-600 dark:text-green-500">
             The Ultimate Closers
           </p>
