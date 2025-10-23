@@ -1,5 +1,6 @@
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import logoTUC from "@/assets/logo.png";
 
 interface FormStep1IntroProps {
   onNext: () => void;
@@ -10,7 +11,7 @@ const FormStep1Intro = ({ onNext }: FormStep1IntroProps) => {
     <div className="space-y-8 animate-fade-in">
       <div className="text-center space-y-4">
         <div className="inline-block p-4 bg-gradient-to-br from-secondary/20 to-primary/20 rounded-full mb-4">
-          <Sparkles className="w-12 h-12 text-secondary" />
+          <img src={logoTUC} alt="The Ultimate Closers" className="w-12 h-12 object-contain" />
         </div>
         
         <h2 className="text-4xl md:text-5xl font-display font-bold text-gradient">
