@@ -5,6 +5,7 @@ import { LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import logo from '@/assets/logo.png';
+import LanguageSelector from '@/components/LanguageSelector';
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -45,14 +46,17 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
                 </p>
               </div>
             </div>
-            <Button
-              onClick={handleSignOut}
-              variant="outline"
-              className="border-background/20 text-background hover:bg-background/10"
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Déconnexion
-            </Button>
+            <div className="flex items-center gap-4">
+              <LanguageSelector className="bg-background/10" />
+              <Button
+                onClick={handleSignOut}
+                variant="outline"
+                className="border-background/20 text-background hover:bg-background/10"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Déconnexion
+              </Button>
+            </div>
           </div>
         </div>
       </header>
