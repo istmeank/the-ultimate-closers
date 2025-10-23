@@ -21,6 +21,7 @@ const CTA = () => {
 
           <Button
             size="lg"
+            onClick={() => window.location.href = '/reserver-appel'}
             className="bg-secondary hover:bg-secondary/90 text-primary font-bold px-10 py-7 rounded-full shadow-2xl hover:shadow-[0_0_40px_rgba(233,196,106,0.6)] hover:scale-105 transition-all group text-lg"
           >
             <Calendar className="mr-3 w-6 h-6" />
