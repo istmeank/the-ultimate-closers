@@ -14,6 +14,102 @@ export type Database = {
   }
   public: {
     Tables: {
+      call_bookings: {
+        Row: {
+          annual_revenue: string
+          call_objective: string
+          commitment_confirmed: boolean
+          company_linkedin: string | null
+          company_name: string
+          company_website: string | null
+          confirmed_at: string | null
+          created_at: string | null
+          current_channels: Json | null
+          email: string
+          first_name: string
+          has_used_ai_crm: string
+          id: string
+          industry: string
+          ip_address: string | null
+          is_business_email: boolean | null
+          job_title: string
+          language: string | null
+          last_name: string
+          main_challenge: string
+          phone: string
+          preferred_date: string | null
+          preferred_platform: string
+          sales_team_size: number | null
+          status: string | null
+          timezone: string
+          updated_at: string | null
+          urgency: string
+          user_agent: string | null
+        }
+        Insert: {
+          annual_revenue: string
+          call_objective: string
+          commitment_confirmed?: boolean
+          company_linkedin?: string | null
+          company_name: string
+          company_website?: string | null
+          confirmed_at?: string | null
+          created_at?: string | null
+          current_channels?: Json | null
+          email: string
+          first_name: string
+          has_used_ai_crm: string
+          id?: string
+          industry: string
+          ip_address?: string | null
+          is_business_email?: boolean | null
+          job_title: string
+          language?: string | null
+          last_name: string
+          main_challenge: string
+          phone: string
+          preferred_date?: string | null
+          preferred_platform: string
+          sales_team_size?: number | null
+          status?: string | null
+          timezone: string
+          updated_at?: string | null
+          urgency: string
+          user_agent?: string | null
+        }
+        Update: {
+          annual_revenue?: string
+          call_objective?: string
+          commitment_confirmed?: boolean
+          company_linkedin?: string | null
+          company_name?: string
+          company_website?: string | null
+          confirmed_at?: string | null
+          created_at?: string | null
+          current_channels?: Json | null
+          email?: string
+          first_name?: string
+          has_used_ai_crm?: string
+          id?: string
+          industry?: string
+          ip_address?: string | null
+          is_business_email?: boolean | null
+          job_title?: string
+          language?: string | null
+          last_name?: string
+          main_challenge?: string
+          phone?: string
+          preferred_date?: string | null
+          preferred_platform?: string
+          sales_team_size?: number | null
+          status?: string | null
+          timezone?: string
+          updated_at?: string | null
+          urgency?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       formations: {
         Row: {
           created_at: string | null
