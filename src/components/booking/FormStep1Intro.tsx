@@ -10,7 +10,7 @@ const FormStep1Intro = ({ onNext }: FormStep1IntroProps) => {
   return (
     <div className="space-y-8 animate-fade-in">
       <div className="text-center space-y-4">
-        <img src={logoTUC} alt="The Ultimate Closers" className="w-16 h-16 object-contain mx-auto mb-4" />
+        <img src={logoTUC} alt="The Ultimate Closers" className="w-24 h-24 object-contain mx-auto mb-4" />
         
         <h2 className="text-4xl md:text-5xl font-display font-bold text-gradient">
           Réservez votre appel stratégique
