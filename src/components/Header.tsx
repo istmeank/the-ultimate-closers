@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Menu, X, Sparkles } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useLanguage, Language } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
+import logo from '@/assets/logo.png';
 
 const Header = () => {
   const { language, setLanguage, t } = useLanguage();
@@ -26,8 +27,8 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <a href="#hero" className="flex items-center gap-2 group">
-            <Sparkles className="w-6 h-6 text-secondary animate-glow-pulse" />
+          <a href="#hero" className="flex items-center gap-3 group">
+            <img src={logo} alt="The Ultimate Closers Logo" className="w-10 h-10 object-contain" />
             <span className="font-playfair font-bold text-xl text-primary group-hover:text-secondary transition-colors">
               The Ultimate Closers
             </span>
