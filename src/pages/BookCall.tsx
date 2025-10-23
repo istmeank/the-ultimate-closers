@@ -2,9 +2,9 @@ import CallBookingForm from "@/components/booking/CallBookingForm";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LanguageProvider, useLanguage } from "@/contexts/LanguageContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-const BookCallContent = () => {
+const BookCall = () => {
   const { t } = useLanguage();
   
   return (
@@ -22,14 +22,6 @@ const BookCallContent = () => {
         <CallBookingForm />
       </div>
     </div>
-  );
-};
-
-const BookCall = () => {
-  return (
-    <LanguageProvider>
-      <BookCallContent />
-    </LanguageProvider>
   );
 };
 
