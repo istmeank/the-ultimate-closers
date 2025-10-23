@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowLeft, Briefcase } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FormStep3BusinessProps {
   form: UseFormReturn<CallBookingFormData>;
@@ -19,15 +20,16 @@ const industries = [
   "Immobilier", "Finance", "Marketing", "Santé", "Autre"
 ];
 
-const channels = [
-  { id: "inbound", label: "Inbound Marketing" },
-  { id: "outbound", label: "Outbound / Cold Calling" },
-  { id: "ads", label: "Publicité payante" },
-  { id: "referral", label: "Recommandations" },
-  { id: "other", label: "Autre" },
-];
-
 const FormStep3Business = ({ form, onNext, onPrevious }: FormStep3BusinessProps) => {
+  const { t } = useLanguage();
+  
+  const channels = [
+    { id: "inbound", label: t('booking.channel.inbound') },
+    { id: "outbound", label: t('booking.channel.outbound') },
+    { id: "ads", label: t('booking.channel.ads') },
+    { id: "referral", label: t('booking.channel.referral') },
+    { id: "other", label: t('booking.channel.other') },
+  ];
   const validateStep = async () => {
     const fields = ['industry', 'annualRevenue', 'salesTeamSize', 'currentChannels', 'mainChallenge'] as const;
     const isValid = await form.trigger(fields);
@@ -40,8 +42,8 @@ const FormStep3Business = ({ form, onNext, onPrevious }: FormStep3BusinessProps)
         <div className="inline-block p-3 bg-gradient-to-br from-secondary/20 to-primary/20 rounded-full mb-3">
           <Briefcase className="w-8 h-8 text-secondary" />
         </div>
-        <h3 className="text-2xl font-display font-bold">Votre entreprise</h3>
-        <p className="text-muted-foreground mt-2">Aidez-nous à comprendre votre contexte</p>
+        <h3 className="text-2xl font-display font-bold">{t('booking.step3.title')}</h3>
+        <p className="text-muted-foreground mt-2">{t('booking.step3.subtitle')}</p>
       </div>
 
       <FormField
@@ -49,11 +51,11 @@ const FormStep3Business = ({ form, onNext, onPrevious }: FormStep3BusinessProps)
         name="industry"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Secteur d'activité *</FormLabel>
+            <FormLabel>{t('booking.step3.industry')} *</FormLabel>
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue placeholder="Sélectionnez votre secteur" />
+                  <SelectValue placeholder={t('booking.select')} />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
@@ -75,11 +77,11 @@ const FormStep3Business = ({ form, onNext, onPrevious }: FormStep3BusinessProps)
           name="annualRevenue"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Chiffre d'affaires annuel *</FormLabel>
+              <FormLabel>{t('booking.step3.revenue')} *</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Sélectionnez" />
+                    <SelectValue placeholder={t('booking.select')} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -99,7 +101,7 @@ const FormStep3Business = ({ form, onNext, onPrevious }: FormStep3BusinessProps)
           name="salesTeamSize"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Taille de l'équipe commerciale *</FormLabel>
+              <FormLabel>{t('booking.step3.teamSize')} *</FormLabel>
               <FormControl>
                 <Input type="number" min="0" placeholder="5" {...field} />
               </FormControl>
@@ -114,7 +116,7 @@ const FormStep3Business = ({ form, onNext, onPrevious }: FormStep3BusinessProps)
         name="currentChannels"
         render={() => (
           <FormItem>
-            <FormLabel>Canaux actuels d'acquisition *</FormLabel>
+            <FormLabel>{t('booking.step3.channels')} *</FormLabel>
             <div className="space-y-2 mt-2">
               {channels.map((channel) => (
                 <FormField
@@ -153,7 +155,7 @@ const FormStep3Business = ({ form, onNext, onPrevious }: FormStep3BusinessProps)
         name="mainChallenge"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Quel est votre principal défi actuellement ? *</FormLabel>
+            <FormLabel>{t('booking.step3.challenge')} *</FormLabel>
             <FormControl>
               <Textarea 
                 placeholder="Ex: Difficulté à générer des leads qualifiés de manière constante..."
@@ -174,14 +176,14 @@ const FormStep3Business = ({ form, onNext, onPrevious }: FormStep3BusinessProps)
           className="flex-1"
         >
           <ArrowLeft className="mr-2 w-4 h-4" />
-          Retour
+          {t('booking.button.back')}
         </Button>
         <Button
           type="button"
           onClick={validateStep}
           className="flex-1 bg-gradient-to-r from-secondary to-primary"
         >
-          Continuer
+          {t('booking.button.continue')}
           <ArrowRight className="ml-2 w-4 h-4" />
         </Button>
       </div>

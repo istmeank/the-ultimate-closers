@@ -9,6 +9,7 @@ import { ArrowRight, ArrowLeft, Calendar as CalendarIcon, Clock } from "lucide-r
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FormStep5PracticalProps {
   form: UseFormReturn<CallBookingFormData>;
@@ -25,6 +26,8 @@ const timezones = [
 ];
 
 const FormStep5Practical = ({ form, onNext, onPrevious }: FormStep5PracticalProps) => {
+  const { t } = useLanguage();
+  
   const validateStep = async () => {
     const fields = ['preferredDate', 'timezone', 'preferredPlatform'] as const;
     const isValid = await form.trigger(fields);
@@ -37,8 +40,8 @@ const FormStep5Practical = ({ form, onNext, onPrevious }: FormStep5PracticalProp
         <div className="inline-block p-3 bg-gradient-to-br from-secondary/20 to-primary/20 rounded-full mb-3">
           <Clock className="w-8 h-8 text-secondary" />
         </div>
-        <h3 className="text-2xl font-display font-bold">Planification</h3>
-        <p className="text-muted-foreground mt-2">Choisissez votre créneau préféré</p>
+        <h3 className="text-2xl font-display font-bold">{t('booking.step5.title')}</h3>
+        <p className="text-muted-foreground mt-2">{t('booking.step5.subtitle')}</p>
       </div>
 
       <FormField
@@ -46,7 +49,7 @@ const FormStep5Practical = ({ form, onNext, onPrevious }: FormStep5PracticalProp
         name="preferredDate"
         render={({ field }) => (
           <FormItem className="flex flex-col">
-            <FormLabel>Date préférée *</FormLabel>
+            <FormLabel>{t('booking.step5.date')} *</FormLabel>
             <Popover>
               <PopoverTrigger asChild>
                 <FormControl>
@@ -85,10 +88,10 @@ const FormStep5Practical = ({ form, onNext, onPrevious }: FormStep5PracticalProp
       <FormField
         control={form.control}
         name="timezone"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Fuseau horaire *</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t('booking.step5.timezone')} *</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder="Sélectionnez votre fuseau horaire" />
@@ -112,11 +115,11 @@ const FormStep5Practical = ({ form, onNext, onPrevious }: FormStep5PracticalProp
         name="preferredPlatform"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Plateforme préférée *</FormLabel>
+            <FormLabel>{t('booking.step5.platform')} *</FormLabel>
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue placeholder="Comment souhaitez-vous nous rejoindre ?" />
+                  <SelectValue placeholder={t('booking.step5.platformQuestion')} />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
@@ -132,8 +135,7 @@ const FormStep5Practical = ({ form, onNext, onPrevious }: FormStep5PracticalProp
 
       <div className="bg-muted/50 rounded-lg p-4 text-sm text-muted-foreground">
         <p>
-          📅 Après validation, vous recevrez un email de confirmation avec le lien de l'appel 
-          et la possibilité d'ajouter l'événement à votre calendrier.
+          📅 {t('booking.step5.notice')}
         </p>
       </div>
 
@@ -145,14 +147,14 @@ const FormStep5Practical = ({ form, onNext, onPrevious }: FormStep5PracticalProp
           className="flex-1"
         >
           <ArrowLeft className="mr-2 w-4 h-4" />
-          Retour
+          {t('booking.button.back')}
         </Button>
         <Button
           type="button"
           onClick={validateStep}
           className="flex-1 bg-gradient-to-r from-secondary to-primary"
         >
-          Continuer
+          {t('booking.button.continue')}
           <ArrowRight className="ml-2 w-4 h-4" />
         </Button>
       </div>

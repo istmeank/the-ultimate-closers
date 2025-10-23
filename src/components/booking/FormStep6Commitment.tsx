@@ -4,6 +4,7 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/comp
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowLeft, Shield, AlertTriangle } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FormStep6CommitmentProps {
   form: UseFormReturn<CallBookingFormData>;
@@ -12,14 +13,16 @@ interface FormStep6CommitmentProps {
 }
 
 const FormStep6Commitment = ({ form, onPrevious, isSubmitting }: FormStep6CommitmentProps) => {
+  const { t } = useLanguage();
+  
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="text-center mb-6">
         <div className="inline-block p-3 bg-gradient-to-br from-secondary/20 to-primary/20 rounded-full mb-3">
           <Shield className="w-8 h-8 text-secondary" />
         </div>
-        <h3 className="text-2xl font-display font-bold">Dernière étape</h3>
-        <p className="text-muted-foreground mt-2">Confirmez votre engagement</p>
+        <h3 className="text-2xl font-display font-bold">{t('booking.step6.title')}</h3>
+        <p className="text-muted-foreground mt-2">{t('booking.step6.subtitle')}</p>
       </div>
 
       <div className="bg-gradient-to-br from-destructive/10 to-destructive/5 border-2 border-destructive/30 rounded-xl p-6 space-y-4">
@@ -27,32 +30,30 @@ const FormStep6Commitment = ({ form, onPrevious, isSubmitting }: FormStep6Commit
           <AlertTriangle className="w-6 h-6 text-destructive flex-shrink-0 mt-1" />
           <div className="space-y-3 text-sm">
             <p className="font-semibold text-destructive text-base">
-              ⚠️ Cet appel est réservé aux professionnels sérieux
+              ⚠️ {t('booking.step6.warning')}
             </p>
             
             <p className="text-muted-foreground">
-              Cet appel découverte est conçu pour les <strong className="text-foreground">dirigeants et responsables 
-              commerciaux décidés à scaler leurs ventes</strong>. Nous investissons du temps dans la préparation 
-              d'une analyse personnalisée pour chaque prospect.
+              {t('booking.step6.intro')}
             </p>
 
             <div className="bg-card/50 rounded-lg p-4 space-y-2">
-              <p className="font-medium">❌ Cet appel N'EST PAS pour vous si :</p>
+              <p className="font-medium">❌ {t('booking.step6.not')}</p>
               <ul className="space-y-1 text-muted-foreground ml-4">
-                <li>• Vous cherchez uniquement un conseil gratuit</li>
-                <li>• Vous n'êtes pas décisionnaire dans votre entreprise</li>
-                <li>• Vous n'avez pas de budget pour investir dans votre croissance</li>
-                <li>• Vous n'êtes pas sûr de pouvoir être présent</li>
+                <li>• {t('booking.step6.not1')}</li>
+                <li>• {t('booking.step6.not2')}</li>
+                <li>• {t('booking.step6.not3')}</li>
+                <li>• {t('booking.step6.not4')}</li>
               </ul>
             </div>
 
             <div className="bg-secondary/10 rounded-lg p-4 space-y-2">
-              <p className="font-medium text-secondary">✅ Cet appel EST pour vous si :</p>
+              <p className="font-medium text-secondary">✅ {t('booking.step6.is')}</p>
               <ul className="space-y-1 text-muted-foreground ml-4">
-                <li>• Vous voulez automatiser votre acquisition de clients</li>
-                <li>• Vous êtes prêt à investir pour scaler votre business</li>
-                <li>• Vous cherchez une solution éprouvée, pas des théories</li>
-                <li>• Vous êtes décideur et prêt à agir rapidement</li>
+                <li>• {t('booking.step6.is1')}</li>
+                <li>• {t('booking.step6.is2')}</li>
+                <li>• {t('booking.step6.is3')}</li>
+                <li>• {t('booking.step6.is4')}</li>
               </ul>
             </div>
           </div>
@@ -74,12 +75,11 @@ const FormStep6Commitment = ({ form, onPrevious, isSubmitting }: FormStep6Commit
             <div className="space-y-1 leading-none">
               <FormLabel className="cursor-pointer">
                 <span className="font-semibold text-base">
-                  Je confirme mon engagement *
+                  {t('booking.step6.confirm')} *
                 </span>
               </FormLabel>
               <p className="text-sm text-muted-foreground">
-                Je comprends que cet appel est une évaluation mutuelle et je m'engage à être présent 
-                à l'heure prévue. Je suis décisionnaire et prêt à investir dans la croissance de mon entreprise.
+                {t('booking.step6.confirmText')}
               </p>
               <FormMessage />
             </div>
@@ -96,7 +96,7 @@ const FormStep6Commitment = ({ form, onPrevious, isSubmitting }: FormStep6Commit
           disabled={isSubmitting}
         >
           <ArrowLeft className="mr-2 w-4 h-4" />
-          Retour
+          {t('booking.button.back')}
         </Button>
         <Button
           type="submit"
@@ -105,11 +105,11 @@ const FormStep6Commitment = ({ form, onPrevious, isSubmitting }: FormStep6Commit
         >
           {isSubmitting ? (
             <>
-              <span className="animate-pulse">Envoi en cours...</span>
+              <span className="animate-pulse">{t('booking.step6.submitting')}</span>
             </>
           ) : (
             <>
-              Confirmer ma réservation
+              {t('booking.step6.submit')}
               <ArrowRight className="ml-2 w-4 h-4" />
             </>
           )}
