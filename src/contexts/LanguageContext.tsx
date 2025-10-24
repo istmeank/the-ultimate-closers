@@ -20,8 +20,8 @@ const translations = {
     // Hero
     'hero.title': 'Convertir sans forcer. Performer avec conscience.',
     'hero.subtitle': "L'alliance entre psychologie, IA et éthique pour une vente augmentée.",
-    'hero.cta.primary': 'Découvrir notre approche',
-    'hero.cta.secondary': 'Réserver un audit gratuit',
+    'hero.cta.primary': 'Réserver un audit offert',
+    'hero.cta.secondary': 'Découvrir notre approche',
     
     // Mission
     'mission.title': "L'éthique comme stratégie.",
@@ -179,8 +179,8 @@ const translations = {
     // Hero
     'hero.title': 'Convert without pressure. Perform with conscience.',
     'hero.subtitle': 'Merging psychology, AI, and ethics to reinvent selling.',
-    'hero.cta.primary': 'Discover our approach',
-    'hero.cta.secondary': 'Book your free audit',
+    'hero.cta.primary': 'Book a Complimentary Audit',
+    'hero.cta.secondary': 'Discover our approach',
     
     // Mission
     'mission.title': 'Ethics as strategy.',
@@ -338,8 +338,8 @@ const translations = {
     // Hero
     'hero.title': 'نحوّل الزبائن بلا ضغط، و نخدمو بالنية و الفهم.',
     'hero.subtitle': 'البيع الواعي بالذكاء الاصطناعي و النية الصافية.',
-    'hero.cta.primary': 'اكتشف طريقتنا',
-    'hero.cta.secondary': 'دير معانا مكالمة مجانية',
+    'hero.cta.primary': 'دير معانا audit مجاني',
+    'hero.cta.secondary': 'اكتشف طريقتنا',
     
     // Mission
     'mission.title': 'النية الصافية هي الاستراتيجية.',
