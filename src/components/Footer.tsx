@@ -1,6 +1,7 @@
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Sparkles, Linkedin, Instagram, Youtube } from 'lucide-react';
+import { Linkedin, Instagram, Youtube, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import logo from '@/assets/logo.png';
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -16,8 +17,8 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center text-center gap-8">
           {/* Logo */}
-          <div className="flex items-center gap-2 group">
-            <Sparkles className="w-8 h-8 text-secondary animate-glow-pulse" />
+          <div className="flex items-center gap-3 group">
+            <img src={logo} alt="The Ultimate Closers Logo" className="w-12 h-12 object-contain" />
             <span className="font-playfair font-bold text-2xl text-background">
               The Ultimate Closers
             </span>
@@ -29,6 +30,15 @@ const Footer = () => {
               "{t('footer.quote')}"
             </p>
           </blockquote>
+
+          {/* Contact Email */}
+          <a 
+            href="mailto:contact@theultimateclosers.com"
+            className="flex items-center gap-2 text-background/80 hover:text-secondary transition-colors group"
+          >
+            <Mail className="w-5 h-5" />
+            <span className="font-inter text-lg">contact@theultimateclosers.com</span>
+          </a>
 
           {/* Social Links */}
           <div className="flex items-center gap-6">

@@ -14,16 +14,270 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      call_bookings: {
+        Row: {
+          annual_revenue: string
+          call_objective: string
+          commitment_confirmed: boolean
+          company_linkedin: string | null
+          company_name: string
+          company_website: string | null
+          confirmed_at: string | null
+          created_at: string | null
+          current_channels: Json | null
+          email: string
+          first_name: string
+          has_used_ai_crm: string
+          id: string
+          industry: string
+          ip_address: string | null
+          is_business_email: boolean | null
+          job_title: string
+          language: string | null
+          last_name: string
+          main_challenge: string
+          phone: string
+          preferred_date: string | null
+          preferred_platform: string
+          sales_team_size: number | null
+          status: string | null
+          timezone: string
+          updated_at: string | null
+          urgency: string
+          user_agent: string | null
+        }
+        Insert: {
+          annual_revenue: string
+          call_objective: string
+          commitment_confirmed?: boolean
+          company_linkedin?: string | null
+          company_name: string
+          company_website?: string | null
+          confirmed_at?: string | null
+          created_at?: string | null
+          current_channels?: Json | null
+          email: string
+          first_name: string
+          has_used_ai_crm: string
+          id?: string
+          industry: string
+          ip_address?: string | null
+          is_business_email?: boolean | null
+          job_title: string
+          language?: string | null
+          last_name: string
+          main_challenge: string
+          phone: string
+          preferred_date?: string | null
+          preferred_platform: string
+          sales_team_size?: number | null
+          status?: string | null
+          timezone: string
+          updated_at?: string | null
+          urgency: string
+          user_agent?: string | null
+        }
+        Update: {
+          annual_revenue?: string
+          call_objective?: string
+          commitment_confirmed?: boolean
+          company_linkedin?: string | null
+          company_name?: string
+          company_website?: string | null
+          confirmed_at?: string | null
+          created_at?: string | null
+          current_channels?: Json | null
+          email?: string
+          first_name?: string
+          has_used_ai_crm?: string
+          id?: string
+          industry?: string
+          ip_address?: string | null
+          is_business_email?: boolean | null
+          job_title?: string
+          language?: string | null
+          last_name?: string
+          main_challenge?: string
+          phone?: string
+          preferred_date?: string | null
+          preferred_platform?: string
+          sales_team_size?: number | null
+          status?: string | null
+          timezone?: string
+          updated_at?: string | null
+          urgency?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      formations: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          duration_minutes: number | null
+          file_type: string | null
+          file_url: string
+          id: string
+          is_published: boolean | null
+          order_index: number | null
+          thumbnail_url: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          file_type?: string | null
+          file_url: string
+          id?: string
+          is_published?: boolean | null
+          order_index?: number | null
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          file_type?: string | null
+          file_url?: string
+          id?: string
+          is_published?: boolean | null
+          order_index?: number | null
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      site_analytics: {
+        Row: {
+          created_at: string | null
+          event_type: string
+          id: string
+          metadata: Json | null
+          page_path: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          page_path?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          page_path?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      site_content: {
+        Row: {
+          content_ar: string | null
+          content_en: string | null
+          content_fr: string | null
+          id: string
+          image_url: string | null
+          section_id: string
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          content_ar?: string | null
+          content_en?: string | null
+          content_fr?: string | null
+          id?: string
+          image_url?: string | null
+          section_id: string
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          content_ar?: string | null
+          content_en?: string | null
+          content_fr?: string | null
+          id?: string
+          image_url?: string | null
+          section_id?: string
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +404,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const

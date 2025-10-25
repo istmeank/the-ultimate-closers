@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Shield, FileText, Cookie, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
+import LanguageSelector from '@/components/LanguageSelector';
 
 const Legal = () => {
   const { t } = useLanguage();
@@ -26,6 +27,11 @@ const Legal = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Language Selector - Fixed Position */}
+      <div className="fixed top-4 right-4 z-50">
+        <LanguageSelector />
+      </div>
+
       {/* Header */}
       <div className="bg-primary/5 border-b">
         <div className="container mx-auto px-4 py-8">
