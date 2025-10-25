@@ -11,7 +11,7 @@ interface LanguageContextType {
 const translations = {
   fr: {
     // Header
-    'nav.home': 'Accueil',
+    'nav.home': 'Qui sommes-nous',
     'nav.services': 'Services',
     'nav.ai': 'IA & Humain',
     'nav.testimonials': 'Témoignages',
@@ -22,6 +22,23 @@ const translations = {
     'hero.subtitle': "L'alliance entre psychologie, IA et éthique pour une vente augmentée.",
     'hero.cta.primary': 'Réserver un audit offert',
     'hero.cta.secondary': 'Découvrir notre approche',
+    
+    // About Us
+    'about.title': 'Qui sommes-nous ?',
+    'about.subtitle': 'Une agence de closing éthique augmentée par l\'IA, fondée sur la psychologie, la stratégie et la valeur humaine.',
+    'about.abdenacer.name': 'Abdenacer Maredj',
+    'about.abdenacer.role': 'Psychothérapeute & Expert Closing',
+    'about.abdenacer.description': 'Pilier psychologique et éthique de The Ultimate Closers. Abdenacer incarne la profondeur et l\'authenticité du closing relationnel : écoute active, lecture comportementale et vente consciente.',
+    'about.naim.name': 'Naim Seghiri',
+    'about.naim.role': 'Stratège Marketing & Opérations',
+    'about.naim.description': 'Architecte de la performance commerciale. Naim incarne la précision et l\'efficacité business : acquisition, automatisation IA et optimisation des tunnels de conversion.',
+    'about.manifesto': 'Chez The Ultimate Closers, nous ne vendons pas : nous comprenons, accompagnons et concluons avec conscience.',
+    'about.value1': 'Bienveillance',
+    'about.value2': 'Professionnalisme',
+    'about.value3': 'Honnêteté',
+    'about.value4': 'Conscience',
+    'about.value5': 'Progression',
+    'about.value6': 'Adaptabilité',
     
     // Mission
     'mission.title': "L'éthique comme stratégie.",
@@ -170,7 +187,7 @@ const translations = {
   },
   en: {
     // Header
-    'nav.home': 'Home',
+    'nav.home': 'About Us',
     'nav.services': 'Services',
     'nav.ai': 'AI & Human',
     'nav.testimonials': 'Testimonials',
@@ -181,6 +198,23 @@ const translations = {
     'hero.subtitle': 'Merging psychology, AI, and ethics to reinvent selling.',
     'hero.cta.primary': 'Book a Complimentary Audit',
     'hero.cta.secondary': 'Discover our approach',
+    
+    // About Us
+    'about.title': 'Who We Are',
+    'about.subtitle': 'An AI-powered ethical closing agency, built on psychology, strategy, and human value.',
+    'about.abdenacer.name': 'Abdenacer Maredj',
+    'about.abdenacer.role': 'Psychotherapist & Closing Expert',
+    'about.abdenacer.description': 'The psychological and ethical pillar of The Ultimate Closers. Abdenacer embodies depth and authenticity in relational closing: active listening, behavioral analysis, and conscious selling.',
+    'about.naim.name': 'Naim Seghiri',
+    'about.naim.role': 'Marketing Strategist & Operations',
+    'about.naim.description': 'Architect of commercial performance. Naim embodies precision and business efficiency: acquisition, AI automation, and conversion funnel optimization.',
+    'about.manifesto': 'At The Ultimate Closers, we don\'t sell: we understand, support, and close with consciousness.',
+    'about.value1': 'Kindness',
+    'about.value2': 'Professionalism',
+    'about.value3': 'Honesty',
+    'about.value4': 'Awareness',
+    'about.value5': 'Growth',
+    'about.value6': 'Adaptability',
     
     // Mission
     'mission.title': 'Ethics as strategy.',
@@ -329,7 +363,7 @@ const translations = {
   },
   dar: {
     // Header
-    'nav.home': 'الرئيسية',
+    'nav.home': 'على من احنا',
     'nav.services': 'الخدمات',
     'nav.ai': 'الذكاء الاصطناعي',
     'nav.testimonials': 'الشهادات',
@@ -340,6 +374,23 @@ const translations = {
     'hero.subtitle': 'البيع الواعي بالذكاء الاصطناعي و النية الصافية.',
     'hero.cta.primary': 'دير معانا audit مجاني',
     'hero.cta.secondary': 'اكتشف طريقتنا',
+    
+    // About Us
+    'about.title': 'على من احنا؟',
+    'about.subtitle': 'وكالة كلوزينغ أخلاقية معززة بالذكاء الاصطناعي، مبنية على علم النفس والاستراتيجية والقيمة الإنسانية.',
+    'about.abdenacer.name': 'عبد الناصر مرادج',
+    'about.abdenacer.role': 'معالج نفسي و خبير كلوزينغ',
+    'about.abdenacer.description': 'الركيزة النفسية والأخلاقية. عبد الناصر يجسد العمق والأصالة في البيع بالعلاقات: الإصغاء النشط، قراءة السلوك، والبيع الواعي.',
+    'about.naim.name': 'نعيم صغيري',
+    'about.naim.role': 'استراتيجي تسويق و عمليات',
+    'about.naim.description': 'مهندس الأداء التجاري. نعيم يجسد الدقة والكفاءة: الاستحواذ، أتمتة الذكاء الاصطناعي، وتحسين مسارات التحويل.',
+    'about.manifesto': 'في The Ultimate Closers، ما كنبيعوش: كنفهمو، كنرافقو، و كنختمو بوعي.',
+    'about.value1': 'الطيبة',
+    'about.value2': 'الاحترافية',
+    'about.value3': 'الصدق',
+    'about.value4': 'الوعي',
+    'about.value5': 'التطور',
+    'about.value6': 'التكيف',
     
     // Mission
     'mission.title': 'النية الصافية هي الاستراتيجية.',

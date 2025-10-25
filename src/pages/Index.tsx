@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
+import AboutUs from '@/components/AboutUs';
 import Mission from '@/components/Mission';
 import Services from '@/components/Services';
 import AISection from '@/components/AISection';
@@ -26,6 +27,7 @@ const Index = () => {
         <Header />
         <main>
           <Hero />
+          <AboutUs />
           <Mission />
           <Services />
           <AISection />

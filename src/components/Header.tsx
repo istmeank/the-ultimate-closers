@@ -9,7 +9,7 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { key: 'nav.home', href: '#hero' },
+    { key: 'nav.home', href: '#about' },
     { key: 'nav.services', href: '#services' },
     { key: 'nav.ai', href: '#ai' },
     { key: 'nav.testimonials', href: '#testimonials' },
