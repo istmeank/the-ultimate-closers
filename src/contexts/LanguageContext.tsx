@@ -67,7 +67,7 @@ const translations = {
     'testimonials.name3': 'Yasmine',
     
     // CTA
-    'cta.title': 'Prêt à transformer votre manière de vendre ?',
+    'cta.title': 'Prêt à propulser votre conversion ?',
     'cta.button': 'Réserver un audit gratuit',
     
     // Footer
@@ -226,7 +226,7 @@ const translations = {
     'testimonials.name3': 'Yasmine',
     
     // CTA
-    'cta.title': 'Ready to transform the way you sell?',
+    'cta.title': 'Ready to boost your conversion?',
     'cta.button': 'Book your free audit',
     
     // Footer
@@ -385,7 +385,7 @@ const translations = {
     'testimonials.name3': 'ياسمين',
     
     // CTA
-    'cta.title': 'جاهز تبدل طريقة البيع تاعك؟',
+    'cta.title': 'واش راك مستعد تزيد في نسبة التحويل ديالك؟',
     'cta.button': 'دير معانا مكالمة مجانية',
     
     // Footer
