@@ -13,6 +13,7 @@ import FormStep4Intention from "./FormStep4Intention";
 import FormStep5Practical from "./FormStep5Practical";
 import FormStep6Commitment from "./FormStep6Commitment";
 import FormStep7Confirmation from "./FormStep7Confirmation";
+import { TurnstileWidget } from "./TurnstileWidget";
 
 const TOTAL_STEPS = 7;
 
@@ -20,6 +21,7 @@ const CallBookingForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingData, setBookingData] = useState<CallBookingFormData | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   const form = useForm<CallBookingFormData>({
     resolver: zodResolver(callBookingSchema),
@@ -62,6 +64,13 @@ const CallBookingForm = () => {
   };
 
   const onSubmit = async (data: CallBookingFormData) => {
+    if (!turnstileToken) {
+      toast.error("Vérification de sécurité requise", {
+        description: "Veuillez compléter la vérification de sécurité."
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -76,45 +85,42 @@ const CallBookingForm = () => {
         }
       });
 
-      // Check if email domain is business (additional validation)
-      const emailDomain = data.email.split('@')[1];
-      const freeEmailDomains = ['gmail.com', 'hotmail.com', 'yahoo.com', 'outlook.com', 'live.com'];
-      const isBusinessEmail = !freeEmailDomains.includes(emailDomain);
-
-      // Insert booking
-      const { error } = await supabase.from('call_bookings').insert({
-        first_name: data.firstName,
-        last_name: data.lastName,
-        job_title: data.jobTitle,
-        company_name: data.companyName,
-        company_website: data.companyWebsite || null,
-        company_linkedin: data.companyLinkedin || null,
-        email: data.email,
-        phone: data.phone,
-        is_business_email: isBusinessEmail,
-        industry: data.industry,
-        annual_revenue: data.annualRevenue,
-        sales_team_size: data.salesTeamSize,
-        current_channels: data.currentChannels,
-        main_challenge: data.mainChallenge,
-        call_objective: data.callObjective,
-        has_used_ai_crm: data.hasUsedAiCrm,
-        urgency: data.urgency,
-        preferred_date: data.preferredDate.toISOString(),
-        timezone: data.timezone,
-        preferred_platform: data.preferredPlatform,
-        commitment_confirmed: data.commitmentConfirmed,
-        language: 'fr',
+      // Submit through edge function with Turnstile verification and rate limiting
+      const { data: response, error: functionError } = await supabase.functions.invoke('submit-booking', {
+        body: {
+          bookingData: {
+            first_name: data.firstName,
+            last_name: data.lastName,
+            job_title: data.jobTitle,
+            company_name: data.companyName,
+            company_website: data.companyWebsite || null,
+            company_linkedin: data.companyLinkedin || null,
+            email: data.email,
+            phone: data.phone,
+            industry: data.industry,
+            annual_revenue: data.annualRevenue,
+            sales_team_size: data.salesTeamSize,
+            current_channels: data.currentChannels,
+            main_challenge: data.mainChallenge,
+            call_objective: data.callObjective,
+            has_used_ai_crm: data.hasUsedAiCrm,
+            urgency: data.urgency,
+            preferred_date: data.preferredDate.toISOString(),
+            timezone: data.timezone,
+            preferred_platform: data.preferredPlatform,
+            commitment_confirmed: data.commitmentConfirmed,
+            language: 'fr',
+          },
+          turnstileToken,
+        },
       });
 
-      if (error) {
-        if (error.message.includes('déjà une réservation')) {
-          toast.error("Vous avez déjà une réservation en cours", {
-            description: "Veuillez patienter 7 jours avant de réserver à nouveau."
-          });
-        } else {
-          throw error;
-        }
+      if (functionError) {
+        throw functionError;
+      }
+
+      if (response?.error) {
+        toast.error(response.error);
         setIsSubmitting(false);
         return;
       }
@@ -162,7 +168,19 @@ const CallBookingForm = () => {
               {currentStep === 3 && <FormStep3Business form={form} onNext={handleNext} onPrevious={handlePrevious} />}
               {currentStep === 4 && <FormStep4Intention form={form} onNext={handleNext} onPrevious={handlePrevious} />}
               {currentStep === 5 && <FormStep5Practical form={form} onNext={handleNext} onPrevious={handlePrevious} />}
-              {currentStep === 6 && <FormStep6Commitment form={form} onPrevious={handlePrevious} isSubmitting={isSubmitting} />}
+              {currentStep === 6 && (
+                <>
+                  <FormStep6Commitment form={form} onPrevious={handlePrevious} isSubmitting={isSubmitting} />
+                  <TurnstileWidget 
+                    onVerify={setTurnstileToken}
+                    onError={() => {
+                      toast.error("Erreur de vérification", {
+                        description: "Veuillez recharger la page et réessayer."
+                      });
+                    }}
+                  />
+                </>
+              )}
             </form>
           </Form>
         )}
