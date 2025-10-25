@@ -2,13 +2,13 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import heroImage from '@/assets/hero-cosmic.jpg';
+import heroImage from '@/assets/hero-handshake.jpg';
 const Hero = () => {
   const {
     t
   } = useLanguage();
   return <section id="hero" className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden" style={{
-    backgroundImage: `linear-gradient(rgba(13, 77, 68, 0.85), rgba(18, 18, 18, 0.9)), url(${heroImage})`,
+    backgroundImage: `linear-gradient(rgba(13, 77, 68, 0.6), rgba(18, 18, 18, 0.7)), url(${heroImage})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundAttachment: 'fixed'
