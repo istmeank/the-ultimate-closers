@@ -49,8 +49,10 @@ const Hero = () => {
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="bg-background/10 backdrop-blur-sm border-2 border-secondary hover:bg-secondary hover:text-primary text-background font-semibold px-8 py-6 rounded-full transition-all">
-              {t('hero.cta.secondary')}
+            <Button asChild size="lg" variant="outline" className="bg-background/10 backdrop-blur-sm border-2 border-secondary hover:bg-secondary hover:text-primary text-background font-semibold px-8 py-6 rounded-full transition-all">
+              <Link to="/auth">
+                {t('hero.cta.secondary')}
+              </Link>
             </Button>
           </div>
 
