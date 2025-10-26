@@ -85,7 +85,7 @@ const translations = {
     
     // CTA
     'cta.title': 'Prêt à propulser votre conversion ?',
-    'cta.button': 'Réserver un audit gratuit',
+    'cta.button': 'Réserver un audit offert',
     
     // Footer
     'footer.quote': 'La sagesse dans la vente, la lumière dans la croissance.',
