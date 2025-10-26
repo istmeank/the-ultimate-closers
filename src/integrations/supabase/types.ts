@@ -14,6 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
+      appointments: {
+        Row: {
+          assigned_to: string | null
+          auto_assigned: boolean | null
+          channel: string | null
+          created_at: string | null
+          end_at: string
+          gcal_event_id: string | null
+          id: string
+          lead_id: string
+          start_at: string
+          status: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          auto_assigned?: boolean | null
+          channel?: string | null
+          created_at?: string | null
+          end_at: string
+          gcal_event_id?: string | null
+          id?: string
+          lead_id: string
+          start_at: string
+          status?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          auto_assigned?: boolean | null
+          channel?: string | null
+          created_at?: string | null
+          end_at?: string
+          gcal_event_id?: string | null
+          id?: string
+          lead_id?: string
+          start_at?: string
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appointments_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       call_bookings: {
         Row: {
           annual_revenue: string
@@ -110,6 +164,80 @@ export type Database = {
         }
         Relationships: []
       }
+      deals: {
+        Row: {
+          amount_cents: number
+          created_at: string | null
+          currency: string | null
+          expected_close_date: string | null
+          id: string
+          lead_id: string
+          offer_name: string
+          stage: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string | null
+          currency?: string | null
+          expected_close_date?: string | null
+          id?: string
+          lead_id: string
+          offer_name: string
+          stage?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string | null
+          currency?: string | null
+          expected_close_date?: string | null
+          id?: string
+          lead_id?: string
+          offer_name?: string
+          stage?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deals_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      external_sync_log: {
+        Row: {
+          entity_id: string
+          entity_type: string
+          error: string | null
+          hubspot_id: string | null
+          id: string
+          last_sync: string | null
+          status: string | null
+        }
+        Insert: {
+          entity_id: string
+          entity_type: string
+          error?: string | null
+          hubspot_id?: string | null
+          id?: string
+          last_sync?: string | null
+          status?: string | null
+        }
+        Update: {
+          entity_id?: string
+          entity_type?: string
+          error?: string | null
+          hubspot_id?: string | null
+          id?: string
+          last_sync?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
       formations: {
         Row: {
           created_at: string | null
@@ -155,6 +283,177 @@ export type Database = {
         }
         Relationships: []
       }
+      interactions: {
+        Row: {
+          by_user_id: string | null
+          content: string | null
+          created_at: string | null
+          id: string
+          lead_id: string
+          type: string
+        }
+        Insert: {
+          by_user_id?: string | null
+          content?: string | null
+          created_at?: string | null
+          id?: string
+          lead_id: string
+          type: string
+        }
+        Update: {
+          by_user_id?: string | null
+          content?: string | null
+          created_at?: string | null
+          id?: string
+          lead_id?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interactions_by_user_id_fkey"
+            columns: ["by_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "interactions_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_scores: {
+        Row: {
+          features: Json | null
+          id: string
+          lead_id: string
+          model: string | null
+          score: number
+          sentiment: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          features?: Json | null
+          id?: string
+          lead_id: string
+          model?: string | null
+          score: number
+          sentiment?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          features?: Json | null
+          id?: string
+          lead_id?: string
+          model?: string | null
+          score?: number
+          sentiment?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_scores_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leads: {
+        Row: {
+          created_at: string | null
+          email: string
+          full_name: string
+          id: string
+          interest: string | null
+          owner_id: string | null
+          phone: string | null
+          score: number | null
+          source: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          full_name: string
+          id?: string
+          interest?: string | null
+          owner_id?: string | null
+          phone?: string | null
+          score?: number | null
+          source: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          interest?: string | null
+          owner_id?: string | null
+          phone?: string | null
+          score?: number | null
+          source?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount_cents: number
+          created_at: string | null
+          deal_id: string
+          id: string
+          paid_at: string | null
+          provider: string
+          status: string | null
+          tx_ref: string | null
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string | null
+          deal_id: string
+          id?: string
+          paid_at?: string | null
+          provider: string
+          status?: string | null
+          tx_ref?: string | null
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string | null
+          deal_id?: string
+          id?: string
+          paid_at?: string | null
+          provider?: string
+          status?: string | null
+          tx_ref?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -181,6 +480,41 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      resources: {
+        Row: {
+          created_at: string | null
+          id: string
+          lead_id: string | null
+          title: string
+          type: string | null
+          url: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          lead_id?: string | null
+          title: string
+          type?: string | null
+          url: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          lead_id?: string | null
+          title?: string
+          type?: string | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resources_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       site_analytics: {
         Row: {
@@ -268,13 +602,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
+      has_role:
+        | { Args: { role_name: string; user_id: string }; Returns: boolean }
+        | {
+            Args: {
+              _role: Database["public"]["Enums"]["app_role"]
+              _user_id: string
+            }
+            Returns: boolean
+          }
     }
     Enums: {
       app_role: "admin" | "user"
