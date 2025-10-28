@@ -85,33 +85,30 @@ const CallBookingForm = () => {
         }
       });
 
-      // Submit through edge function with Turnstile verification and rate limiting
-      const { data: response, error: functionError } = await supabase.functions.invoke('submit-booking', {
+      // Submit through secure edge function with validation and rate limiting
+      const { data: response, error: functionError } = await supabase.functions.invoke('submit-booking-secure', {
         body: {
-          bookingData: {
-            first_name: data.firstName,
-            last_name: data.lastName,
-            job_title: data.jobTitle,
-            company_name: data.companyName,
-            company_website: data.companyWebsite || null,
-            company_linkedin: data.companyLinkedin || null,
-            email: data.email,
-            phone: data.phone,
-            industry: data.industry,
-            annual_revenue: data.annualRevenue,
-            sales_team_size: data.salesTeamSize,
-            current_channels: data.currentChannels,
-            main_challenge: data.mainChallenge,
-            call_objective: data.callObjective,
-            has_used_ai_crm: data.hasUsedAiCrm,
-            urgency: data.urgency,
-            preferred_date: data.preferredDate.toISOString(),
-            timezone: data.timezone,
-            preferred_platform: data.preferredPlatform,
-            commitment_confirmed: data.commitmentConfirmed,
-            language: 'fr',
-          },
-          turnstileToken,
+          first_name: data.firstName,
+          last_name: data.lastName,
+          job_title: data.jobTitle,
+          company_name: data.companyName,
+          company_website: data.companyWebsite || null,
+          company_linkedin: data.companyLinkedin || null,
+          email: data.email,
+          phone: data.phone,
+          industry: data.industry,
+          annual_revenue: data.annualRevenue,
+          sales_team_size: data.salesTeamSize,
+          current_channels: data.currentChannels,
+          main_challenge: data.mainChallenge,
+          call_objective: data.callObjective,
+          has_used_ai_crm: data.hasUsedAiCrm,
+          urgency: data.urgency,
+          preferred_date: data.preferredDate.toISOString(),
+          timezone: data.timezone,
+          preferred_platform: data.preferredPlatform,
+          commitment_confirmed: data.commitmentConfirmed,
+          language: 'fr',
         },
       });
 
@@ -119,8 +116,8 @@ const CallBookingForm = () => {
         throw functionError;
       }
 
-      if (response?.error) {
-        toast.error(response.error);
+      if (!response?.success) {
+        toast.error(response?.error || "Erreur lors de la réservation");
         setIsSubmitting(false);
         return;
       }

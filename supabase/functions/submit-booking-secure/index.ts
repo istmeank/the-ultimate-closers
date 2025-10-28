@@ -2,7 +2,6 @@
 // Remplace l'accès direct à la base de données avec validation et rate limiting
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { corsHeaders } from '../_shared/cors.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
