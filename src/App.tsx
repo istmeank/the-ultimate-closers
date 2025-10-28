@@ -11,6 +11,7 @@ import Legal from "./pages/Legal";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
 import BookCall from "./pages/BookCall";
+import DashboardCloser from "./pages/DashboardCloser";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +35,14 @@ const App = () => (
               element={
                 <ProtectedRoute requireAdmin>
                   <Admin />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard-closer" 
+              element={
+                <ProtectedRoute requireRole="closer">
+                  <DashboardCloser />
                 </ProtectedRoute>
               } 
             />

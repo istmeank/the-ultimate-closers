@@ -1,13 +1,16 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 
+type AppRole = 'admin' | 'closer' | 'owner' | 'client' | 'user';
+
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requireAdmin?: boolean;
+  requireRole?: AppRole;
 }
 
-export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps) => {
-  const { user, isAdmin, loading } = useAuth();
+export const ProtectedRoute = ({ children, requireAdmin = false, requireRole }: ProtectedRouteProps) => {
+  const { user, role, isAdmin, loading } = useAuth();
 
   if (loading) {
     return (
@@ -25,6 +28,10 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
   }
 
   if (requireAdmin && !isAdmin) {
+    return <Navigate to="/" replace />;
+  }
+
+  if (requireRole && role !== requireRole && !isAdmin) {
     return <Navigate to="/" replace />;
   }
 
