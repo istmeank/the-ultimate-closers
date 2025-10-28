@@ -12,11 +12,14 @@ import logo from '@/assets/logo.png';
 import LanguageSelector from '@/components/LanguageSelector';
 import DebugInfo from '@/components/DebugInfo';
 
-const emailSchema = z.string().email('Email invalide');
+const emailSchema = z.string().email('Email invalide').refine(
+  (email) => email.endsWith('@theultimateclosers.com'),
+  'Seuls les emails professionnels @theultimateclosers.com sont autorisés'
+);
 const passwordSchema = z.string().min(6, 'Le mot de passe doit contenir au moins 6 caractères');
 
 const Auth = () => {
-  const { user, isAdmin, loading, signInWithEmail, signUpWithEmail, signInWithGoogle } = useAuth();
+  const { user, isAdmin, isCloser, loading, signInWithEmail, signUpWithEmail, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [email, setEmail] = useState('');
@@ -27,11 +30,13 @@ const Auth = () => {
     if (user && !loading) {
       if (isAdmin) {
         navigate('/admin');
+      } else if (isCloser) {
+        navigate('/dashboard-closer');
       } else {
         navigate('/');
       }
     }
-  }, [user, isAdmin, loading, navigate]);
+  }, [user, isAdmin, isCloser, loading, navigate]);
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -138,7 +143,7 @@ const Auth = () => {
               The Ultimate Closers
             </h1>
             <p className="font-inter text-muted-foreground">
-              Connexion administrateur
+              Connexion professionnelle
             </p>
           </div>
 
@@ -156,7 +161,7 @@ const Auth = () => {
                   <Input
                     id="signin-email"
                     type="email"
-                    placeholder="admin@example.com"
+                    placeholder="mohamed@theultimateclosers.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -226,7 +231,7 @@ const Auth = () => {
                   <Input
                     id="signup-email"
                     type="email"
-                    placeholder="admin@example.com"
+                    placeholder="mohamed@theultimateclosers.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -258,7 +263,7 @@ const Auth = () => {
           </Tabs>
 
           <p className="text-center text-sm text-muted-foreground font-inter mt-4">
-            Réservé aux administrateurs autorisés
+            Réservé aux utilisateurs autorisés @theultimateclosers.com
           </p>
         </div>
       </Card>

@@ -12,6 +12,7 @@ import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
 import BookCall from "./pages/BookCall";
 import DashboardCloser from "./pages/DashboardCloser";
+import LeadDetail from "./pages/LeadDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -43,6 +44,14 @@ const App = () => (
               element={
                 <ProtectedRoute requireRole="closer">
                   <DashboardCloser />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard-closer/lead/:id" 
+              element={
+                <ProtectedRoute requireRole="closer">
+                  <LeadDetail />
                 </ProtectedRoute>
               } 
             />

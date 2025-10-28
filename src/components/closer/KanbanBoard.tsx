@@ -1,18 +1,40 @@
-import { useQuery } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
+import { DragDropContext, Droppable, DropResult } from '@hello-pangea/dnd';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { KanbanColumn } from './KanbanColumn';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { LeadCard } from './LeadCard';
+
+interface Lead {
+  id: string;
+  full_name: string;
+  email: string;
+  phone?: string;
+  status: string;
+  score: number;
+  source: string;
+  created_at: string;
+  owner_id: string;
+}
+
+interface LeadsByStatus {
+  [key: string]: Lead[];
+}
 
 const columns = [
-  { id: 'new', title: 'Nouveau', color: 'violet' },
-  { id: 'qualified', title: 'Qualifié', color: 'blue' },
-  { id: 'in_progress', title: 'En cours', color: 'orange' },
-  { id: 'won', title: 'Gagné', color: 'green' },
-  { id: 'lost', title: 'Perdu', color: 'red' }
+  { id: 'new', title: 'Nouveau', color: 'violet', description: 'Nouveaux leads' },
+  { id: 'qualified', title: 'Qualifié', color: 'blue', description: 'Leads qualifiés' },
+  { id: 'in_progress', title: 'En cours', color: 'orange', description: 'En négociation' },
+  { id: 'won', title: 'Gagné', color: 'green', description: 'Deals conclus' },
+  { id: 'lost', title: 'Perdu', color: 'red', description: 'Opportunités perdues' }
 ];
 
 export const KanbanBoard = () => {
+  const queryClient = useQueryClient();
+  const [leadsByStatus, setLeadsByStatus] = useState<LeadsByStatus>({});
+
+  // Récupérer les leads du closer connecté
   const { data: leads, isLoading } = useQuery({
     queryKey: ['closerLeads'],
     queryFn: async () => {
@@ -26,74 +48,99 @@ export const KanbanBoard = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data || [];
-    }
+      return data as Lead[];
+    },
   });
+
+  // Mutation pour mettre à jour le statut d'un lead
+  const updateLeadStatus = useMutation({
+    mutationFn: async ({ leadId, newStatus }: { leadId: string; newStatus: string }) => {
+      const { error } = await supabase
+        .from('leads')
+        .update({ status: newStatus })
+        .eq('id', leadId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['closerLeads'] });
+    },
+  });
+
+  // Organiser les leads par statut
+  useEffect(() => {
+    if (leads) {
+      const organized: LeadsByStatus = {};
+      columns.forEach(col => {
+        organized[col.id] = leads.filter(lead => lead.status === col.id);
+      });
+      setLeadsByStatus(organized);
+    }
+  }, [leads]);
+
+  const onDragEnd = async (result: DropResult) => {
+    const { destination, source, draggableId } = result;
+
+    // Si pas de destination, on ne fait rien
+    if (!destination) return;
+
+    // Si même colonne et même position, on ne fait rien
+    if (destination.droppableId === source.droppableId && destination.index === source.index) {
+      return;
+    }
+
+    // Mettre à jour le statut du lead
+    try {
+      await updateLeadStatus.mutateAsync({
+        leadId: draggableId,
+        newStatus: destination.droppableId,
+      });
+    } catch (error) {
+      console.error('Error updating lead status:', error);
+    }
+  };
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        {columns.map((column) => (
-          <Card key={column.id} className="animate-pulse">
-            <CardHeader>
-              <div className="h-6 bg-muted rounded w-3/4"></div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {[...Array(3)].map((_, i) => (
-                  <div key={i} className="h-20 bg-muted rounded"></div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Pipeline Kanban</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
-  // Grouper les leads par statut
-  const leadsByStatus = leads?.reduce((acc, lead) => {
-    const status = lead.status || 'new';
-    if (!acc[status]) acc[status] = [];
-    acc[status].push(lead);
-    return acc;
-  }, {} as Record<string, any[]>) || {};
+  const totalLeads = leads?.length || 0;
 
   return (
-    <div className="space-y-4">
-      <h2 className="font-playfair text-2xl font-bold text-primary">
-        Pipeline de Leads
-      </h2>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        {columns.map((column) => {
-          const columnLeads = leadsByStatus[column.id] || [];
-          
-          return (
-            <Card key={column.id} className={`border-2 border-${column.color}-200 bg-${column.color}-50/30`}>
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center justify-between">
-                  <span className="text-lg">{column.title}</span>
-                  <Badge variant="secondary" className="bg-white/50">
-                    {columnLeads.length}
-                  </Badge>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {columnLeads.length === 0 ? (
-                  <div className="text-center text-muted-foreground py-8">
-                    <p className="text-sm">Aucun lead</p>
-                  </div>
-                ) : (
-                  columnLeads.map((lead) => (
-                    <LeadCard key={lead.id} lead={lead} />
-                  ))
-                )}
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-    </div>
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="font-playfair text-xl">Pipeline Kanban</CardTitle>
+          <Badge variant="secondary" className="text-sm">
+            {totalLeads} leads au total
+          </Badge>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            {columns.map((column) => (
+              <KanbanColumn
+                key={column.id}
+                column={column}
+                leads={leadsByStatus[column.id] || []}
+                isUpdating={updateLeadStatus.isPending}
+              />
+            ))}
+          </div>
+        </DragDropContext>
+      </CardContent>
+    </Card>
   );
 };
