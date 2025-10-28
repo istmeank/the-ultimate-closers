@@ -95,6 +95,7 @@ export type Database = {
           preferred_platform: string
           sales_team_size: number | null
           status: string | null
+          submission_source: string | null
           timezone: string
           updated_at: string | null
           urgency: string
@@ -126,6 +127,7 @@ export type Database = {
           preferred_platform: string
           sales_team_size?: number | null
           status?: string | null
+          submission_source?: string | null
           timezone: string
           updated_at?: string | null
           urgency: string
@@ -157,6 +159,7 @@ export type Database = {
           preferred_platform?: string
           sales_team_size?: number | null
           status?: string | null
+          submission_source?: string | null
           timezone?: string
           updated_at?: string | null
           urgency?: string
