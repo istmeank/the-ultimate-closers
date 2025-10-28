@@ -1,0 +1,17 @@
+# Redirects pour SPA (Single Page Application)
+# Toutes les routes doivent rediriger vers index.html pour le routage côté client
+
+# Routes principales
+/auth          /index.html   200
+/admin         /index.html   200
+/dashboard-closer /index.html 200
+/reserver-appel /index.html  200
+/legal         /index.html   200
+
+# Routes avec paramètres
+/auth/*        /index.html   200
+/admin/*       /index.html   200
+/dashboard-closer/* /index.html 200
+
+# Fallback pour toutes les autres routes
+/*             /index.html   200

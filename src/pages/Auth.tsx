@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 import logo from '@/assets/logo.png';
 import LanguageSelector from '@/components/LanguageSelector';
+import DebugInfo from '@/components/DebugInfo';
 
 const emailSchema = z.string().email('Email invalide');
 const passwordSchema = z.string().min(6, 'Le mot de passe doit contenir au moins 6 caractères');
@@ -112,6 +113,9 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary via-primary to-primary/90 p-4">
+      {/* Debug Info */}
+      <DebugInfo />
+      
       {/* Language Selector - Fixed Position */}
       <div className="fixed top-4 right-4 z-50">
         <LanguageSelector />
