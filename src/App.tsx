@@ -12,6 +12,10 @@ import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
 import BookCall from "./pages/BookCall";
 import DashboardCloser from "./pages/DashboardCloser";
+import CalendarSettings from "./pages/CalendarSettings";
+import SlackSettings from "./pages/SlackSettings";
+import CloserLeads from "./pages/CloserLeads";
+import CloserProfile from "./pages/CloserProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -43,6 +47,38 @@ const App = () => (
               element={
                 <ProtectedRoute requireRole="closer">
                   <DashboardCloser />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard-closer/calendar" 
+              element={
+                <ProtectedRoute requireRole="closer">
+                  <CalendarSettings />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard-closer/slack" 
+              element={
+                <ProtectedRoute requireRole="closer">
+                  <SlackSettings />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard-closer/leads" 
+              element={
+                <ProtectedRoute requireRole="closer">
+                  <CloserLeads />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard-closer/profile" 
+              element={
+                <ProtectedRoute requireRole="closer">
+                  <CloserProfile />
                 </ProtectedRoute>
               } 
             />

@@ -11,6 +11,7 @@ import Results from '@/components/Results';
 import Testimonials from '@/components/Testimonials';
 import CTA from '@/components/CTA';
 import Footer from '@/components/Footer';
+import { ChatbotQualif } from '@/components/ChatbotQualif';
 
 const Index = () => {
   useEffect(() => {
@@ -36,6 +37,7 @@ const Index = () => {
           <CTA />
         </main>
         <Footer />
+        <ChatbotQualif />
       </div>
     </LanguageProvider>
   );
