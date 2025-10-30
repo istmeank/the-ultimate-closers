@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { UserRoleDebug } from "@/components/UserRoleDebug";
 import Index from "./pages/Index";
 import Legal from "./pages/Legal";
 import Auth from "./pages/Auth";
@@ -16,6 +17,7 @@ import CalendarSettings from "./pages/CalendarSettings";
 import SlackSettings from "./pages/SlackSettings";
 import CloserLeads from "./pages/CloserLeads";
 import CloserProfile from "./pages/CloserProfile";
+import AccessDenied from "./pages/AccessDenied";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +35,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/legal" element={<Legal />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/access-denied" element={<AccessDenied />} />
             <Route path="/reserver-appel" element={<BookCall />} />
             <Route 
               path="/admin" 
@@ -84,6 +87,7 @@ const App = () => (
             />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <UserRoleDebug />
         </BrowserRouter>
       </TooltipProvider>
     </LanguageProvider>

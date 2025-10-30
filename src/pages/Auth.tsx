@@ -16,22 +16,25 @@ const emailSchema = z.string().email('Email invalide');
 const passwordSchema = z.string().min(6, 'Le mot de passe doit contenir au moins 6 caractères');
 
 const Auth = () => {
-  const { user, isAdmin, loading, signInWithEmail, signUpWithEmail, signInWithGoogle } = useAuth();
+  const { user, isAdmin, isCloser, isOwner, loading, signInWithEmail, signUpWithEmail, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Redirection intelligente selon le rôle
   useEffect(() => {
     if (user && !loading) {
-      if (isAdmin) {
+      if (isAdmin || isOwner) {
         navigate('/admin');
+      } else if (isCloser) {
+        navigate('/dashboard-closer');
       } else {
         navigate('/');
       }
     }
-  }, [user, isAdmin, loading, navigate]);
+  }, [user, isAdmin, isOwner, isCloser, loading, navigate]);
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();

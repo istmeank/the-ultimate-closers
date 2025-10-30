@@ -28,11 +28,11 @@ export const ProtectedRoute = ({ children, requireAdmin = false, requireRole }: 
   }
 
   if (requireAdmin && !isAdmin) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/access-denied" replace />;
   }
 
   if (requireRole && role !== requireRole && !isAdmin) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/access-denied" replace />;
   }
 
   return <>{children}</>;
