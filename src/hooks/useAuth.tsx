@@ -8,6 +8,7 @@ export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [role, setRole] = useState<AppRole | null>(null);
+  const [userRoles, setUserRoles] = useState<AppRole[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isCloser, setIsCloser] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
@@ -55,28 +56,37 @@ export const useAuth = () => {
       const { data, error } = await supabase
         .from('user_roles')
         .select('role')
-        .eq('user_id', userId)
-        .maybeSingle();
+        .eq('user_id', userId);
       
       if (error) {
         console.error('Error checking user role:', error);
         // En cas d'erreur, définir le rôle par défaut 'user'
         setRole('user');
+        setUserRoles(['user']);
         setIsAdmin(false);
         setIsCloser(false);
         setIsOwner(false);
       } else {
-        // Toujours définir un rôle (par défaut 'user' si aucun rôle n'est trouvé)
-        const userRole = (data?.role as AppRole) || 'user';
-        setRole(userRole);
-        setIsAdmin(userRole === 'admin' || userRole === 'owner');
-        setIsCloser(userRole === 'closer');
-        setIsOwner(userRole === 'owner');
+        // Récupérer tous les rôles de l'utilisateur
+        const roles = data.map(r => r.role as AppRole);
+        const allRoles: AppRole[] = roles.length > 0 ? roles : ['user'];
+        
+        // Le rôle principal est le plus élevé dans la hiérarchie
+        const primaryRole = allRoles.includes('owner') ? 'owner' :
+                          allRoles.includes('admin') ? 'admin' :
+                          allRoles.includes('closer') ? 'closer' : 'user';
+        
+        setRole(primaryRole);
+        setUserRoles(allRoles);
+        setIsAdmin(allRoles.includes('admin') || allRoles.includes('owner'));
+        setIsCloser(allRoles.includes('closer'));
+        setIsOwner(allRoles.includes('owner'));
       }
     } catch (error) {
       console.error('Error checking user role:', error);
       // En cas d'exception, définir le rôle par défaut 'user'
       setRole('user');
+      setUserRoles(['user']);
       setIsAdmin(false);
       setIsCloser(false);
       setIsOwner(false);
@@ -114,6 +124,7 @@ export const useAuth = () => {
     user,
     session,
     role,
+    userRoles,
     isAdmin,
     isCloser,
     isOwner,

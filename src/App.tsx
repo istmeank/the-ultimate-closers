@@ -8,6 +8,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 
 import { CloserLayout } from "@/components/closer/CloserLayout";
+import { AdminLayoutWithSidebar } from "@/components/admin/AdminLayoutWithSidebar";
 import Index from "./pages/Index";
 import Legal from "./pages/Legal";
 import Auth from "./pages/Auth";
@@ -21,6 +22,12 @@ import CloserProfile from "./pages/CloserProfile";
 import CloserSettings from "./pages/CloserSettings";
 import AccessDenied from "./pages/AccessDenied";
 import NotFound from "./pages/NotFound";
+import { Dashboard } from "@/components/admin/Dashboard";
+import { ContentEditor } from "@/components/admin/ContentEditor";
+import { FormationsManager } from "@/components/admin/FormationsManager";
+import { UsersManager } from "@/components/admin/UsersManager";
+import { ClosersManager } from "@/components/admin/ClosersManager";
+import { Analytics } from "@/components/admin/Analytics";
 
 const queryClient = new QueryClient();
 
@@ -43,10 +50,17 @@ const App = () => (
               path="/admin" 
               element={
                 <ProtectedRoute requireAdmin>
-                  <Admin />
+                  <AdminLayoutWithSidebar />
                 </ProtectedRoute>
-              } 
-            />
+              }
+            >
+              <Route index element={<Dashboard />} />
+              <Route path="content" element={<ContentEditor />} />
+              <Route path="formations" element={<FormationsManager />} />
+              <Route path="users" element={<UsersManager />} />
+              <Route path="closers" element={<ClosersManager />} />
+              <Route path="analytics" element={<Analytics />} />
+            </Route>
             <Route 
               path="/dashboard-closer" 
               element={

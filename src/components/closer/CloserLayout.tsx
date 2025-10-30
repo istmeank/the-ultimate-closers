@@ -34,12 +34,16 @@ export const CloserLayout = ({ children }: CloserLayoutProps) => {
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-gradient-to-br from-primary/5 to-secondary/5">
-        {/* Header avec bouton de toggle */}
-        <header className="fixed top-0 left-0 right-0 h-14 flex items-center justify-between px-4 bg-background/80 backdrop-blur-sm border-b z-40">
+        {/* Header avec accent doré subtil */}
+        <header className="fixed top-0 left-0 right-0 h-14 flex items-center justify-between px-4 bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent backdrop-blur-sm border-b border-secondary/20 z-40">
           <div className="flex items-center gap-3">
             <SidebarTrigger />
-            <img src={logo} alt="Logo" className="w-8 h-8 object-contain" />
-            <h1 className="font-playfair text-xl font-bold text-primary">
+            <img 
+              src={logo} 
+              alt="Logo" 
+              className="w-8 h-8 object-contain hover:drop-shadow-[0_0_10px_hsl(44,73%,66%/0.6)] transition-all" 
+            />
+            <h1 className="font-playfair text-xl font-bold bg-gradient-to-r from-primary via-secondary/80 to-primary bg-clip-text text-transparent">
               Dashboard Closer
             </h1>
           </div>
@@ -50,9 +54,7 @@ export const CloserLayout = ({ children }: CloserLayoutProps) => {
             </span>
             <Button
               onClick={handleSignOut}
-              variant="ghost"
-              size="sm"
-              className="hover:text-primary"
+              className="bg-secondary text-primary hover:bg-secondary/90 hover:shadow-[0_0_20px_hsl(44,73%,66%/0.5)] transition-all duration-300"
             >
               <LogOut className="w-4 h-4 mr-2" />
               Déconnexion
@@ -114,9 +116,9 @@ const SidebarContent = () => {
               to={item.href}
               end={item.href === '/dashboard-closer'}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+                `flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300 ${
                   isActive
-                    ? 'bg-primary text-primary-foreground'
+                    ? 'bg-secondary/20 text-secondary border-l-4 border-secondary shadow-[0_0_15px_hsl(44,73%,66%/0.3)]'
                     : 'text-muted-foreground hover:text-primary hover:bg-primary/10'
                 }`
               }
