@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { Shield, ShieldOff, Search, UserCog, UserMinus } from 'lucide-react';
+import { CreateUserDialog } from './CreateUserDialog';
 import {
   Table,
   TableBody,
@@ -116,6 +117,7 @@ export const UsersManager = () => {
             Total: {users.length} utilisateurs
           </p>
         </div>
+        <CreateUserDialog onUserCreated={loadUsers} />
       </div>
 
       <Card className="bg-background/95 backdrop-blur-sm border-secondary/20 p-6">

@@ -1,6 +1,7 @@
 import { Outlet, useNavigate } from 'react-router-dom';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { UnifiedSidebar } from '@/components/shared/UnifiedSidebar';
+import { RoleSwitcher } from '@/components/shared/RoleSwitcher';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
@@ -36,6 +37,7 @@ export const AdminLayoutWithSidebar = () => {
             <span className="text-sm text-background/90 font-inter">
               {user?.email}
             </span>
+            <RoleSwitcher />
             <Button
               onClick={handleSignOut}
               className="bg-secondary text-primary hover:bg-secondary/90 hover:shadow-[0_0_20px_hsl(44,73%,66%/0.5)] transition-all duration-300"

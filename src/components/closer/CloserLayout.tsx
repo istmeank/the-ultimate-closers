@@ -15,6 +15,7 @@ import {
   LogOut
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { RoleSwitcher } from '@/components/shared/RoleSwitcher';
 import { Button } from '@/components/ui/button';
 import logo from '@/assets/logo.png';
 
@@ -52,6 +53,7 @@ export const CloserLayout = ({ children }: CloserLayoutProps) => {
             <span className="text-sm text-muted-foreground font-inter">
               {user?.email}
             </span>
+            <RoleSwitcher />
             <Button
               onClick={handleSignOut}
               className="bg-secondary text-primary hover:bg-secondary/90 hover:shadow-[0_0_20px_hsl(44,73%,66%/0.5)] transition-all duration-300"
