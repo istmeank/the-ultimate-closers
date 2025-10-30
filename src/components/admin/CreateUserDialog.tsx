@@ -49,45 +49,28 @@ export const CreateUserDialog = ({ onUserCreated }: { onUserCreated: () => void 
         return;
       }
 
-      // Récupérer le token d'authentification
+      // Récupérer le token d'authentification (vérifier que la session est valide)
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        toast({
-          title: 'Erreur',
-          description: 'Session expirée',
-          variant: 'destructive',
-        });
+        toast({ title: 'Erreur', description: 'Session expirée', variant: 'destructive' });
         return;
       }
 
-      // Appeler l'edge function
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-user`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email,
-            password,
-            fullName,
-            roles: roles.length > 0 ? roles : ['user'],
-          }),
-        }
-      );
+      // Appeler la fonction Edge via le SDK (meilleure pratique)
+      const { data, error } = await supabase.functions.invoke('create-user', {
+        body: {
+          email,
+          password,
+          fullName,
+          roles: roles.length > 0 ? roles : ['user'],
+        },
+      });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Erreur lors de la création de l\'utilisateur');
+      if (error) {
+        throw new Error((error as any).message || 'Erreur lors de la création de l\'utilisateur');
       }
 
-      toast({
-        title: 'Succès',
-        description: `Utilisateur ${email} créé avec succès`,
-      });
+      toast({ title: 'Succès', description: `Utilisateur ${email} créé avec succès` });
 
       // Réinitialiser le formulaire
       setEmail('');
