@@ -60,15 +60,14 @@ export const useAuth = () => {
       
       if (error) {
         console.error('Error checking user role:', error);
-        // En cas d'erreur, assigner le rôle 'user' par défaut
-        const defaultRole: AppRole = 'user';
-        setRole(defaultRole);
+        // En cas d'erreur, définir le rôle par défaut 'user'
+        setRole('user');
         setIsAdmin(false);
         setIsCloser(false);
         setIsOwner(false);
       } else {
-        // Garantir qu'on a toujours un rôle défini (minimum 'user')
-        const userRole: AppRole = (data?.role as AppRole) || 'user';
+        // Toujours définir un rôle (par défaut 'user' si aucun rôle n'est trouvé)
+        const userRole = (data?.role as AppRole) || 'user';
         setRole(userRole);
         setIsAdmin(userRole === 'admin' || userRole === 'owner');
         setIsCloser(userRole === 'closer');
@@ -76,7 +75,8 @@ export const useAuth = () => {
       }
     } catch (error) {
       console.error('Error checking user role:', error);
-      setRole(null);
+      // En cas d'exception, définir le rôle par défaut 'user'
+      setRole('user');
       setIsAdmin(false);
       setIsCloser(false);
       setIsOwner(false);

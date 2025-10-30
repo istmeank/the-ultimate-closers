@@ -1,6 +1,10 @@
 import { ReactNode } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import { Sidebar, SidebarProvider, SidebarTrigger, SidebarContent, useSidebar } from '@/components/ui/sidebar';
+import { NavLink } from 'react-router-dom';
+import { 
+  Sidebar, 
+  SidebarProvider, 
+  SidebarTrigger
+} from '@/components/ui/sidebar';
 import { 
   LayoutDashboard, 
   Users, 
@@ -14,10 +18,29 @@ interface CloserLayoutProps {
   children: ReactNode;
 }
 
-const SidebarNav = () => {
-  const { open: collapsed } = useSidebar();
-  const location = useLocation();
+export const CloserLayout = ({ children }: CloserLayoutProps) => {
+  return (
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full bg-gradient-to-br from-primary/5 to-secondary/5">
+        {/* Header avec bouton de toggle */}
+        <header className="fixed top-0 left-0 right-0 h-14 flex items-center px-4 bg-background/80 backdrop-blur-sm border-b z-40">
+          <SidebarTrigger className="mr-4" />
+          <h1 className="font-playfair text-xl font-bold text-primary">
+            Dashboard Closer
+          </h1>
+        </header>
 
+        <SidebarContent />
+        
+        <main className="flex-1 pt-14 p-8">
+          {children}
+        </main>
+      </div>
+    </SidebarProvider>
+  );
+};
+
+const SidebarContent = () => {
   const sidebarItems = [
     {
       icon: LayoutDashboard,
@@ -52,14 +75,8 @@ const SidebarNav = () => {
   ];
 
   return (
-    <SidebarContent>
-      <div className="p-4">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="font-playfair text-xl font-bold text-primary">
-            {!collapsed && 'Dashboard Closer'}
-          </h2>
-          <SidebarTrigger />
-        </div>
+    <Sidebar collapsible="icon">
+      <div className="p-4 pt-20">
         <nav className="space-y-2">
           {sidebarItems.map((item) => (
             <NavLink
@@ -75,28 +92,11 @@ const SidebarNav = () => {
               }
             >
               <item.icon className="w-4 h-4 flex-shrink-0" />
-              {!collapsed && <span className="font-medium">{item.label}</span>}
+              <span className="font-medium">{item.label}</span>
             </NavLink>
           ))}
         </nav>
       </div>
-    </SidebarContent>
-  );
-};
-
-export const CloserLayout = ({ children }: CloserLayoutProps) => {
-
-  return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-gradient-to-br from-primary/5 to-secondary/5">
-        <Sidebar collapsible="icon">
-          <SidebarNav />
-        </Sidebar>
-        
-        <main className="flex-1 p-8">
-          {children}
-        </main>
-      </div>
-    </SidebarProvider>
+    </Sidebar>
   );
 };
