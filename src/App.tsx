@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { LanguageProvider } from "@/contexts/LanguageContext";
-import { UserRoleDebug } from "@/components/UserRoleDebug";
+
 import { CloserLayout } from "@/components/closer/CloserLayout";
 import Index from "./pages/Index";
 import Legal from "./pages/Legal";
@@ -64,7 +64,6 @@ const App = () => (
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
-          <UserRoleDebug />
         </BrowserRouter>
       </TooltipProvider>
     </LanguageProvider>

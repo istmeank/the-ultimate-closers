@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { 
   Sidebar, 
   SidebarProvider, 
@@ -11,23 +11,53 @@ import {
   Calendar, 
   MessageSquare, 
   User,
-  Settings
+  Settings,
+  LogOut
 } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { Button } from '@/components/ui/button';
+import logo from '@/assets/logo.png';
 
 interface CloserLayoutProps {
   children?: ReactNode;
 }
 
 export const CloserLayout = ({ children }: CloserLayoutProps) => {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/auth');
+  };
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-gradient-to-br from-primary/5 to-secondary/5">
         {/* Header avec bouton de toggle */}
-        <header className="fixed top-0 left-0 right-0 h-14 flex items-center px-4 bg-background/80 backdrop-blur-sm border-b z-40">
-          <SidebarTrigger className="mr-4" />
-          <h1 className="font-playfair text-xl font-bold text-primary">
-            Dashboard Closer
-          </h1>
+        <header className="fixed top-0 left-0 right-0 h-14 flex items-center justify-between px-4 bg-background/80 backdrop-blur-sm border-b z-40">
+          <div className="flex items-center gap-3">
+            <SidebarTrigger />
+            <img src={logo} alt="Logo" className="w-8 h-8 object-contain" />
+            <h1 className="font-playfair text-xl font-bold text-primary">
+              Dashboard Closer
+            </h1>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-muted-foreground font-inter">
+              {user?.email}
+            </span>
+            <Button
+              onClick={handleSignOut}
+              variant="ghost"
+              size="sm"
+              className="hover:text-primary"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Déconnexion
+            </Button>
+          </div>
         </header>
 
         <SidebarContent />

@@ -93,17 +93,6 @@ export const useAuth = () => {
     return { error };
   };
 
-  const signUpWithEmail = async (email: string, password: string) => {
-    const redirectUrl = `${window.location.origin}/`;
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: redirectUrl,
-      },
-    });
-    return { error };
-  };
 
   const signInWithGoogle = async () => {
     const redirectUrl = `${window.location.origin}/`;
@@ -130,7 +119,6 @@ export const useAuth = () => {
     isOwner,
     loading,
     signInWithEmail,
-    signUpWithEmail,
     signInWithGoogle,
     signOut,
   };

@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { Shield, ShieldOff, Search } from 'lucide-react';
+import { Shield, ShieldOff, Search, UserCog, UserMinus } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -58,31 +58,31 @@ export const UsersManager = () => {
     }
   };
 
-  const toggleAdmin = async (userId: string, isAdmin: boolean) => {
+  const toggleRole = async (userId: string, role: 'admin' | 'closer', hasRole: boolean) => {
     try {
-      if (isAdmin) {
-        // Remove admin role
+      if (hasRole) {
+        // Remove role
         const { error } = await supabase
           .from('user_roles')
           .delete()
           .eq('user_id', userId)
-          .eq('role', 'admin');
+          .eq('role', role);
 
         if (error) throw error;
       } else {
-        // Add admin role
+        // Add role
         const { error } = await supabase
           .from('user_roles')
-          .insert({ user_id: userId, role: 'admin' });
+          .insert({ user_id: userId, role });
 
         if (error) throw error;
       }
 
       toast({
         title: 'Succès',
-        description: isAdmin
-          ? 'Rôle admin retiré'
-          : 'Rôle admin attribué',
+        description: hasRole
+          ? `Rôle ${role} retiré`
+          : `Rôle ${role} attribué`,
       });
       
       loadUsers();
@@ -136,7 +136,7 @@ export const UsersManager = () => {
             <TableRow>
               <TableHead>Email</TableHead>
               <TableHead>Nom</TableHead>
-              <TableHead>Rôle</TableHead>
+              <TableHead>Rôles</TableHead>
               <TableHead>Date d'inscription</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -150,39 +150,83 @@ export const UsersManager = () => {
               </TableRow>
             ) : (
               filteredUsers.map((user) => {
+                const isOwner = user.roles.includes('owner');
                 const isAdmin = user.roles.includes('admin');
+                const isCloser = user.roles.includes('closer');
+                const isUser = user.roles.includes('user');
+                
                 return (
                   <TableRow key={user.id}>
                     <TableCell className="font-mono text-sm">{user.email}</TableCell>
                     <TableCell>{user.full_name || '-'}</TableCell>
                     <TableCell>
-                      {isAdmin ? (
-                        <Badge className="bg-secondary text-primary">Admin</Badge>
-                      ) : (
-                        <Badge variant="outline">User</Badge>
-                      )}
+                      <div className="flex flex-wrap gap-1">
+                        {isOwner && (
+                          <Badge className="bg-purple-500 text-white">Owner</Badge>
+                        )}
+                        {isAdmin && (
+                          <Badge className="bg-secondary text-primary">Admin</Badge>
+                        )}
+                        {isCloser && (
+                          <Badge className="bg-blue-500 text-white">Closer</Badge>
+                        )}
+                        {isUser && (
+                          <Badge variant="outline">User</Badge>
+                        )}
+                        {user.roles.length === 0 && (
+                          <Badge variant="secondary">Aucun rôle</Badge>
+                        )}
+                      </div>
                     </TableCell>
                     <TableCell>
                       {new Date(user.created_at).toLocaleDateString('fr-FR')}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        onClick={() => toggleAdmin(user.id, isAdmin)}
-                        variant={isAdmin ? 'destructive' : 'outline'}
-                        size="sm"
-                      >
-                        {isAdmin ? (
+                      <div className="flex gap-2 justify-end">
+                        {!isOwner && (
                           <>
-                            <ShieldOff className="w-4 h-4 mr-2" />
-                            Retirer admin
-                          </>
-                        ) : (
-                          <>
-                            <Shield className="w-4 h-4 mr-2" />
-                            Promouvoir admin
+                            <Button
+                              onClick={() => toggleRole(user.id, 'admin', isAdmin)}
+                              variant={isAdmin ? 'destructive' : 'outline'}
+                              size="sm"
+                            >
+                              {isAdmin ? (
+                                <>
+                                  <ShieldOff className="w-4 h-4 mr-1" />
+                                  Retirer admin
+                                </>
+                              ) : (
+                                <>
+                                  <Shield className="w-4 h-4 mr-1" />
+                                  Promouvoir admin
+                                </>
+                              )}
+                            </Button>
+                            <Button
+                              onClick={() => toggleRole(user.id, 'closer', isCloser)}
+                              variant={isCloser ? 'destructive' : 'outline'}
+                              size="sm"
+                            >
+                              {isCloser ? (
+                                <>
+                                  <UserMinus className="w-4 h-4 mr-1" />
+                                  Retirer closer
+                                </>
+                              ) : (
+                                <>
+                                  <UserCog className="w-4 h-4 mr-1" />
+                                  Promouvoir closer
+                                </>
+                              )}
+                            </Button>
                           </>
                         )}
-                      </Button>
+                        {isOwner && (
+                          <Badge variant="secondary" className="text-xs">
+                            Protégé
+                          </Badge>
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 );
