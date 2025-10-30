@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { UserRoleDebug } from "@/components/UserRoleDebug";
+import { CloserLayout } from "@/components/closer/CloserLayout";
 import Index from "./pages/Index";
 import Legal from "./pages/Legal";
 import Auth from "./pages/Auth";
@@ -17,6 +18,7 @@ import CalendarSettings from "./pages/CalendarSettings";
 import SlackSettings from "./pages/SlackSettings";
 import CloserLeads from "./pages/CloserLeads";
 import CloserProfile from "./pages/CloserProfile";
+import CloserSettings from "./pages/CloserSettings";
 import AccessDenied from "./pages/AccessDenied";
 import NotFound from "./pages/NotFound";
 
@@ -49,42 +51,17 @@ const App = () => (
               path="/dashboard-closer" 
               element={
                 <ProtectedRoute requireRole="closer">
-                  <DashboardCloser />
+                  <CloserLayout />
                 </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/dashboard-closer/calendar" 
-              element={
-                <ProtectedRoute requireRole="closer">
-                  <CalendarSettings />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/dashboard-closer/slack" 
-              element={
-                <ProtectedRoute requireRole="closer">
-                  <SlackSettings />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/dashboard-closer/leads" 
-              element={
-                <ProtectedRoute requireRole="closer">
-                  <CloserLeads />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/dashboard-closer/profile" 
-              element={
-                <ProtectedRoute requireRole="closer">
-                  <CloserProfile />
-                </ProtectedRoute>
-              } 
-            />
+              }
+            >
+              <Route index element={<DashboardCloser />} />
+              <Route path="calendar" element={<CalendarSettings />} />
+              <Route path="slack" element={<SlackSettings />} />
+              <Route path="leads" element={<CloserLeads />} />
+              <Route path="profile" element={<CloserProfile />} />
+              <Route path="settings" element={<CloserSettings />} />
+            </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
           <UserRoleDebug />

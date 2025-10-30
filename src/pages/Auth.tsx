@@ -22,11 +22,11 @@ const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
 
-  // Redirection intelligente selon le rôle - attendre que le rôle soit vérifié
+  // Redirection uniquement après action de connexion explicite
   useEffect(() => {
-    // Attendre que loading soit terminé ET que le rôle soit défini
-    if (user && !loading && role !== null) {
+    if (shouldRedirect && user && !loading && role !== null) {
       if (isAdmin || isOwner) {
         navigate('/admin');
       } else if (isCloser) {
@@ -35,11 +35,12 @@ const Auth = () => {
         navigate('/');
       }
     }
-  }, [user, role, isAdmin, isOwner, isCloser, loading, navigate]);
+  }, [shouldRedirect, user, role, isAdmin, isOwner, isCloser, loading, navigate]);
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setShouldRedirect(true);
 
     try {
       emailSchema.parse(email);
@@ -47,6 +48,7 @@ const Auth = () => {
 
       const { error } = await signInWithEmail(email, password);
       if (error) {
+        setShouldRedirect(false);
         toast({
           title: 'Erreur de connexion',
           description: error.message === 'Invalid login credentials' 
@@ -56,6 +58,7 @@ const Auth = () => {
         });
       }
     } catch (err) {
+      setShouldRedirect(false);
       if (err instanceof z.ZodError) {
         toast({
           title: 'Erreur de validation',
@@ -105,8 +108,10 @@ const Auth = () => {
   };
 
   const handleGoogleSignIn = async () => {
+    setShouldRedirect(true);
     const { error } = await signInWithGoogle();
     if (error) {
+      setShouldRedirect(false);
       toast({
         title: 'Erreur de connexion',
         description: error.message,

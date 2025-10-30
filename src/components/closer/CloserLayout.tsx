@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 import { 
   Sidebar, 
   SidebarProvider, 
@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 interface CloserLayoutProps {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 export const CloserLayout = ({ children }: CloserLayoutProps) => {
@@ -33,7 +33,7 @@ export const CloserLayout = ({ children }: CloserLayoutProps) => {
         <SidebarContent />
         
         <main className="flex-1 pt-14 p-8">
-          {children}
+          {children || <Outlet />}
         </main>
       </div>
     </SidebarProvider>
