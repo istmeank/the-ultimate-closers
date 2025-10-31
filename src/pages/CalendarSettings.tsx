@@ -1,22 +1,136 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { Calendar, CheckCircle, XCircle } from 'lucide-react';
+import { Calendar, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function CalendarSettings() {
   const [isConnected, setIsConnected] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
   
-  const handleConnect = () => {
-    // TODO: Rediriger vers OAuth Google
-    toast.info('Connexion Google Calendar à implémenter');
-    // window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?...`;
+  useEffect(() => {
+    checkConnection();
+    
+    // Handle OAuth callback
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const state = params.get('state');
+    
+    if (code && state) {
+      handleCallback(code, state);
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, []);
+  
+  const checkConnection = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      
+      const { data, error } = await supabase
+        .from('closer_integrations')
+        .select('*')
+        .eq('closer_id', user.id)
+        .eq('integration_type', 'google_calendar')
+        .eq('is_active', true)
+        .single();
+      
+      if (!error && data) {
+        setIsConnected(true);
+      }
+    } catch (error) {
+      console.error('Error checking connection:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
   
-  const handleDisconnect = () => {
-    setIsConnected(false);
-    toast.success('Google Calendar déconnecté');
+  const handleConnect = async () => {
+    try {
+      setIsProcessing(true);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast.error('Vous devez être connecté');
+        return;
+      }
+
+      const { data, error } = await supabase.functions.invoke('google-calendar-auth/initiate', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`
+        }
+      });
+
+      if (error) throw error;
+      
+      if (data?.authUrl) {
+        window.location.href = data.authUrl;
+      }
+    } catch (error) {
+      console.error('Error connecting:', error);
+      toast.error('Erreur lors de la connexion à Google Calendar');
+    } finally {
+      setIsProcessing(false);
+    }
   };
+  
+  const handleCallback = async (code: string, state: string) => {
+    try {
+      setIsProcessing(true);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const { error } = await supabase.functions.invoke('google-calendar-auth/callback', {
+        body: { code, state },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`
+        }
+      });
+
+      if (error) throw error;
+      
+      setIsConnected(true);
+      toast.success('Google Calendar connecté avec succès');
+    } catch (error) {
+      console.error('Error handling callback:', error);
+      toast.error('Erreur lors de la connexion');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+  
+  const handleDisconnect = async () => {
+    try {
+      setIsProcessing(true);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const { error } = await supabase.functions.invoke('google-calendar-auth/disconnect', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`
+        }
+      });
+
+      if (error) throw error;
+      
+      setIsConnected(false);
+      toast.success('Google Calendar déconnecté');
+    } catch (error) {
+      console.error('Error disconnecting:', error);
+      toast.error('Erreur lors de la déconnexion');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+  
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center p-12">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
   
   return (
     <div className="space-y-6 p-6">
@@ -60,8 +174,16 @@ export default function CalendarSettings() {
                 onClick={handleDisconnect} 
                 variant="outline"
                 className="w-full"
+                disabled={isProcessing}
               >
-                Déconnecter
+                {isProcessing ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Déconnexion...
+                  </>
+                ) : (
+                  'Déconnecter'
+                )}
               </Button>
             </>
           ) : (
@@ -79,8 +201,16 @@ export default function CalendarSettings() {
               <Button 
                 onClick={handleConnect} 
                 className="w-full"
+                disabled={isProcessing}
               >
-                Connecter Google Calendar
+                {isProcessing ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Connexion...
+                  </>
+                ) : (
+                  'Connecter Google Calendar'
+                )}
               </Button>
             </>
           )}
