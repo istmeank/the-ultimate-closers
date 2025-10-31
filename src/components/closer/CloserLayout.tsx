@@ -13,7 +13,8 @@ import {
   User,
   Settings,
   LogOut,
-  Home
+  Home,
+  Building2
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { RoleSwitcher } from '@/components/shared/RoleSwitcher';
@@ -110,6 +111,11 @@ const SidebarContent = () => {
       icon: Calendar,
       label: t('closer.nav.calendar'),
       href: '/dashboard-closer/calendar'
+    },
+    {
+      icon: Building2,
+      label: 'HubSpot CRM',
+      href: '/dashboard-closer/hubspot'
     },
     {
       icon: MessageSquare,
