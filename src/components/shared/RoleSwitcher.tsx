@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { UserCog, Check } from 'lucide-react';
 
-type AppRole = 'admin' | 'closer' | 'owner' | 'client' | 'user';
+type AppRole = 'admin' | 'closer' | 'owner' | 'client' | 'user' | 'developer';
 
 export const RoleSwitcher = () => {
   const { userRoles } = useAuth();
@@ -42,6 +42,8 @@ export const RoleSwitcher = () => {
       navigate('/admin');
     } else if (role === 'closer') {
       navigate('/dashboard-closer');
+    } else if (role === 'developer') {
+      navigate('/dashboard-closer/hubspot');
     }
   };
 
@@ -50,6 +52,7 @@ export const RoleSwitcher = () => {
       owner: 'Owner',
       admin: 'Admin',
       closer: 'Closer',
+      developer: 'Développeur',
       user: 'User',
       client: 'Client',
     };
@@ -61,6 +64,7 @@ export const RoleSwitcher = () => {
       owner: 'bg-purple-500/20 text-purple-300 border-purple-500/50',
       admin: 'bg-secondary/20 text-secondary border-secondary/50',
       closer: 'bg-blue-500/20 text-blue-300 border-blue-500/50',
+      developer: 'bg-orange-500/20 text-orange-300 border-orange-500/50',
       user: 'bg-gray-500/20 text-gray-300 border-gray-500/50',
     };
     return classes[role] || 'bg-gray-500/20 text-gray-300 border-gray-500/50';

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
 
-type AppRole = 'admin' | 'closer' | 'owner' | 'client' | 'user';
+type AppRole = 'admin' | 'closer' | 'owner' | 'client' | 'user' | 'developer';
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -12,6 +12,7 @@ export const useAuth = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isCloser, setIsCloser] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
+  const [isDeveloper, setIsDeveloper] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -67,20 +68,29 @@ export const useAuth = () => {
         setIsCloser(false);
         setIsOwner(false);
       } else {
-        // Récupérer tous les rôles de l'utilisateur
-        const roles = data.map(r => r.role as AppRole);
-        const allRoles: AppRole[] = roles.length > 0 ? roles : ['user'];
-        
-        // Le rôle principal est le plus élevé dans la hiérarchie
-        const primaryRole = allRoles.includes('owner') ? 'owner' :
-                          allRoles.includes('admin') ? 'admin' :
-                          allRoles.includes('closer') ? 'closer' : 'user';
-        
-        setRole(primaryRole);
-        setUserRoles(allRoles);
-        setIsAdmin(allRoles.includes('admin') || allRoles.includes('owner'));
-        setIsCloser(allRoles.includes('closer'));
-        setIsOwner(allRoles.includes('owner'));
+      // Récupérer tous les rôles de l'utilisateur
+      const roles = data.map(r => r.role as AppRole);
+      const allRoles: AppRole[] = roles.length > 0 ? roles : ['user'];
+      
+      // Determine primary role based on hierarchy: owner > admin > developer > closer > user
+      let primaryRole: AppRole = 'user';
+      
+      if (roles.includes('owner')) {
+        primaryRole = 'owner';
+      } else if (roles.includes('admin')) {
+        primaryRole = 'admin';
+      } else if (roles.includes('developer')) {
+        primaryRole = 'developer';
+      } else if (roles.includes('closer')) {
+        primaryRole = 'closer';
+      }
+
+      setRole(primaryRole);
+      setUserRoles(allRoles);
+      setIsAdmin(allRoles.includes('admin'));
+      setIsCloser(allRoles.includes('closer'));
+      setIsOwner(allRoles.includes('owner'));
+      setIsDeveloper(allRoles.includes('developer'));
       }
     } catch (error) {
       console.error('Error checking user role:', error);
@@ -90,6 +100,7 @@ export const useAuth = () => {
       setIsAdmin(false);
       setIsCloser(false);
       setIsOwner(false);
+      setIsDeveloper(false);
     } finally {
       setLoading(false);
     }
@@ -128,6 +139,7 @@ export const useAuth = () => {
     isAdmin,
     isCloser,
     isOwner,
+    isDeveloper,
     loading,
     signInWithEmail,
     signInWithGoogle,

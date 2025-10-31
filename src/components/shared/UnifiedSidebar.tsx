@@ -10,13 +10,14 @@ import {
   FileEdit,
   GraduationCap,
   BarChart3,
-  Target
+  Target,
+  Share2
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { LucideIcon } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
-type AppRole = 'admin' | 'closer' | 'owner' | 'client' | 'user';
+type AppRole = 'admin' | 'closer' | 'owner' | 'client' | 'user' | 'developer';
 
 interface SidebarItem {
   icon: LucideIcon;
@@ -104,6 +105,12 @@ const sidebarItems: ExtendedSidebarItem[] = [
     label: 'Paramètres',
     href: '/dashboard-closer/settings',
     roles: ['closer', 'admin', 'owner']
+  },
+  {
+    icon: Share2,
+    label: 'HubSpot',
+    href: '/dashboard-closer/hubspot',
+    roles: ['closer', 'admin', 'owner', 'developer']
   }
 ];
 
@@ -123,7 +130,8 @@ export const UnifiedSidebar = () => {
     { icon: Calendar, label: t('closer.nav.calendar'), href: '/dashboard-closer/calendar', roles: ['closer', 'admin', 'owner'] },
     { icon: MessageSquare, label: t('closer.nav.slack'), href: '/dashboard-closer/slack', roles: ['closer', 'admin', 'owner'] },
     { icon: User, label: t('closer.nav.profile'), href: '/dashboard-closer/profile', roles: ['closer', 'admin', 'owner'] },
-    { icon: Settings, label: t('closer.nav.settings'), href: '/dashboard-closer/settings', roles: ['closer', 'admin', 'owner'] }
+    { icon: Settings, label: t('closer.nav.settings'), href: '/dashboard-closer/settings', roles: ['closer', 'admin', 'owner'] },
+    { icon: Share2, label: 'HubSpot', href: '/dashboard-closer/hubspot', roles: ['closer', 'admin', 'owner', 'developer'] }
   ];
 
   const visibleItems = sidebarItemsWithLabels.filter(item => 
