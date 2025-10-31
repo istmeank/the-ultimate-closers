@@ -69,48 +69,73 @@ serve(async (req) => {
       );
     }
     
-    // Créer l'utilisateur
+    // Créer l'utilisateur (idempotent)
+    let userId: string | null = null;
+    let existed = false;
     const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
       email,
       password,
       email_confirm: true,
       user_metadata: { full_name: fullName || '' }
     });
-    
+
     if (createError) {
-      return new Response(
-        JSON.stringify({ error: `Erreur lors de la création: ${createError.message}` }), 
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-    
-    // Créer le profil
-    await supabaseAdmin.from('profiles').insert({
-      id: newUser.user.id,
-      email: email,
-      full_name: fullName || ''
-    });
-    
-    // Assigner les rôles
-    if (selectedRoles && Array.isArray(selectedRoles)) {
-      for (const role of selectedRoles) {
-        if (['admin', 'closer', 'user'].includes(role)) {
-          await supabaseAdmin.from('user_roles').insert({
-            user_id: newUser.user.id,
-            role: role
-          });
+      const msg = createError.message?.toLowerCase() || '';
+      const already = msg.includes('already been registered') || msg.includes('already registered') || msg.includes('user already') || msg.includes('exists');
+      if (!already) {
+        return new Response(
+          JSON.stringify({ error: `Erreur lors de la création: ${createError.message}` }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      existed = true;
+      // Chercher l'utilisateur existant par le profil
+      const { data: existingProfile } = await supabaseAdmin
+        .from('profiles')
+        .select('id')
+        .eq('email', email)
+        .maybeSingle();
+
+      if (existingProfile?.id) {
+        userId = existingProfile.id;
+      } else {
+        // Fallback: parcourir la liste des utilisateurs Auth
+        const { data: usersList } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+        const found = usersList?.users?.find((u: any) => (u.email || '').toLowerCase() === email.toLowerCase());
+        if (!found) {
+          return new Response(
+            JSON.stringify({ error: 'Utilisateur déjà existant mais introuvable' }),
+            { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
         }
+        userId = found.id;
       }
     } else {
-      // Rôle par défaut: user
-      await supabaseAdmin.from('user_roles').insert({
-        user_id: newUser.user.id,
-        role: 'user'
-      });
+      userId = newUser.user.id;
+    }
+
+    // Assurer le profil (upsert)
+    await supabaseAdmin.from('profiles').upsert(
+      { id: userId, email, full_name: fullName || '' },
+      { onConflict: 'id' }
+    );
+
+    // Assigner les rôles (upsert pour éviter les doublons)
+    const rolesToAssign = (selectedRoles && Array.isArray(selectedRoles) && selectedRoles.length > 0)
+      ? selectedRoles
+      : ['user'];
+    const validRoles = ['admin', 'closer', 'user'];
+    const roleRows = rolesToAssign
+      .filter((r: string) => validRoles.includes(r))
+      .map((r: string) => ({ user_id: userId as string, role: r }));
+
+    if (roleRows.length > 0) {
+      await supabaseAdmin.from('user_roles').upsert(roleRows, { onConflict: 'user_id,role' });
     }
     
+    const responseUser = existed ? { id: userId, email, full_name: fullName || null, existed: true } : newUser.user;
     return new Response(
-      JSON.stringify({ success: true, user: newUser.user }), 
+      JSON.stringify({ success: true, user: responseUser, existed }), 
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (err) {
