@@ -259,7 +259,15 @@ export default function HubSpotSettings() {
               )}
             </div>
             <p className="text-sm text-muted-foreground">
-              Vous pouvez créer une clé API dans HubSpot : Settings → Integrations → Private Apps
+              <strong>Comment obtenir votre clé API :</strong>
+              <br />
+              1. Allez dans HubSpot → Settings → Integrations → Private Apps
+              <br />
+              2. Créez une nouvelle Private App
+              <br />
+              3. Activez le scope : <code className="bg-muted px-1 rounded">crm.objects.contacts.write</code>
+              <br />
+              4. Copiez le token (format : pat-na1-xxxxx...)
             </p>
           </div>
 

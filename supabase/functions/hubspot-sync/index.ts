@@ -186,14 +186,24 @@ Deno.serve(async (req) => {
         throw new Error('API key required for testing');
       }
 
-      const response = await fetch('https://api.hubapi.com/crm/v3/properties/contacts', {
+      const response = await fetch('https://api.hubapi.com/crm/v3/objects/contacts?limit=1', {
         headers: {
           'Authorization': `Bearer ${providedApiKey}`,
+          'Content-Type': 'application/json',
         },
       });
 
       if (!response.ok) {
-        throw new Error('Invalid API key or insufficient permissions');
+        const errorText = await response.text();
+        console.error('HubSpot API error:', response.status, errorText);
+        
+        if (response.status === 401) {
+          throw new Error('Clé API invalide. Vérifiez que vous avez copié la clé complète depuis HubSpot.');
+        } else if (response.status === 403) {
+          throw new Error('Permissions insuffisantes. Votre clé API doit avoir le scope "crm.objects.contacts.read".');
+        } else {
+          throw new Error(`Erreur HubSpot (${response.status}): ${errorText}`);
+        }
       }
 
       return new Response(
