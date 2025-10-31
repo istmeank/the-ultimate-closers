@@ -1,6 +1,6 @@
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Shield, FileText, Cookie, Lock } from 'lucide-react';
+import { ArrowLeft, Shield, FileText, Cookie, Lock, ScrollText } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import LanguageSelector from '@/components/LanguageSelector';
@@ -60,7 +60,11 @@ const Legal = () => {
               <FileText className="w-5 h-5" />
               Navigation rapide
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <a href="#cgu" className="flex items-center gap-2 p-3 rounded-lg hover:bg-primary/5 transition-colors">
+                <ScrollText className="w-4 h-4 text-primary" />
+                <span>Conditions d'utilisation</span>
+              </a>
               <a href="#confidentialite" className="flex items-center gap-2 p-3 rounded-lg hover:bg-primary/5 transition-colors">
                 <Shield className="w-4 h-4 text-primary" />
                 <span>Politique de confidentialité</span>
@@ -76,7 +80,203 @@ const Legal = () => {
             </div>
           </div>
 
-          {/* 1. Politique de confidentialité */}
+          {/* 1. Conditions Générales d'Utilisation */}
+          <div id="cgu" className="bg-background rounded-lg border p-6 mb-8">
+            <h2 className="flex items-center gap-2 text-2xl font-semibold mb-6">
+              <ScrollText className="w-6 h-6 text-primary" />
+              Conditions Générales d'Utilisation (CGU)
+            </h2>
+            
+            <div className="space-y-6">
+              <div>
+                <h3 className="font-semibold text-lg mb-3">1. Objet</h3>
+                <p className="text-muted-foreground">
+                  Les présentes Conditions Générales d'Utilisation (CGU) régissent l'accès et l'utilisation du site web 
+                  <strong> The Ultimate Closers</strong> ainsi que de tous les services proposés. En accédant au site, 
+                  vous acceptez sans réserve les présentes CGU.
+                </p>
+              </div>
+
+              <hr className="border-gray-200" />
+
+              <div>
+                <h3 className="font-semibold text-lg mb-3">2. Accès aux services</h3>
+                <p className="text-muted-foreground mb-3">
+                  L'accès au site est gratuit pour la consultation des contenus publics. Certains services (formations, 
+                  accompagnements personnalisés, outils IA avancés) peuvent nécessiter :
+                </p>
+                <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                  <li>Une inscription avec création de compte</li>
+                  <li>Un paiement préalable selon les tarifs en vigueur</li>
+                  <li>Une validation de votre demande par nos équipes</li>
+                </ul>
+                <p className="text-muted-foreground mt-3">
+                  Nous nous réservons le droit de refuser l'accès à tout utilisateur ne respectant pas les présentes CGU 
+                  ou présentant un comportement inapproprié.
+                </p>
+              </div>
+
+              <hr className="border-gray-200" />
+
+              <div>
+                <h3 className="font-semibold text-lg mb-3">3. Obligations de l'utilisateur</h3>
+                <p className="text-muted-foreground mb-3">
+                  En utilisant nos services, vous vous engagez à :
+                </p>
+                <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                  <li>Fournir des informations exactes et à jour lors de votre inscription</li>
+                  <li>Ne pas partager vos identifiants de connexion avec des tiers</li>
+                  <li>Respecter la propriété intellectuelle de The Ultimate Closers</li>
+                  <li>Ne pas utiliser les outils à des fins illégales ou frauduleuses</li>
+                  <li>Ne pas tenter de contourner les mesures de sécurité du site</li>
+                  <li>Ne pas diffuser de contenus inappropriés, diffamatoires ou offensants</li>
+                  <li>Utiliser les outils IA de manière éthique et professionnelle</li>
+                </ul>
+              </div>
+
+              <hr className="border-gray-200" />
+
+              <div>
+                <h3 className="font-semibold text-lg mb-3">4. Services proposés</h3>
+                <p className="text-muted-foreground mb-3">
+                  The Ultimate Closers propose notamment :
+                </p>
+                <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                  <li><strong>Formations en closing :</strong> programmes d'accompagnement pour closers et entrepreneurs</li>
+                  <li><strong>Outils IA :</strong> automatisation de tâches commerciales, qualification de leads, analyse prédictive</li>
+                  <li><strong>Coaching personnalisé :</strong> accompagnement individuel par nos experts</li>
+                  <li><strong>Ressources téléchargeables :</strong> guides, templates, scripts de vente</li>
+                  <li><strong>Communauté :</strong> accès à notre réseau de closers professionnels</li>
+                </ul>
+                <p className="text-muted-foreground mt-3">
+                  Les services sont fournis <strong>"en l'état"</strong> et peuvent être modifiés ou interrompus à tout moment 
+                  sans préavis. The Ultimate Closers s'efforce d'assurer une disponibilité maximale mais ne peut garantir 
+                  un fonctionnement ininterrompu.
+                </p>
+              </div>
+
+              <hr className="border-gray-200" />
+
+              <div>
+                <h3 className="font-semibold text-lg mb-3">5. Propriété intellectuelle</h3>
+                <p className="text-muted-foreground">
+                  Tous les contenus présents sur le site (textes, images, vidéos, logos, formations, outils IA, code source) 
+                  sont la propriété exclusive de <strong>The Ultimate Closers</strong> et protégés par le droit d'auteur. 
+                  Toute reproduction, distribution, modification ou utilisation commerciale sans autorisation écrite préalable 
+                  est strictement interdite et passible de poursuites judiciaires.
+                </p>
+                <p className="text-muted-foreground mt-3">
+                  L'accès aux formations et outils vous confère un <strong>droit d'usage personnel et non transférable</strong>. 
+                  Vous ne pouvez pas revendre, redistribuer ou partager les contenus auxquels vous avez accès.
+                </p>
+              </div>
+
+              <hr className="border-gray-200" />
+
+              <div>
+                <h3 className="font-semibold text-lg mb-3">6. Tarifs et modalités de paiement</h3>
+                <p className="text-muted-foreground">
+                  Les tarifs des services payants sont indiqués en euros (€) toutes taxes comprises. 
+                  Nous nous réservons le droit de modifier nos tarifs à tout moment, mais les services déjà payés 
+                  resteront acquis selon les conditions en vigueur au moment de l'achat.
+                </p>
+                <p className="text-muted-foreground mt-3">
+                  Les paiements peuvent s'effectuer par carte bancaire, virement ou autres moyens proposés sur le site. 
+                  Toute commande validée et payée est définitive, sous réserve des conditions de rétractation légales.
+                </p>
+              </div>
+
+              <hr className="border-gray-200" />
+
+              <div>
+                <h3 className="font-semibold text-lg mb-3">7. Droit de rétractation</h3>
+                <p className="text-muted-foreground">
+                  Conformément au Code de la consommation, vous disposez d'un délai de <strong>14 jours</strong> 
+                  à compter de votre achat pour exercer votre droit de rétractation, sauf si vous avez déjà commencé 
+                  à accéder aux contenus de formation (auquel cas le droit de rétractation peut être inapplicable).
+                </p>
+                <p className="text-muted-foreground mt-3">
+                  Pour exercer ce droit, contactez-nous à : 
+                  <a href="mailto:contact@theultimateclosers.com" className="text-primary hover:underline ml-1">
+                    contact@theultimateclosers.com
+                  </a>
+                </p>
+              </div>
+
+              <hr className="border-gray-200" />
+
+              <div>
+                <h3 className="font-semibold text-lg mb-3">8. Responsabilité et garanties</h3>
+                <p className="text-muted-foreground mb-3">
+                  The Ultimate Closers met tout en œuvre pour fournir des services de qualité, cependant :
+                </p>
+                <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                  <li>Nous ne garantissons pas de résultats commerciaux spécifiques suite à l'utilisation de nos services</li>
+                  <li>Les outils IA sont des assistants et ne remplacent pas le jugement humain</li>
+                  <li>Nous ne sommes pas responsables des décisions prises suite à l'utilisation de nos outils</li>
+                  <li>Nous ne garantissons pas l'absence totale d'erreurs ou d'interruptions de service</li>
+                  <li>Nous ne sommes pas responsables des dommages indirects (perte de chiffre d'affaires, manque à gagner)</li>
+                </ul>
+                <p className="text-muted-foreground mt-3">
+                  L'utilisateur reste seul responsable de l'utilisation qu'il fait des services et des informations fournies.
+                </p>
+              </div>
+
+              <hr className="border-gray-200" />
+
+              <div>
+                <h3 className="font-semibold text-lg mb-3">9. Résiliation et suspension</h3>
+                <p className="text-muted-foreground">
+                  The Ultimate Closers se réserve le droit de suspendre ou de résilier l'accès d'un utilisateur 
+                  en cas de violation des présentes CGU, sans préavis ni indemnité. Cela inclut notamment :
+                </p>
+                <ul className="list-disc list-inside space-y-2 text-muted-foreground mt-3">
+                  <li>Utilisation frauduleuse ou abusive des services</li>
+                  <li>Partage non autorisé de contenus protégés</li>
+                  <li>Comportement inapproprié envers l'équipe ou la communauté</li>
+                  <li>Non-respect de la propriété intellectuelle</li>
+                </ul>
+              </div>
+
+              <hr className="border-gray-200" />
+
+              <div>
+                <h3 className="font-semibold text-lg mb-3">10. Modification des CGU</h3>
+                <p className="text-muted-foreground">
+                  The Ultimate Closers se réserve le droit de modifier les présentes CGU à tout moment. 
+                  Les nouvelles conditions seront applicables dès leur mise en ligne. Il est de la responsabilité 
+                  de l'utilisateur de consulter régulièrement cette page pour prendre connaissance des éventuelles modifications.
+                </p>
+              </div>
+
+              <hr className="border-gray-200" />
+
+              <div>
+                <h3 className="font-semibold text-lg mb-3">11. Loi applicable et juridiction</h3>
+                <p className="text-muted-foreground">
+                  Les présentes CGU sont soumises au <strong>droit français</strong>. Tout litige relatif à 
+                  l'interprétation ou l'exécution des présentes sera de la compétence exclusive des tribunaux français.
+                </p>
+                <p className="text-muted-foreground mt-3">
+                  En cas de différend, nous vous encourageons à nous contacter en priorité pour tenter une résolution amiable.
+                </p>
+              </div>
+
+              <hr className="border-gray-200" />
+
+              <div>
+                <h3 className="font-semibold text-lg mb-3">12. Contact</h3>
+                <p className="text-muted-foreground">
+                  Pour toute question relative aux présentes CGU, contactez-nous à :<br />
+                  <a href="mailto:contact@theultimateclosers.com" className="text-primary hover:underline">
+                    contact@theultimateclosers.com
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* 2. Politique de confidentialité */}
           <div id="confidentialite" className="bg-background rounded-lg border p-6 mb-8">
             <h2 className="flex items-center gap-2 text-2xl font-semibold mb-6">
               <Shield className="w-6 h-6 text-primary" />
@@ -172,7 +372,7 @@ const Legal = () => {
             </div>
           </div>
 
-          {/* 2. Mentions légales */}
+          {/* 3. Mentions légales */}
           <div id="mentions-legales" className="bg-background rounded-lg border p-6 mb-8">
             <h2 className="flex items-center gap-2 text-2xl font-semibold mb-6">
               <FileText className="w-6 h-6 text-primary" />
@@ -234,7 +434,7 @@ const Legal = () => {
             </div>
           </div>
 
-          {/* 3. Politique de sécurité & cookies */}
+          {/* 4. Politique de sécurité & cookies */}
           <div id="securite-cookies" className="bg-background rounded-lg border p-6 mb-8">
             <h2 className="flex items-center gap-2 text-2xl font-semibold mb-6">
               <Lock className="w-6 h-6 text-primary" />
