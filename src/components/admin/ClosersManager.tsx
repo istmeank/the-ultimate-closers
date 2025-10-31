@@ -4,7 +4,8 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { UserPlus, UserMinus, TrendingUp, Target } from 'lucide-react';
+import { UserPlus, UserMinus, TrendingUp, Target, RefreshCw } from 'lucide-react';
+import { CreateUserDialog } from './CreateUserDialog';
 
 interface Closer {
   id: string;
@@ -123,6 +124,18 @@ export const ClosersManager = () => {
           <p className="text-muted-foreground mt-1">
             {closers.length} closer{closers.length > 1 ? 's' : ''} enregistré{closers.length > 1 ? 's' : ''}
           </p>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={loadClosers}
+            disabled={loading}
+          >
+            <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            Actualiser
+          </Button>
+          <CreateUserDialog onUserCreated={loadClosers} />
         </div>
       </div>
 
