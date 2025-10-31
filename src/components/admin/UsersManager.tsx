@@ -46,16 +46,20 @@ export const UsersManager = () => {
 
       if (profilesError) throw profilesError;
 
-      // Load roles for each user
-      const { data: roles, error: rolesError } = await supabase
-        .from('user_roles')
-        .select('user_id, role');
+      // Load roles via edge function (bypass RLS safely)
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('Session invalide. Veuillez vous reconnecter.');
+
+      const { data: resp, error: rolesError } = await supabase.functions.invoke('list-user-roles', {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
 
       if (rolesError) throw rolesError;
+      const roles = (resp as any)?.roles ?? [];
 
       const usersWithRoles = profiles.map((profile) => ({
         ...profile,
-        roles: roles.filter((r) => r.user_id === profile.id).map((r) => r.role),
+        roles: roles.filter((r: any) => r.user_id === profile.id).map((r: any) => r.role),
       }));
 
       setUsers(usersWithRoles);
@@ -72,29 +76,27 @@ export const UsersManager = () => {
 
   const toggleRole = async (userId: string, role: 'admin' | 'closer', hasRole: boolean) => {
     try {
-      if (hasRole) {
-        // Remove role
-        const { error } = await supabase
-          .from('user_roles')
-          .delete()
-          .eq('user_id', userId)
-          .eq('role', role);
-
-        if (error) throw error;
-      } else {
-        // Add role
-        const { error } = await supabase
-          .from('user_roles')
-          .insert({ user_id: userId, role });
-
-        if (error) throw error;
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast({
+          title: 'Session expirée',
+          description: 'Veuillez vous reconnecter',
+          variant: 'destructive',
+        });
+        return;
       }
+
+      const action = hasRole ? 'remove' : 'add';
+      const { error } = await supabase.functions.invoke('manage-user-role', {
+        body: { userId, role, action },
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+
+      if (error) throw error;
 
       toast({
         title: 'Succès',
-        description: hasRole
-          ? `Rôle ${role} retiré`
-          : `Rôle ${role} attribué`,
+        description: hasRole ? `Rôle ${role} retiré` : `Rôle ${role} attribué`,
       });
       
       loadUsers();
