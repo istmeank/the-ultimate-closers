@@ -16,6 +16,15 @@ interface Lead {
   interest: string | null;
 }
 
+const getHubSpotApiUrl = (apiKey: string): string => {
+  // Detect EU token (pat-eu1-...)
+  if (apiKey.startsWith('pat-eu1-')) {
+    return 'https://api.hubapieu1.com';
+  }
+  // Default to US
+  return 'https://api.hubapi.com';
+};
+
 const mapStatusToLifecycleStage = (status: string): string => {
   const mapping: Record<string, string> = {
     'new': 'lead',
@@ -51,7 +60,8 @@ const getHubSpotApiKey = async (supabaseClient: any, userId?: string): Promise<s
 
 const searchContactByEmail = async (email: string, apiKey: string): Promise<string | null> => {
   try {
-    const response = await fetch('https://api.hubapi.com/crm/v3/objects/contacts/search', {
+    const apiUrl = getHubSpotApiUrl(apiKey);
+    const response = await fetch(`${apiUrl}/crm/v3/objects/contacts/search`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
@@ -81,6 +91,7 @@ const searchContactByEmail = async (email: string, apiKey: string): Promise<stri
 };
 
 const createOrUpdateContact = async (lead: Lead, apiKey: string): Promise<{ id: string; action: 'created' | 'updated' }> => {
+  const apiUrl = getHubSpotApiUrl(apiKey);
   const nameParts = lead.full_name.trim().split(' ');
   const firstname = nameParts[0] || '';
   const lastname = nameParts.slice(1).join(' ') || '';
@@ -99,7 +110,7 @@ const createOrUpdateContact = async (lead: Lead, apiKey: string): Promise<{ id: 
 
   if (existingContactId) {
     // Update existing contact
-    const response = await fetch(`https://api.hubapi.com/crm/v3/objects/contacts/${existingContactId}`, {
+    const response = await fetch(`${apiUrl}/crm/v3/objects/contacts/${existingContactId}`, {
       method: 'PATCH',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
@@ -116,7 +127,7 @@ const createOrUpdateContact = async (lead: Lead, apiKey: string): Promise<{ id: 
     return { id: existingContactId, action: 'updated' };
   } else {
     // Create new contact
-    const response = await fetch('https://api.hubapi.com/crm/v3/objects/contacts', {
+    const response = await fetch(`${apiUrl}/crm/v3/objects/contacts`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
@@ -186,7 +197,8 @@ Deno.serve(async (req) => {
         throw new Error('API key required for testing');
       }
 
-      const response = await fetch('https://api.hubapi.com/crm/v3/objects/contacts?limit=1', {
+      const apiUrl = getHubSpotApiUrl(providedApiKey);
+      const response = await fetch(`${apiUrl}/crm/v3/objects/contacts?limit=1`, {
         headers: {
           'Authorization': `Bearer ${providedApiKey}`,
           'Content-Type': 'application/json',
