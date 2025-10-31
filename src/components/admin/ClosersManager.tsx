@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { UserPlus, UserMinus, TrendingUp, Target } from 'lucide-react';
-import { BackToDashboardButton } from './BackToDashboardButton';
 
 interface Closer {
   id: string;
@@ -108,16 +107,13 @@ export const ClosersManager = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <BackToDashboardButton />
-          <div>
-            <h2 className="font-playfair font-bold text-3xl text-background">
-              Gestion des Closers
-            </h2>
-            <p className="text-muted-foreground mt-1">
-              {closers.length} closer{closers.length > 1 ? 's' : ''} enregistré{closers.length > 1 ? 's' : ''}
-            </p>
-          </div>
+        <div>
+          <h2 className="font-playfair font-bold text-3xl text-background">
+            Gestion des Closers
+          </h2>
+          <p className="text-muted-foreground mt-1">
+            {closers.length} closer{closers.length > 1 ? 's' : ''} enregistré{closers.length > 1 ? 's' : ''}
+          </p>
         </div>
       </div>
 

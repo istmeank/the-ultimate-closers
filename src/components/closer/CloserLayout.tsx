@@ -33,8 +33,8 @@ export const CloserLayout = ({ children }: CloserLayoutProps) => {
     navigate('/auth');
   };
 
-  // Vérifier si l'utilisateur est admin ou owner
-  const isAdminOrOwner = userRoles.includes('admin') || userRoles.includes('owner');
+  // Vérifier si l'utilisateur est owner uniquement
+  const isOwner = userRoles.includes('owner');
 
   return (
     <SidebarProvider>
@@ -57,7 +57,7 @@ export const CloserLayout = ({ children }: CloserLayoutProps) => {
             <span className="text-sm text-muted-foreground font-inter">
               {user?.email}
             </span>
-            {isAdminOrOwner && (
+            {isOwner && (
               <Button
                 onClick={() => navigate('/admin')}
                 variant="outline"

@@ -15,7 +15,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { BackToDashboardButton } from './BackToDashboardButton';
 
 export const UsersManager = () => {
   const [users, setUsers] = useState<any[]>([]);
@@ -110,16 +109,13 @@ export const UsersManager = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <BackToDashboardButton />
-          <div>
-            <h2 className="font-playfair font-bold text-3xl text-background">
-              Utilisateurs
-            </h2>
-            <p className="text-background/70 font-inter mt-1">
-              Total: {users.length} utilisateurs
-            </p>
-          </div>
+        <div>
+          <h2 className="font-playfair font-bold text-3xl text-background">
+            Utilisateurs
+          </h2>
+          <p className="text-background/70 font-inter mt-1">
+            Total: {users.length} utilisateurs
+          </p>
         </div>
         <CreateUserDialog onUserCreated={loadUsers} />
       </div>
