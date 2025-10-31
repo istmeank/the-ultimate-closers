@@ -10,7 +10,7 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute = ({ children, requireAdmin = false, requireRole }: ProtectedRouteProps) => {
-  const { user, role, isAdmin, loading } = useAuth();
+  const { user, role, isAdmin, isOwner, loading } = useAuth();
 
   if (loading) {
     return (
@@ -27,7 +27,7 @@ export const ProtectedRoute = ({ children, requireAdmin = false, requireRole }: 
     return <Navigate to="/auth" replace />;
   }
 
-  if (requireAdmin && !isAdmin) {
+  if (requireAdmin && !isAdmin && !isOwner) {
     return <Navigate to="/access-denied" replace />;
   }
 
