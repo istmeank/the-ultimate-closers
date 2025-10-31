@@ -17,11 +17,8 @@ interface Lead {
 }
 
 const getHubSpotApiUrl = (apiKey: string): string => {
-  // Detect EU token (pat-eu1-...)
-  if (apiKey.startsWith('pat-eu1-')) {
-    return 'https://api.hubapieu1.com';
-  }
-  // Default to US
+  // HubSpot uses the same API URL for all regions (US and EU)
+  // The routing is handled automatically based on the token prefix
   return 'https://api.hubapi.com';
 };
 
