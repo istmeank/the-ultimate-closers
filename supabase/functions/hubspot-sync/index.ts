@@ -200,7 +200,7 @@ Deno.serve(async (req) => {
         if (response.status === 401) {
           throw new Error('Clé API invalide. Vérifiez que vous avez copié la clé complète depuis HubSpot.');
         } else if (response.status === 403) {
-          throw new Error('Permissions insuffisantes. Votre clé API doit avoir le scope "crm.objects.contacts.read".');
+          throw new Error('Permissions insuffisantes. Votre clé API doit avoir le scope "crm.objects.contacts.write" pour créer et modifier des contacts.');
         } else {
           throw new Error(`Erreur HubSpot (${response.status}): ${errorText}`);
         }
