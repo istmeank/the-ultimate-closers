@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Save } from 'lucide-react';
 import { AddContentDialog } from './AddContentDialog';
+import { BackToDashboardButton } from './BackToDashboardButton';
 
 export const ContentEditor = () => {
   const [sections, setSections] = useState<any[]>([]);
@@ -69,9 +70,12 @@ export const ContentEditor = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="font-playfair font-bold text-3xl text-background">
-          Modifier le contenu
-        </h2>
+        <div className="flex items-center gap-4">
+          <BackToDashboardButton />
+          <h2 className="font-playfair font-bold text-3xl text-background">
+            Modifier le contenu
+          </h2>
+        </div>
         <div className="flex gap-3">
           <Button
             onClick={loadContent}

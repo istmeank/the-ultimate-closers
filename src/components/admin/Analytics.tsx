@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BackToDashboardButton } from './BackToDashboardButton';
 
 export const Analytics = () => {
   const [pageViews, setPageViews] = useState<any[]>([]);
@@ -56,9 +57,12 @@ export const Analytics = () => {
 
   return (
     <div className="space-y-6">
-      <h2 className="font-playfair font-bold text-3xl text-background">
-        Statistiques
-      </h2>
+      <div className="flex items-center gap-4">
+        <BackToDashboardButton />
+        <h2 className="font-playfair font-bold text-3xl text-background">
+          Statistiques
+        </h2>
+      </div>
 
       <Card className="bg-background/95 backdrop-blur-sm border-secondary/20 p-6">
         <h3 className="font-playfair font-bold text-xl text-primary mb-4">

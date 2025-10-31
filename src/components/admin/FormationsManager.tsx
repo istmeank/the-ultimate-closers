@@ -15,6 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { BackToDashboardButton } from './BackToDashboardButton';
 
 interface Formation {
   id?: string;
@@ -154,9 +155,12 @@ export const FormationsManager = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="font-playfair font-bold text-3xl text-background">
-          Formations
-        </h2>
+        <div className="flex items-center gap-4">
+          <BackToDashboardButton />
+          <h2 className="font-playfair font-bold text-3xl text-background">
+            Formations
+          </h2>
+        </div>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button
