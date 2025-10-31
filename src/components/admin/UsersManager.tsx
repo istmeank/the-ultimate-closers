@@ -109,11 +109,32 @@ export const UsersManager = () => {
 
   const deleteUser = async (userId: string, email: string) => {
     try {
-      const { error } = await supabase.functions.invoke('delete-user', {
+      // Verify session before calling the function
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !session) {
+        console.error('Session error:', sessionError);
+        toast({
+          title: 'Session expirée',
+          description: 'Veuillez vous reconnecter',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      console.log('🔐 Session token present:', !!session.access_token);
+      console.log('🔐 Token preview:', session.access_token.substring(0, 20) + '...');
+
+      const { data, error } = await supabase.functions.invoke('delete-user', {
         body: { userId },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
       });
 
       if (error) throw error;
+
+      console.log('✅ Delete user response:', data);
 
       toast({
         title: 'Utilisateur supprimé',
@@ -122,6 +143,7 @@ export const UsersManager = () => {
       
       loadUsers();
     } catch (error: any) {
+      console.error('❌ Delete user error:', error);
       toast({
         title: 'Erreur',
         description: error.message,

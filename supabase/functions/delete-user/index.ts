@@ -12,9 +12,16 @@ serve(async (req) => {
   }
 
   try {
+    console.log('🔍 Delete user request received');
+    console.log('📋 Request method:', req.method);
+    console.log('📋 All headers:', Object.fromEntries(req.headers.entries()));
+    
     // Vérifier le header Authorization
     const authHeader = req.headers.get('Authorization');
-    console.log('Authorization header present:', !!authHeader);
+    console.log('🔐 Authorization header present:', !!authHeader);
+    if (authHeader) {
+      console.log('🔐 Token preview:', authHeader.substring(0, 30) + '...');
+    }
     
     if (!authHeader) {
       return new Response(
