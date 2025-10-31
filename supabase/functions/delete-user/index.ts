@@ -1,0 +1,106 @@
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
+  try {
+    const supabaseAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
+    
+    // Vérifier que l'appelant est authentifié
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: 'Non autorisé' }), 
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+    
+    if (authError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Non autorisé' }), 
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    // Vérifier que l'utilisateur a le rôle admin ou owner
+    const { data: roles } = await supabaseAdmin
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id);
+    
+    const hasPermission = roles?.some(r => ['admin', 'owner'].includes(r.role));
+    if (!hasPermission) {
+      return new Response(
+        JSON.stringify({ error: 'Interdit: Seuls les admins et owners peuvent supprimer des utilisateurs' }), 
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    // Récupérer l'ID de l'utilisateur à supprimer
+    const { userId } = await req.json();
+    
+    if (!userId) {
+      return new Response(
+        JSON.stringify({ error: 'userId requis' }), 
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Empêcher la suppression de son propre compte
+    if (userId === user.id) {
+      return new Response(
+        JSON.stringify({ error: 'Vous ne pouvez pas supprimer votre propre compte' }), 
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Vérifier que l'utilisateur à supprimer n'est pas un owner
+    const { data: targetRoles } = await supabaseAdmin
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', userId);
+    
+    const isTargetOwner = targetRoles?.some(r => r.role === 'owner');
+    if (isTargetOwner) {
+      return new Response(
+        JSON.stringify({ error: 'Impossible de supprimer un owner' }), 
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    // Supprimer l'utilisateur (cascade supprimera le profil et les rôles)
+    const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(userId);
+    
+    if (deleteError) {
+      return new Response(
+        JSON.stringify({ error: `Erreur lors de la suppression: ${deleteError.message}` }), 
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    return new Response(
+      JSON.stringify({ success: true, message: 'Utilisateur supprimé avec succès' }), 
+      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+  } catch (err) {
+    const e = err as { message?: string };
+    return new Response(
+      JSON.stringify({ error: e?.message ?? 'Erreur inattendue' }), 
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+  }
+});

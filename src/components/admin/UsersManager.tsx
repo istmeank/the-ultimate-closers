@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { Shield, ShieldOff, Search, UserCog, UserMinus } from 'lucide-react';
+import { Shield, ShieldOff, Search, UserCog, UserMinus, Trash2 } from 'lucide-react';
 import { CreateUserDialog } from './CreateUserDialog';
 import {
   Table,
@@ -15,6 +15,17 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 export const UsersManager = () => {
   const [users, setUsers] = useState<any[]>([]);
@@ -84,6 +95,29 @@ export const UsersManager = () => {
         description: hasRole
           ? `Rôle ${role} retiré`
           : `Rôle ${role} attribué`,
+      });
+      
+      loadUsers();
+    } catch (error: any) {
+      toast({
+        title: 'Erreur',
+        description: error.message,
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const deleteUser = async (userId: string, email: string) => {
+    try {
+      const { error } = await supabase.functions.invoke('delete-user', {
+        body: { userId },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: 'Utilisateur supprimé',
+        description: `${email} a été supprimé avec succès`,
       });
       
       loadUsers();
@@ -221,6 +255,35 @@ export const UsersManager = () => {
                                 </>
                               )}
                             </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button
+                                  variant="destructive"
+                                  size="sm"
+                                >
+                                  <Trash2 className="w-4 h-4 mr-1" />
+                                  Supprimer
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Êtes-vous sûr de vouloir supprimer l'utilisateur <strong>{user.email}</strong> ?
+                                    Cette action est irréversible et supprimera toutes les données associées.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                  <AlertDialogAction
+                                    onClick={() => deleteUser(user.id, user.email)}
+                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                  >
+                                    Supprimer définitivement
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
                           </>
                         )}
                         {isOwner && (
