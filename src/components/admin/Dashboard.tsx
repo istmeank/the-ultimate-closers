@@ -123,7 +123,7 @@ export const Dashboard = () => {
 
   return (
     <div className="space-y-6">
-      <h2 className="font-playfair font-bold text-3xl text-background">
+      <h2 className="font-playfair font-bold text-3xl text-primary">
         Vue d'ensemble
       </h2>
 
