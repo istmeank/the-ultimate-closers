@@ -12,6 +12,17 @@ serve(async (req) => {
   }
 
   try {
+    // Vérifier le header Authorization
+    const authHeader = req.headers.get('Authorization');
+    console.log('Authorization header present:', !!authHeader);
+    
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: 'Authorization header manquant' }), 
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
@@ -23,16 +34,18 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
       {
         global: {
-          headers: { Authorization: req.headers.get('Authorization')! },
+          headers: { Authorization: authHeader },
         },
       }
     );
     
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+    console.log('Auth error:', authError);
+    console.log('User authenticated:', !!user);
     
     if (authError || !user) {
       return new Response(
-        JSON.stringify({ error: 'Non autorisé' }), 
+        JSON.stringify({ error: 'Non autorisé', details: authError?.message }), 
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
