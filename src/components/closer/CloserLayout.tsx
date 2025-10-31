@@ -12,7 +12,8 @@ import {
   MessageSquare, 
   User,
   Settings,
-  LogOut
+  LogOut,
+  Home
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { RoleSwitcher } from '@/components/shared/RoleSwitcher';
@@ -24,13 +25,16 @@ interface CloserLayoutProps {
 }
 
 export const CloserLayout = ({ children }: CloserLayoutProps) => {
-  const { user, signOut } = useAuth();
+  const { user, signOut, userRoles } = useAuth();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
     await signOut();
     navigate('/auth');
   };
+
+  // Vérifier si l'utilisateur est admin ou owner
+  const isAdminOrOwner = userRoles.includes('admin') || userRoles.includes('owner');
 
   return (
     <SidebarProvider>
@@ -53,6 +57,16 @@ export const CloserLayout = ({ children }: CloserLayoutProps) => {
             <span className="text-sm text-muted-foreground font-inter">
               {user?.email}
             </span>
+            {isAdminOrOwner && (
+              <Button
+                onClick={() => navigate('/admin')}
+                variant="outline"
+                className="border-secondary/50 text-secondary hover:bg-secondary/10 hover:border-secondary hover:shadow-[0_0_15px_hsl(44,73%,66%/0.4)] transition-all duration-300"
+              >
+                <Home className="w-4 h-4 mr-2" />
+                Dashboard Admin
+              </Button>
+            )}
             <RoleSwitcher />
             <Button
               onClick={handleSignOut}
