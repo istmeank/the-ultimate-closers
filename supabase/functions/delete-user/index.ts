@@ -103,14 +103,34 @@ serve(async (req) => {
       );
     }
     
-    // Supprimer l'utilisateur (cascade supprimera le profil et les rôles)
+    // Tenter la suppression de l'utilisateur d'auth puis nettoyer les données applicatives
     const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(userId);
-    
     if (deleteError) {
-      return new Response(
-        JSON.stringify({ error: `Erreur lors de la suppression: ${deleteError.message}` }), 
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      console.log('⚠️ admin.deleteUser error:', deleteError.message);
+      // Si l'utilisateur n'existe pas côté auth, on continue le nettoyage applicatif
+      if (!deleteError.message?.toLowerCase().includes('user not found')) {
+        return new Response(
+          JSON.stringify({ error: `Erreur lors de la suppression: ${deleteError.message}` }), 
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+
+    // Nettoyage des données applicatives
+    const { error: rolesDeleteError } = await supabaseAdmin
+      .from('user_roles')
+      .delete()
+      .eq('user_id', userId);
+    if (rolesDeleteError) {
+      console.log('⚠️ user_roles delete error:', rolesDeleteError.message);
+    }
+
+    const { error: profileDeleteError } = await supabaseAdmin
+      .from('profiles')
+      .delete()
+      .eq('id', userId);
+    if (profileDeleteError) {
+      console.log('⚠️ profiles delete error:', profileDeleteError.message);
     }
     
     return new Response(
