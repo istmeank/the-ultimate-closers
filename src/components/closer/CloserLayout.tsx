@@ -19,6 +19,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { RoleSwitcher } from '@/components/shared/RoleSwitcher';
 import { Button } from '@/components/ui/button';
 import logo from '@/assets/logo.png';
+import { useLanguage } from '@/contexts/LanguageContext';
+import LanguageSelector from '@/components/LanguageSelector';
 
 interface CloserLayoutProps {
   children?: ReactNode;
@@ -27,6 +29,7 @@ interface CloserLayoutProps {
 export const CloserLayout = ({ children }: CloserLayoutProps) => {
   const { user, signOut, userRoles } = useAuth();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const handleSignOut = async () => {
     await signOut();
@@ -57,6 +60,7 @@ export const CloserLayout = ({ children }: CloserLayoutProps) => {
             <span className="text-sm text-muted-foreground font-inter">
               {user?.email}
             </span>
+            <LanguageSelector className="scale-90" />
             {isOwner && (
               <Button
                 onClick={() => navigate('/admin')}
@@ -73,7 +77,7 @@ export const CloserLayout = ({ children }: CloserLayoutProps) => {
               className="bg-secondary text-primary hover:bg-secondary/90 hover:shadow-[0_0_20px_hsl(44,73%,66%/0.5)] transition-all duration-300"
             >
               <LogOut className="w-4 h-4 mr-2" />
-              Déconnexion
+              {t('closer.logout')}
             </Button>
           </div>
         </header>
@@ -89,35 +93,37 @@ export const CloserLayout = ({ children }: CloserLayoutProps) => {
 };
 
 const SidebarContent = () => {
+  const { t } = useLanguage();
+  
   const sidebarItems = [
     {
       icon: LayoutDashboard,
-      label: 'Pipeline',
+      label: t('closer.nav.pipeline'),
       href: '/dashboard-closer'
     },
     {
       icon: Users,
-      label: 'Mes Leads',
+      label: t('closer.nav.leads'),
       href: '/dashboard-closer/leads'
     },
     {
       icon: Calendar,
-      label: 'Agenda Google',
+      label: t('closer.nav.calendar'),
       href: '/dashboard-closer/calendar'
     },
     {
       icon: MessageSquare,
-      label: 'Slack',
+      label: t('closer.nav.slack'),
       href: '/dashboard-closer/slack'
     },
     {
       icon: User,
-      label: 'Profil',
+      label: t('closer.nav.profile'),
       href: '/dashboard-closer/profile'
     },
     {
       icon: Settings,
-      label: 'Paramètres',
+      label: t('closer.nav.settings'),
       href: '/dashboard-closer/settings'
     }
   ];

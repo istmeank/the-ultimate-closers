@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { LucideIcon } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 type AppRole = 'admin' | 'closer' | 'owner' | 'client' | 'user';
 
@@ -108,13 +109,27 @@ const sidebarItems: ExtendedSidebarItem[] = [
 
 export const UnifiedSidebar = () => {
   const { userRoles } = useAuth();
+  const { t } = useLanguage();
 
-  // Filtrer les items selon les rôles de l'utilisateur
-  const visibleItems = sidebarItems.filter(item => 
+  const sidebarItemsWithLabels: ExtendedSidebarItem[] = [
+    { icon: LayoutDashboard, label: t('admin.nav.dashboard'), href: '/admin', roles: ['admin', 'owner'], prominent: true },
+    { icon: FileEdit, label: t('admin.nav.content'), href: '/admin/content', roles: ['admin', 'owner'] },
+    { icon: GraduationCap, label: t('admin.nav.formations'), href: '/admin/formations', roles: ['admin', 'owner'] },
+    { icon: Users, label: t('admin.nav.users'), href: '/admin/users', roles: ['admin', 'owner'] },
+    { icon: Target, label: t('admin.nav.closers'), href: '/admin/closers', roles: ['admin', 'owner'] },
+    { icon: BarChart3, label: t('admin.nav.analytics'), href: '/admin/analytics', roles: ['admin', 'owner'] },
+    { icon: LayoutDashboard, label: t('closer.nav.pipeline'), href: '/dashboard-closer', roles: ['closer', 'admin', 'owner'] },
+    { icon: Users, label: t('closer.nav.leads'), href: '/dashboard-closer/leads', roles: ['closer', 'admin', 'owner'] },
+    { icon: Calendar, label: t('closer.nav.calendar'), href: '/dashboard-closer/calendar', roles: ['closer', 'admin', 'owner'] },
+    { icon: MessageSquare, label: t('closer.nav.slack'), href: '/dashboard-closer/slack', roles: ['closer', 'admin', 'owner'] },
+    { icon: User, label: t('closer.nav.profile'), href: '/dashboard-closer/profile', roles: ['closer', 'admin', 'owner'] },
+    { icon: Settings, label: t('closer.nav.settings'), href: '/dashboard-closer/settings', roles: ['closer', 'admin', 'owner'] }
+  ];
+
+  const visibleItems = sidebarItemsWithLabels.filter(item => 
     item.roles.some(requiredRole => userRoles.includes(requiredRole))
   );
 
-  // Regroupement par section
   const adminItems = visibleItems.filter(i => i.href.startsWith('/admin'));
   const closerItems = visibleItems.filter(i => i.href.startsWith('/dashboard-closer'));
 

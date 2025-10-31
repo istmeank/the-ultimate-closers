@@ -6,10 +6,13 @@ import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
 import logo from '@/assets/logo.png';
+import { useLanguage } from '@/contexts/LanguageContext';
+import LanguageSelector from '@/components/LanguageSelector';
 
 export const AdminLayoutWithSidebar = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const handleSignOut = async () => {
     await signOut();
@@ -37,13 +40,14 @@ export const AdminLayoutWithSidebar = () => {
             <span className="text-sm text-background/90 font-inter">
               {user?.email}
             </span>
+            <LanguageSelector className="scale-90" />
             <RoleSwitcher />
             <Button
               onClick={handleSignOut}
               className="bg-secondary text-primary hover:bg-secondary/90 hover:shadow-[0_0_20px_hsl(44,73%,66%/0.5)] transition-all duration-300"
             >
               <LogOut className="w-4 h-4 mr-2" />
-              Déconnexion
+              {t('closer.logout')}
             </Button>
           </div>
         </header>

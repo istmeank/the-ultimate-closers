@@ -11,6 +11,7 @@ import { z } from 'zod';
 import logo from '@/assets/logo.png';
 import LanguageSelector from '@/components/LanguageSelector';
 import DebugInfo from '@/components/DebugInfo';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const emailSchema = z.string().email('Email invalide');
 const passwordSchema = z.string().min(6, 'Le mot de passe doit contenir au moins 6 caractères');
@@ -19,6 +20,7 @@ const Auth = () => {
   const { user, role, isAdmin, isCloser, isOwner, loading, signInWithEmail, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -50,9 +52,9 @@ const Auth = () => {
       if (error) {
         setShouldRedirect(false);
         toast({
-          title: 'Erreur de connexion',
+          title: t('auth.error.title'),
           description: error.message === 'Invalid login credentials' 
-            ? 'Email ou mot de passe incorrect' 
+            ? t('auth.error.credentials')
             : error.message,
           variant: 'destructive',
         });
@@ -61,7 +63,7 @@ const Auth = () => {
       setShouldRedirect(false);
       if (err instanceof z.ZodError) {
         toast({
-          title: 'Erreur de validation',
+          title: t('auth.error.validation'),
           description: err.errors[0].message,
           variant: 'destructive',
         });
@@ -78,7 +80,7 @@ const Auth = () => {
     if (error) {
       setShouldRedirect(false);
       toast({
-        title: 'Erreur de connexion',
+        title: t('auth.error.title'),
         description: error.message,
         variant: 'destructive',
       });
@@ -109,13 +111,13 @@ const Auth = () => {
               <img src={logo} alt="The Ultimate Closers Logo" className="w-20 h-20 object-contain" />
             </div>
             <h1 className="font-playfair font-bold text-3xl text-primary">
-              The Ultimate Closers
+              {t('auth.title')}
             </h1>
             <p className="font-inter text-muted-foreground">
-              Connexion réservée aux Ultimate Closers
+              {t('auth.subtitle')}
             </p>
             <p className="font-inter text-sm text-muted-foreground">
-              Contactez un administrateur pour créer votre compte
+              {t('auth.contact')}
             </p>
           </div>
 
@@ -123,7 +125,7 @@ const Auth = () => {
           <div className="space-y-4">
             <form onSubmit={handleEmailSignIn} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="signin-email">Email</Label>
+                <Label htmlFor="signin-email">{t('auth.email')}</Label>
                 <Input
                   id="signin-email"
                   type="email"
@@ -134,7 +136,7 @@ const Auth = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="signin-password">Mot de passe</Label>
+                <Label htmlFor="signin-password">{t('auth.password')}</Label>
                 <Input
                   id="signin-password"
                   type="password"
@@ -149,7 +151,7 @@ const Auth = () => {
                 disabled={isSubmitting || loading}
                 className="w-full bg-secondary hover:bg-secondary/90 text-primary font-bold py-6 rounded-lg shadow-lg hover:shadow-[0_0_30px_rgba(233,196,106,0.5)] transition-all"
               >
-                {isSubmitting ? 'Connexion...' : 'Se connecter'}
+                {isSubmitting ? t('auth.signingIn') : t('auth.signin')}
               </Button>
             </form>
 
@@ -158,7 +160,7 @@ const Auth = () => {
                 <span className="w-full border-t" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">Ou</span>
+                <span className="bg-background px-2 text-muted-foreground">{t('auth.or')}</span>
               </div>
             </div>
 
@@ -186,12 +188,12 @@ const Auth = () => {
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                 />
               </svg>
-              Continuer avec Google
+              {t('auth.google')}
             </Button>
           </div>
 
           <p className="text-center text-sm text-muted-foreground font-inter mt-4">
-            Réservé aux administrateurs autorisés
+            {t('auth.reserved')}
           </p>
         </div>
       </Card>
