@@ -27,18 +27,27 @@ export const ClosersManager = () => {
 
   const loadClosers = async () => {
     try {
-      // Récupérer les closers avec leurs stats
+      // Récupérer tous les user_ids qui ont le rôle 'closer'
+      const { data: closerRoles, error: rolesError } = await supabase
+        .from('user_roles')
+        .select('user_id')
+        .eq('role', 'closer');
+
+      if (rolesError) throw rolesError;
+      
+      if (!closerRoles || closerRoles.length === 0) {
+        setClosers([]);
+        setLoading(false);
+        return;
+      }
+
+      const closerIds = closerRoles.map(r => r.user_id);
+
+      // Récupérer les profils des closers
       const { data: closersData, error: closersError } = await supabase
         .from('profiles')
-        .select(`
-          id,
-          full_name,
-          email,
-          is_active,
-          max_concurrent_leads,
-          user_roles!inner(role)
-        `)
-        .eq('user_roles.role', 'closer' as any);
+        .select('id, full_name, email, is_active, max_concurrent_leads')
+        .in('id', closerIds);
 
       if (closersError) throw closersError;
 
