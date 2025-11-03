@@ -4,7 +4,8 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { Shield, ShieldOff, Search } from 'lucide-react';
+import { Shield, ShieldOff, Search, UserCog, UserMinus, Trash2 } from 'lucide-react';
+import { CreateUserDialog } from './CreateUserDialog';
 import {
   Table,
   TableBody,
@@ -14,6 +15,17 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 export const UsersManager = () => {
   const [users, setUsers] = useState<any[]>([]);
@@ -34,16 +46,20 @@ export const UsersManager = () => {
 
       if (profilesError) throw profilesError;
 
-      // Load roles for each user
-      const { data: roles, error: rolesError } = await supabase
-        .from('user_roles')
-        .select('user_id, role');
+      // Load roles via edge function (bypass RLS safely)
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('Session invalide. Veuillez vous reconnecter.');
+
+      const { data: resp, error: rolesError } = await supabase.functions.invoke('list-user-roles', {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
 
       if (rolesError) throw rolesError;
+      const roles = (resp as any)?.roles ?? [];
 
       const usersWithRoles = profiles.map((profile) => ({
         ...profile,
-        roles: roles.filter((r) => r.user_id === profile.id).map((r) => r.role),
+        roles: roles.filter((r: any) => r.user_id === profile.id).map((r: any) => r.role),
       }));
 
       setUsers(usersWithRoles);
@@ -58,35 +74,78 @@ export const UsersManager = () => {
     }
   };
 
-  const toggleAdmin = async (userId: string, isAdmin: boolean) => {
+  const toggleRole = async (userId: string, role: 'admin' | 'closer', hasRole: boolean) => {
     try {
-      if (isAdmin) {
-        // Remove admin role
-        const { error } = await supabase
-          .from('user_roles')
-          .delete()
-          .eq('user_id', userId)
-          .eq('role', 'admin');
-
-        if (error) throw error;
-      } else {
-        // Add admin role
-        const { error } = await supabase
-          .from('user_roles')
-          .insert({ user_id: userId, role: 'admin' });
-
-        if (error) throw error;
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast({
+          title: 'Session expirée',
+          description: 'Veuillez vous reconnecter',
+          variant: 'destructive',
+        });
+        return;
       }
+
+      const action = hasRole ? 'remove' : 'add';
+      const { error } = await supabase.functions.invoke('manage-user-role', {
+        body: { userId, role, action },
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+
+      if (error) throw error;
 
       toast({
         title: 'Succès',
-        description: isAdmin
-          ? 'Rôle admin retiré'
-          : 'Rôle admin attribué',
+        description: hasRole ? `Rôle ${role} retiré` : `Rôle ${role} attribué`,
       });
       
       loadUsers();
     } catch (error: any) {
+      toast({
+        title: 'Erreur',
+        description: error.message,
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const deleteUser = async (userId: string, email: string) => {
+    try {
+      // Verify session before calling the function
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !session) {
+        console.error('Session error:', sessionError);
+        toast({
+          title: 'Session expirée',
+          description: 'Veuillez vous reconnecter',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      console.log('🔐 Session token present:', !!session.access_token);
+      console.log('🔐 Token preview:', session.access_token.substring(0, 20) + '...');
+
+      const { data, error } = await supabase.functions.invoke('delete-user', {
+        body: { userId },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (error) throw error;
+
+      console.log('✅ Delete user response:', data);
+
+      toast({
+        title: 'Utilisateur supprimé',
+        description: `${email} a été supprimé avec succès`,
+      });
+      
+      loadUsers();
+    } catch (error: any) {
+      console.error('❌ Delete user error:', error);
       toast({
         title: 'Erreur',
         description: error.message,
@@ -116,6 +175,7 @@ export const UsersManager = () => {
             Total: {users.length} utilisateurs
           </p>
         </div>
+        <CreateUserDialog onUserCreated={loadUsers} />
       </div>
 
       <Card className="bg-background/95 backdrop-blur-sm border-secondary/20 p-6">
@@ -136,7 +196,7 @@ export const UsersManager = () => {
             <TableRow>
               <TableHead>Email</TableHead>
               <TableHead>Nom</TableHead>
-              <TableHead>Rôle</TableHead>
+              <TableHead>Rôles</TableHead>
               <TableHead>Date d'inscription</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -150,39 +210,112 @@ export const UsersManager = () => {
               </TableRow>
             ) : (
               filteredUsers.map((user) => {
+                const isOwner = user.roles.includes('owner');
                 const isAdmin = user.roles.includes('admin');
+                const isCloser = user.roles.includes('closer');
+                const isUser = user.roles.includes('user');
+                
                 return (
                   <TableRow key={user.id}>
                     <TableCell className="font-mono text-sm">{user.email}</TableCell>
                     <TableCell>{user.full_name || '-'}</TableCell>
                     <TableCell>
-                      {isAdmin ? (
-                        <Badge className="bg-secondary text-primary">Admin</Badge>
-                      ) : (
-                        <Badge variant="outline">User</Badge>
-                      )}
+                      <div className="flex flex-wrap gap-1">
+                        {isOwner && (
+                          <Badge className="bg-purple-500 text-white">Owner</Badge>
+                        )}
+                        {isAdmin && (
+                          <Badge className="bg-secondary text-primary">Admin</Badge>
+                        )}
+                        {isCloser && (
+                          <Badge className="bg-blue-500 text-white">Closer</Badge>
+                        )}
+                        {isUser && (
+                          <Badge variant="outline">User</Badge>
+                        )}
+                        {user.roles.length === 0 && (
+                          <Badge variant="secondary">Aucun rôle</Badge>
+                        )}
+                      </div>
                     </TableCell>
                     <TableCell>
                       {new Date(user.created_at).toLocaleDateString('fr-FR')}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        onClick={() => toggleAdmin(user.id, isAdmin)}
-                        variant={isAdmin ? 'destructive' : 'outline'}
-                        size="sm"
-                      >
-                        {isAdmin ? (
+                      <div className="flex gap-2 justify-end">
+                        {!isOwner && (
                           <>
-                            <ShieldOff className="w-4 h-4 mr-2" />
-                            Retirer admin
-                          </>
-                        ) : (
-                          <>
-                            <Shield className="w-4 h-4 mr-2" />
-                            Promouvoir admin
+                            <Button
+                              onClick={() => toggleRole(user.id, 'admin', isAdmin)}
+                              variant={isAdmin ? 'destructive' : 'outline'}
+                              size="sm"
+                            >
+                              {isAdmin ? (
+                                <>
+                                  <ShieldOff className="w-4 h-4 mr-1" />
+                                  Retirer admin
+                                </>
+                              ) : (
+                                <>
+                                  <Shield className="w-4 h-4 mr-1" />
+                                  Promouvoir admin
+                                </>
+                              )}
+                            </Button>
+                            <Button
+                              onClick={() => toggleRole(user.id, 'closer', isCloser)}
+                              variant={isCloser ? 'destructive' : 'outline'}
+                              size="sm"
+                            >
+                              {isCloser ? (
+                                <>
+                                  <UserMinus className="w-4 h-4 mr-1" />
+                                  Retirer closer
+                                </>
+                              ) : (
+                                <>
+                                  <UserCog className="w-4 h-4 mr-1" />
+                                  Promouvoir closer
+                                </>
+                              )}
+                            </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button
+                                  variant="destructive"
+                                  size="sm"
+                                >
+                                  <Trash2 className="w-4 h-4 mr-1" />
+                                  Supprimer
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Êtes-vous sûr de vouloir supprimer l'utilisateur <strong>{user.email}</strong> ?
+                                    Cette action est irréversible et supprimera toutes les données associées.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                  <AlertDialogAction
+                                    onClick={() => deleteUser(user.id, user.email)}
+                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                  >
+                                    Supprimer définitivement
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
                           </>
                         )}
-                      </Button>
+                        {isOwner && (
+                          <Badge variant="secondary" className="text-xs">
+                            Protégé
+                          </Badge>
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 );

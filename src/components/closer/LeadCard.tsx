@@ -1,30 +1,61 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal, Phone, Mail, Calendar, Eye } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { RefreshCw, CheckCircle2, MoreHorizontal } from 'lucide-react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-interface Lead {
-  id: string;
-  full_name: string;
-  email: string;
-  phone?: string;
-  status: string;
-  score: number;
-  source: string;
-  created_at: string;
-  owner_id: string;
-}
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface LeadCardProps {
-  lead: Lead;
+  lead: {
+    id: string;
+    full_name: string;
+    email: string;
+    phone?: string;
+    score: number;
+    source: string;
+    created_at: string;
+    status: string;
+  };
+  hubspotSynced?: boolean;
+  onSyncSuccess?: () => void;
 }
 
-export const LeadCard = ({ lead }: LeadCardProps) => {
+export const LeadCard = ({ lead, hubspotSynced = false, onSyncSuccess }: LeadCardProps) => {
+  const [isSyncing, setIsSyncing] = useState(false);
+  const { toast } = useToast();
   const navigate = useNavigate();
 
+  const handleSyncToHubSpot = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsSyncing(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('hubspot-sync', {
+        body: { leadId: lead.id, action: 'create' },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: 'Synchronisé',
+        description: `${lead.full_name} a été synchronisé avec HubSpot`,
+      });
+
+      onSyncSuccess?.();
+    } catch (error) {
+      toast({
+        title: 'Erreur',
+        description: error instanceof Error ? error.message : 'Impossible de synchroniser avec HubSpot',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSyncing(false);
+    }
+  };
   const getScoreBadge = (score: number) => {
     if (score >= 75) {
       return <Badge className="bg-green-100 text-green-800 border-green-200">🔥 {score}</Badge>;
@@ -51,24 +82,6 @@ export const LeadCard = ({ lead }: LeadCardProps) => {
     );
   };
 
-  const handleCall = () => {
-    if (lead.phone) {
-      window.open(`tel:${lead.phone}`, '_self');
-    }
-  };
-
-  const handleEmail = () => {
-    window.open(`mailto:${lead.email}`, '_self');
-  };
-
-  const handleSchedule = () => {
-    // TODO: Ouvrir modal de planification RDV
-    console.log('Schedule appointment for:', lead.id);
-  };
-
-  const handleViewDetails = () => {
-    navigate(`/dashboard-closer/lead/${lead.id}`);
-  };
 
   return (
     <Card className="p-4 hover:shadow-lg transition-all cursor-pointer border-primary/20 hover:border-primary/40">
@@ -103,38 +116,45 @@ export const LeadCard = ({ lead }: LeadCardProps) => {
             })}
           </span>
         </div>
+        
+        {/* Status and HubSpot sync */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <div className={`w-2 h-2 rounded-full ${
+              lead.status === 'won' ? 'bg-green-500' :
+              lead.status === 'lost' ? 'bg-red-500' :
+              lead.status === 'in_progress' ? 'bg-orange-500' :
+              lead.status === 'qualified' ? 'bg-blue-500' :
+              'bg-gray-500'
+            }`} />
+            <span className="text-xs text-muted-foreground capitalize">
+              {lead.status.replace('_', ' ')}
+            </span>
+          </div>
 
-        {/* Actions rapides */}
-        <div className="flex gap-1 pt-2 border-t border-primary/10">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="flex-1 h-8 text-xs"
-            onClick={handleViewDetails}
-          >
-            <Eye className="h-3 w-3 mr-1" />
-            Voir
-          </Button>
-          {lead.phone && (
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="flex-1 h-8 text-xs"
-              onClick={handleCall}
+          {hubspotSynced ? (
+            <Badge variant="outline" className="text-xs gap-1 bg-green-50 text-green-700 border-green-200">
+              <CheckCircle2 className="w-3 h-3" />
+              HubSpot
+            </Badge>
+          ) : lead.score >= 75 ? (
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-6 text-xs px-2"
+              onClick={handleSyncToHubSpot}
+              disabled={isSyncing}
             >
-              <Phone className="h-3 w-3 mr-1" />
-              Appeler
+              {isSyncing ? (
+                <RefreshCw className="w-3 h-3 animate-spin" />
+              ) : (
+                <>
+                  <RefreshCw className="w-3 h-3 mr-1" />
+                  Sync
+                </>
+              )}
             </Button>
-          )}
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="flex-1 h-8 text-xs"
-            onClick={handleEmail}
-          >
-            <Mail className="h-3 w-3 mr-1" />
-            Email
-          </Button>
+          ) : null}
         </div>
       </CardContent>
     </Card>

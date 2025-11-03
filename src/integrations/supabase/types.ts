@@ -167,6 +167,66 @@ export type Database = {
         }
         Relationships: []
       }
+      closer_assignments: {
+        Row: {
+          closer_id: string
+          created_at: string | null
+          id: string
+          last_assigned_at: string | null
+          total_assigned: number | null
+        }
+        Insert: {
+          closer_id: string
+          created_at?: string | null
+          id?: string
+          last_assigned_at?: string | null
+          total_assigned?: number | null
+        }
+        Update: {
+          closer_id?: string
+          created_at?: string | null
+          id?: string
+          last_assigned_at?: string | null
+          total_assigned?: number | null
+        }
+        Relationships: []
+      }
+      closer_integrations: {
+        Row: {
+          access_token: string
+          closer_id: string
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          integration_type: string
+          is_active: boolean | null
+          refresh_token: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          access_token: string
+          closer_id: string
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          integration_type: string
+          is_active?: boolean | null
+          refresh_token?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          access_token?: string
+          closer_id?: string
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          integration_type?: string
+          is_active?: boolean | null
+          refresh_token?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       deals: {
         Row: {
           amount_cents: number
@@ -460,26 +520,38 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          bio: string | null
           created_at: string | null
           email: string | null
           full_name: string | null
           id: string
+          is_active: boolean | null
+          max_concurrent_leads: number | null
+          specialties: Json | null
           updated_at: string | null
         }
         Insert: {
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string | null
           email?: string | null
           full_name?: string | null
           id: string
+          is_active?: boolean | null
+          max_concurrent_leads?: number | null
+          specialties?: Json | null
           updated_at?: string | null
         }
         Update: {
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string | null
           email?: string | null
           full_name?: string | null
           id?: string
+          is_active?: boolean | null
+          max_concurrent_leads?: number | null
+          specialties?: Json | null
           updated_at?: string | null
         }
         Relationships: []
@@ -614,7 +686,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "user"
+      app_role: "admin" | "user" | "closer" | "owner" | "client" | "developer"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -742,7 +814,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "user"],
+      app_role: ["admin", "user", "closer", "owner", "client", "developer"],
     },
   },
 } as const

@@ -1,103 +1,162 @@
 import { ReactNode } from 'react';
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { LayoutDashboard, Users, Calendar, MessageSquare, User, LogOut } from 'lucide-react';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { 
+  Sidebar, 
+  SidebarProvider, 
+  SidebarTrigger
+} from '@/components/ui/sidebar';
+import { 
+  LayoutDashboard, 
+  Users, 
+  Calendar, 
+  MessageSquare, 
+  User,
+  Settings,
+  LogOut,
+  Home,
+  Building2
+} from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { RoleSwitcher } from '@/components/shared/RoleSwitcher';
 import { Button } from '@/components/ui/button';
+import logo from '@/assets/logo.png';
+import { useLanguage } from '@/contexts/LanguageContext';
+import LanguageSelector from '@/components/LanguageSelector';
 
 interface CloserLayoutProps {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
-const menuItems = [
-  {
-    title: 'Pipeline',
-    url: '/dashboard-closer',
-    icon: LayoutDashboard,
-  },
-  {
-    title: 'Mes Leads',
-    url: '/dashboard-closer/leads',
-    icon: Users,
-  },
-  {
-    title: 'Agenda Google',
-    url: '/dashboard-closer/calendar',
-    icon: Calendar,
-  },
-  {
-    title: 'Slack',
-    url: '/dashboard-closer/slack',
-    icon: MessageSquare,
-  },
-  {
-    title: 'Profil',
-    url: '/dashboard-closer/profile',
-    icon: User,
-  },
-];
-
 export const CloserLayout = ({ children }: CloserLayoutProps) => {
-  const { user, signOut } = useAuth();
+  const { user, signOut, userRoles } = useAuth();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const handleSignOut = async () => {
     await signOut();
-    navigate('/');
+    navigate('/auth');
   };
 
+  // Vérifier si l'utilisateur est owner uniquement
+  const isOwner = userRoles.includes('owner');
+
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
-      <Sidebar className="border-r border-primary/10">
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel className="font-playfair text-lg text-primary">
-              The Ultimate Closers
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {menuItems.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton 
-                      onClick={() => navigate(item.url)}
-                      className="w-full justify-start"
-                    >
-                      <item.icon className="mr-2 h-4 w-4" />
-                      {item.title}
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full bg-gradient-to-br from-primary/5 to-secondary/5">
+        {/* Header avec accent doré subtil */}
+        <header className="fixed top-0 left-0 right-0 h-14 flex items-center justify-between px-4 bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent backdrop-blur-sm border-b border-secondary/20 z-40">
+          <div className="flex items-center gap-3">
+            <SidebarTrigger />
+            <img 
+              src={logo} 
+              alt="Logo" 
+              className="w-8 h-8 object-contain hover:drop-shadow-[0_0_10px_hsl(44,73%,66%/0.6)] transition-all" 
+            />
+            <h1 className="font-playfair text-xl font-bold bg-gradient-to-r from-primary via-secondary/80 to-primary bg-clip-text text-transparent">
+              Dashboard Closer
+            </h1>
+          </div>
           
-          <SidebarGroup className="mt-auto">
-            <SidebarGroupContent>
-              <div className="px-2 py-2">
-                <div className="text-sm text-muted-foreground mb-2">
-                  Connecté en tant que
-                </div>
-                <div className="text-sm font-medium text-primary mb-3">
-                  {user?.email}
-                </div>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={handleSignOut}
-                  className="w-full"
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Déconnexion
-                </Button>
-              </div>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-      </Sidebar>
-      
-      <main className="flex-1 p-8 overflow-auto">
-        {children}
-      </main>
-    </div>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-muted-foreground font-inter">
+              {user?.email}
+            </span>
+            <LanguageSelector className="scale-90" />
+            {isOwner && (
+              <Button
+                onClick={() => navigate('/admin')}
+                variant="outline"
+                className="border-secondary/50 text-secondary hover:bg-secondary/10 hover:border-secondary hover:shadow-[0_0_15px_hsl(44,73%,66%/0.4)] transition-all duration-300"
+              >
+                <Home className="w-4 h-4 mr-2" />
+                Dashboard Admin
+              </Button>
+            )}
+            <RoleSwitcher />
+            <Button
+              onClick={handleSignOut}
+              className="bg-secondary text-primary hover:bg-secondary/90 hover:shadow-[0_0_20px_hsl(44,73%,66%/0.5)] transition-all duration-300"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              {t('closer.logout')}
+            </Button>
+          </div>
+        </header>
+
+        <SidebarContent />
+        
+        <main className="flex-1 pt-14 p-8">
+          {children || <Outlet />}
+        </main>
+      </div>
+    </SidebarProvider>
+  );
+};
+
+const SidebarContent = () => {
+  const { t } = useLanguage();
+  
+  const sidebarItems = [
+    {
+      icon: LayoutDashboard,
+      label: t('closer.nav.pipeline'),
+      href: '/dashboard-closer'
+    },
+    {
+      icon: Users,
+      label: t('closer.nav.leads'),
+      href: '/dashboard-closer/leads'
+    },
+    {
+      icon: Calendar,
+      label: t('closer.nav.calendar'),
+      href: '/dashboard-closer/calendar'
+    },
+    {
+      icon: Building2,
+      label: 'HubSpot CRM',
+      href: '/dashboard-closer/hubspot'
+    },
+    {
+      icon: MessageSquare,
+      label: t('closer.nav.slack'),
+      href: '/dashboard-closer/slack'
+    },
+    {
+      icon: User,
+      label: t('closer.nav.profile'),
+      href: '/dashboard-closer/profile'
+    },
+    {
+      icon: Settings,
+      label: t('closer.nav.settings'),
+      href: '/dashboard-closer/settings'
+    }
+  ];
+
+  return (
+    <Sidebar collapsible="icon" className="bg-primary border-r border-primary-foreground/10">
+      <div className="p-4 pt-20">
+        <nav className="space-y-2">
+          {sidebarItems.map((item) => (
+            <NavLink
+              key={item.href}
+              to={item.href}
+              end={item.href === '/dashboard-closer'}
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300 ${
+                  isActive
+                    ? 'bg-secondary/20 text-secondary border-l-4 border-secondary shadow-[0_0_15px_hsl(44,73%,66%/0.4)]'
+                    : 'text-primary-foreground/70 hover:text-secondary hover:bg-secondary/10'
+                }`
+              }
+            >
+              <item.icon className="w-4 h-4 flex-shrink-0" />
+              <span className="font-medium">{item.label}</span>
+            </NavLink>
+          ))}
+        </nav>
+      </div>
+    </Sidebar>
   );
 };

@@ -184,6 +184,54 @@ const translations = {
     'booking.channel.other': 'Autre',
     'booking.select': 'Sélectionnez',
     'booking.urgent': 'Urgent',
+    
+    // Auth
+    'auth.title': 'The Ultimate Closers',
+    'auth.subtitle': 'Connexion réservée aux Ultimate Closers',
+    'auth.contact': 'Contactez un administrateur pour créer votre compte',
+    'auth.email': 'Email',
+    'auth.password': 'Mot de passe',
+    'auth.signin': 'Se connecter',
+    'auth.signingIn': 'Connexion...',
+    'auth.or': 'Ou',
+    'auth.google': 'Continuer avec Google',
+    'auth.reserved': 'Réservé aux administrateurs autorisés',
+    'auth.error.title': 'Erreur de connexion',
+    'auth.error.credentials': 'Email ou mot de passe incorrect',
+    'auth.error.validation': 'Erreur de validation',
+    
+    // 404
+    'notfound.title': '404',
+    'notfound.subtitle': 'Oops! Page introuvable',
+    'notfound.home': 'Retour à l\'accueil',
+    
+    // Access Denied
+    'access.title': 'Accès refusé',
+    'access.subtitle': 'Vous n\'avez pas les permissions nécessaires pour accéder à cette page.',
+    'access.connected': 'Connecté en tant que :',
+    'access.homeBtn': 'Retour à ma page d\'accueil',
+    'access.needLogin': 'Vous devez être connecté pour accéder à cette ressource.',
+    'access.loginBtn': 'Se connecter',
+    'access.backHome': 'Retour à l\'accueil',
+    
+    // Closer Dashboard
+    'closer.title': 'Pipeline Closers',
+    'closer.subtitle': 'Gestion de vos leads et rendez-vous',
+    'closer.logout': 'Déconnexion',
+    'closer.nav.pipeline': 'Pipeline',
+    'closer.nav.leads': 'Mes Leads',
+    'closer.nav.calendar': 'Agenda Google',
+    'closer.nav.slack': 'Slack',
+    'closer.nav.profile': 'Profil',
+    'closer.nav.settings': 'Paramètres',
+    
+    // Admin Sidebar
+    'admin.nav.dashboard': 'Dashboard Admin',
+    'admin.nav.content': 'Contenu',
+    'admin.nav.formations': 'Formations',
+    'admin.nav.users': 'Utilisateurs',
+    'admin.nav.closers': 'Closers',
+    'admin.nav.analytics': 'Analytics',
   },
   en: {
     // Header
@@ -360,6 +408,54 @@ const translations = {
     'booking.channel.other': 'Other',
     'booking.select': 'Select',
     'booking.urgent': 'Urgent',
+    
+    // Auth
+    'auth.title': 'The Ultimate Closers',
+    'auth.subtitle': 'Login reserved for Ultimate Closers',
+    'auth.contact': 'Contact an administrator to create your account',
+    'auth.email': 'Email',
+    'auth.password': 'Password',
+    'auth.signin': 'Sign in',
+    'auth.signingIn': 'Signing in...',
+    'auth.or': 'Or',
+    'auth.google': 'Continue with Google',
+    'auth.reserved': 'Reserved for authorized administrators',
+    'auth.error.title': 'Login error',
+    'auth.error.credentials': 'Incorrect email or password',
+    'auth.error.validation': 'Validation error',
+    
+    // 404
+    'notfound.title': '404',
+    'notfound.subtitle': 'Oops! Page not found',
+    'notfound.home': 'Return to home',
+    
+    // Access Denied
+    'access.title': 'Access denied',
+    'access.subtitle': 'You do not have the necessary permissions to access this page.',
+    'access.connected': 'Connected as:',
+    'access.homeBtn': 'Back to my homepage',
+    'access.needLogin': 'You must be logged in to access this resource.',
+    'access.loginBtn': 'Sign in',
+    'access.backHome': 'Back to home',
+    
+    // Closer Dashboard
+    'closer.title': 'Closers Pipeline',
+    'closer.subtitle': 'Manage your leads and appointments',
+    'closer.logout': 'Logout',
+    'closer.nav.pipeline': 'Pipeline',
+    'closer.nav.leads': 'My Leads',
+    'closer.nav.calendar': 'Google Calendar',
+    'closer.nav.slack': 'Slack',
+    'closer.nav.profile': 'Profile',
+    'closer.nav.settings': 'Settings',
+    
+    // Admin Sidebar
+    'admin.nav.dashboard': 'Admin Dashboard',
+    'admin.nav.content': 'Content',
+    'admin.nav.formations': 'Training',
+    'admin.nav.users': 'Users',
+    'admin.nav.closers': 'Closers',
+    'admin.nav.analytics': 'Analytics',
   },
   dar: {
     // Header
@@ -536,6 +632,54 @@ const translations = {
     'booking.channel.other': 'أخرى',
     'booking.select': 'اختار',
     'booking.urgent': 'مستعجل',
+    
+    // Auth
+    'auth.title': 'The Ultimate Closers',
+    'auth.subtitle': 'تسجيل الدخول حصري لـ Ultimate Closers',
+    'auth.contact': 'تواصل مع مسؤول لإنشاء حسابك',
+    'auth.email': 'البريد الإلكتروني',
+    'auth.password': 'كلمة المرور',
+    'auth.signin': 'تسجيل الدخول',
+    'auth.signingIn': 'جاري تسجيل الدخول...',
+    'auth.or': 'أو',
+    'auth.google': 'متابعة مع جوجل',
+    'auth.reserved': 'محجوز للمسؤولين المصرح لهم',
+    'auth.error.title': 'خطأ في تسجيل الدخول',
+    'auth.error.credentials': 'البريد الإلكتروني أو كلمة المرور غير صحيحة',
+    'auth.error.validation': 'خطأ في التحقق',
+    
+    // 404
+    'notfound.title': '404',
+    'notfound.subtitle': 'للأسف! الصفحة غير موجودة',
+    'notfound.home': 'رجوع للصفحة الرئيسية',
+    
+    // Access Denied
+    'access.title': 'تم رفض الوصول',
+    'access.subtitle': 'ليس لديك الصلاحيات اللازمة للوصول إلى هذه الصفحة.',
+    'access.connected': 'متصل باسم:',
+    'access.homeBtn': 'العودة إلى صفحتي الرئيسية',
+    'access.needLogin': 'يجب أن تكون متصلاً للوصول إلى هذا المورد.',
+    'access.loginBtn': 'تسجيل الدخول',
+    'access.backHome': 'العودة إلى الصفحة الرئيسية',
+    
+    // Closer Dashboard
+    'closer.title': 'مسار الكلوزرز',
+    'closer.subtitle': 'إدارة العملاء المحتملين والمواعيد',
+    'closer.logout': 'تسجيل الخروج',
+    'closer.nav.pipeline': 'المسار',
+    'closer.nav.leads': 'العملاء المحتملين',
+    'closer.nav.calendar': 'جوجل كالندر',
+    'closer.nav.slack': 'سلاك',
+    'closer.nav.profile': 'الملف الشخصي',
+    'closer.nav.settings': 'الإعدادات',
+    
+    // Admin Sidebar
+    'admin.nav.dashboard': 'لوحة الإدارة',
+    'admin.nav.content': 'المحتوى',
+    'admin.nav.formations': 'التكوينات',
+    'admin.nav.users': 'المستخدمون',
+    'admin.nav.closers': 'الكلوزرز',
+    'admin.nav.analytics': 'التحليلات',
   },
 };
 

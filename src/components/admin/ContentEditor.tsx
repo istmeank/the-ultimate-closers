@@ -6,7 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Save, Upload } from 'lucide-react';
+import { Save } from 'lucide-react';
+import { AddContentDialog } from './AddContentDialog';
 
 export const ContentEditor = () => {
   const [sections, setSections] = useState<any[]>([]);
@@ -71,13 +72,16 @@ export const ContentEditor = () => {
         <h2 className="font-playfair font-bold text-3xl text-background">
           Modifier le contenu
         </h2>
-        <Button
-          onClick={loadContent}
-          variant="outline"
-          className="border-background/20 text-background hover:bg-background/10"
-        >
-          Actualiser
-        </Button>
+        <div className="flex gap-3">
+          <Button
+            onClick={loadContent}
+            variant="outline"
+            className="border-background/20 text-background hover:bg-background/10"
+          >
+            Actualiser
+          </Button>
+          <AddContentDialog onContentAdded={loadContent} />
+        </div>
       </div>
 
       {sections.length === 0 ? (

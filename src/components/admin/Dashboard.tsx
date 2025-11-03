@@ -9,6 +9,10 @@ export const Dashboard = () => {
     totalFormations: 0,
     publishedFormations: 0,
     recentViews: 0,
+    totalLeads: 0,
+    qualifiedLeads: 0,
+    totalDeals: 0,
+    totalRevenue: 0,
   });
 
   useEffect(() => {
@@ -42,11 +46,36 @@ export const Dashboard = () => {
         .eq('event_type', 'page_view')
         .gte('created_at', sevenDaysAgo.toISOString());
 
+      // CRM Stats
+      const { count: leadsCount } = await supabase
+        .from('leads')
+        .select('*', { count: 'exact', head: true });
+
+      const { count: qualifiedCount } = await supabase
+        .from('leads')
+        .select('*', { count: 'exact', head: true })
+        .gte('score', 75);
+
+      const { count: dealsCount } = await supabase
+        .from('deals')
+        .select('*', { count: 'exact', head: true });
+
+      const { data: revenueData } = await supabase
+        .from('deals')
+        .select('amount_cents')
+        .eq('stage', 'won');
+
+      const totalRevenue = (revenueData || []).reduce((sum, deal) => sum + deal.amount_cents, 0) / 100;
+
       setStats({
         totalUsers: usersCount || 0,
         totalFormations: formationsCount || 0,
         publishedFormations: publishedCount || 0,
         recentViews: viewsCount || 0,
+        totalLeads: leadsCount || 0,
+        qualifiedLeads: qualifiedCount || 0,
+        totalDeals: dealsCount || 0,
+        totalRevenue: totalRevenue || 0,
       });
     } catch (error) {
       console.error('Error loading stats:', error);
@@ -61,32 +90,44 @@ export const Dashboard = () => {
       color: 'text-secondary',
     },
     {
-      title: 'Formations',
-      value: stats.totalFormations,
+      title: 'Leads totaux',
+      value: stats.totalLeads,
+      icon: Users,
+      color: 'text-secondary',
+    },
+    {
+      title: 'Leads qualifiés',
+      value: stats.qualifiedLeads,
+      icon: TrendingUp,
+      color: 'text-secondary',
+    },
+    {
+      title: 'Deals',
+      value: stats.totalDeals,
       icon: FileText,
       color: 'text-secondary',
     },
     {
-      title: 'Formations publiées',
-      value: stats.publishedFormations,
-      icon: Calendar,
+      title: 'CA généré',
+      value: `${stats.totalRevenue.toLocaleString('fr-FR')}€`,
+      icon: TrendingUp,
       color: 'text-secondary',
     },
     {
-      title: 'Vues (7 derniers jours)',
-      value: stats.recentViews,
-      icon: TrendingUp,
+      title: 'Formations',
+      value: stats.totalFormations,
+      icon: Calendar,
       color: 'text-secondary',
     },
   ];
 
   return (
     <div className="space-y-6">
-      <h2 className="font-playfair font-bold text-3xl text-background">
+      <h2 className="font-playfair font-bold text-3xl text-primary">
         Vue d'ensemble
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {statCards.map((stat) => (
           <Card
             key={stat.title}

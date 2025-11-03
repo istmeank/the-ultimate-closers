@@ -2,15 +2,17 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
 
-type AppRole = 'admin' | 'closer' | 'owner' | 'client' | 'user';
+type AppRole = 'admin' | 'closer' | 'owner' | 'client' | 'user' | 'developer';
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [role, setRole] = useState<AppRole | null>(null);
+  const [userRoles, setUserRoles] = useState<AppRole[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isCloser, setIsCloser] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
+  const [isDeveloper, setIsDeveloper] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -55,28 +57,50 @@ export const useAuth = () => {
       const { data, error } = await supabase
         .from('user_roles')
         .select('role')
-        .eq('user_id', userId)
-        .maybeSingle();
+        .eq('user_id', userId);
       
       if (error) {
         console.error('Error checking user role:', error);
-        setRole(null);
+        // En cas d'erreur, définir le rôle par défaut 'user'
+        setRole('user');
+        setUserRoles(['user']);
         setIsAdmin(false);
         setIsCloser(false);
         setIsOwner(false);
       } else {
-        const userRole = data?.role as AppRole || 'user';
-        setRole(userRole);
-        setIsAdmin(userRole === 'admin' || userRole === 'owner');
-        setIsCloser(userRole === 'closer');
-        setIsOwner(userRole === 'owner');
+      // Récupérer tous les rôles de l'utilisateur
+      const roles = data.map(r => r.role as AppRole);
+      const allRoles: AppRole[] = roles.length > 0 ? roles : ['user'];
+      
+      // Determine primary role based on hierarchy: owner > admin > developer > closer > user
+      let primaryRole: AppRole = 'user';
+      
+      if (roles.includes('owner')) {
+        primaryRole = 'owner';
+      } else if (roles.includes('admin')) {
+        primaryRole = 'admin';
+      } else if (roles.includes('developer')) {
+        primaryRole = 'developer';
+      } else if (roles.includes('closer')) {
+        primaryRole = 'closer';
+      }
+
+      setRole(primaryRole);
+      setUserRoles(allRoles);
+      setIsAdmin(allRoles.includes('admin'));
+      setIsCloser(allRoles.includes('closer'));
+      setIsOwner(allRoles.includes('owner'));
+      setIsDeveloper(allRoles.includes('developer'));
       }
     } catch (error) {
       console.error('Error checking user role:', error);
-      setRole(null);
+      // En cas d'exception, définir le rôle par défaut 'user'
+      setRole('user');
+      setUserRoles(['user']);
       setIsAdmin(false);
       setIsCloser(false);
       setIsOwner(false);
+      setIsDeveloper(false);
     } finally {
       setLoading(false);
     }
@@ -90,17 +114,6 @@ export const useAuth = () => {
     return { error };
   };
 
-  const signUpWithEmail = async (email: string, password: string) => {
-    const redirectUrl = `${window.location.origin}/`;
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: redirectUrl,
-      },
-    });
-    return { error };
-  };
 
   const signInWithGoogle = async () => {
     const redirectUrl = `${window.location.origin}/`;
@@ -122,12 +135,13 @@ export const useAuth = () => {
     user,
     session,
     role,
+    userRoles,
     isAdmin,
     isCloser,
     isOwner,
+    isDeveloper,
     loading,
     signInWithEmail,
-    signUpWithEmail,
     signInWithGoogle,
     signOut,
   };
