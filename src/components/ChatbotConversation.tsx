@@ -7,6 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { CheckCircle, ArrowRight } from 'lucide-react';
+import { detectDarijaLanguage } from '@/lib/darijaDetection';
+import { DziriBERTSuggestions } from '@/components/DziriBERTSuggestions';
 
 interface ChatbotConversationProps {
   onClose: () => void;
@@ -15,6 +17,8 @@ interface ChatbotConversationProps {
 export const ChatbotConversation = ({ onClose }: ChatbotConversationProps) => {
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [showDziriBERT, setShowDziriBERT] = useState(false);
+  const [darijaConfidence, setDarijaConfidence] = useState(0);
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -52,7 +56,7 @@ export const ChatbotConversation = ({ onClose }: ChatbotConversationProps) => {
 
   const currentQuestion = questions[step];
 
-  const handleNext = () => {
+  const handleNext = async () => {
     // Validation simple
     const requiredFields = currentQuestion.fields;
     const hasEmptyFields = requiredFields.some(field => !formData[field as keyof typeof formData]);
@@ -60,6 +64,18 @@ export const ChatbotConversation = ({ onClose }: ChatbotConversationProps) => {
     if (hasEmptyFields) {
       toast.error('Veuillez remplir tous les champs');
       return;
+    }
+
+    // Détection Darija à l'étape 3 (main_challenge) - step 2 car index 0
+    if (step === 2 && formData.main_challenge) {
+      const darijaResult = await detectDarijaLanguage(formData.main_challenge);
+      setDarijaConfidence(darijaResult.confidence);
+      
+      // Afficher DziriBERT si confiance > 70%
+      if (darijaResult.isDarija && darijaResult.confidence > 0.7) {
+        setShowDziriBERT(true);
+        console.log('🇩🇿 Darija détecté:', darijaResult);
+      }
     }
 
     if (step < questions.length - 1) {
@@ -72,6 +88,16 @@ export const ChatbotConversation = ({ onClose }: ChatbotConversationProps) => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
+      // Détection finale Darija si pas encore faite
+      let finalDarijaConfidence = darijaConfidence;
+      let isDarijaSpeaker = darijaConfidence > 0.7;
+
+      if (formData.main_challenge && !isDarijaSpeaker) {
+        const darijaResult = await detectDarijaLanguage(formData.main_challenge);
+        finalDarijaConfidence = darijaResult.confidence;
+        isDarijaSpeaker = darijaResult.isDarija && darijaResult.confidence > 0.7;
+      }
+
       // Appeler l'Edge Function score-lead
       const { data, error } = await supabase.functions.invoke('score-lead', {
         body: {
@@ -81,14 +107,20 @@ export const ChatbotConversation = ({ onClose }: ChatbotConversationProps) => {
             is_business_email: !formData.email.match(/@(gmail|hotmail|yahoo|outlook|live)\./),
             commitment_confirmed: true,
             sales_team_size: parseInt(formData.sales_team_size) || 0,
+            is_darija_speaker: isDarijaSpeaker,
+            darija_confidence: finalDarijaConfidence
           }
         }
       });
 
       if (error) throw error;
 
+      const scoreMessage = isDarijaSpeaker 
+        ? `Merci ! 🇩🇿 Darija détecté. Score: ${data.score}/100`
+        : `Merci ! Votre demande a été enregistrée (Score: ${data.score}/100)`;
+
       toast.success(
-        `Merci ! Votre demande a été enregistrée (Score: ${data.score}/100)`,
+        scoreMessage,
         {
           description: data.auto_assigned 
             ? 'Un closer vous contactera sous 24h' 
@@ -231,6 +263,25 @@ export const ChatbotConversation = ({ onClose }: ChatbotConversationProps) => {
                   placeholder="Décrivez votre besoin principal..."
                   rows={3}
                 />
+                
+                {/* Affichage conditionnel DziriBERT si Darija détecté */}
+                {showDziriBERT && (
+                  <div className="mt-4 p-4 border border-primary/20 rounded-lg bg-primary/5">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-2xl">🇩🇿</span>
+                      <p className="text-sm text-muted-foreground">
+                        Darija détecté ! Suggestions de complétion :
+                      </p>
+                    </div>
+                    <DziriBERTSuggestions
+                      placeholder={formData.main_challenge}
+                      onSelect={(completed) => {
+                        setFormData({ ...formData, main_challenge: completed });
+                        setShowDziriBERT(false);
+                      }}
+                    />
+                  </div>
+                )}
               </>
             )}
             {field === 'urgency' && (

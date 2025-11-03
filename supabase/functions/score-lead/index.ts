@@ -55,6 +55,12 @@ Deno.serve(async (req) => {
     // Engagement (+10 points si commitment confirmé)
     if (leadData.commitment_confirmed) score += 10;
     
+    // Darija speaker (+5 points - marché local algérien)
+    if (leadData.is_darija_speaker && leadData.darija_confidence > 0.7) {
+      score += 5;
+      console.log(`🇩🇿 Darija speaker detected (confidence: ${Math.round(leadData.darija_confidence * 100)}%): +5 points`);
+    }
+    
     console.log(`Lead score calculated: ${score}/100`);
     
     // Créer ou update lead avec score

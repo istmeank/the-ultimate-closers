@@ -200,7 +200,7 @@ const LeadDetail = () => {
                     {deals.map((deal) => (
                       <div key={deal.id} className="flex items-center justify-between p-4 border rounded-lg">
                         <div>
-                          <h4 className="font-semibold">{deal.title}</h4>
+                          <h4 className="font-semibold">{deal.offer_name}</h4>
                           <p className="text-sm text-muted-foreground">
                             Montant: {(deal.amount_cents / 100).toLocaleString('fr-FR')} €
                           </p>
