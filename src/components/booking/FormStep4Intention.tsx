@@ -27,7 +27,7 @@ const FormStep4Intention = ({ form, onNext, onPrevious }: FormStep4IntentionProp
         <div className="inline-block p-3 bg-gradient-to-br from-secondary/20 to-primary/20 rounded-full mb-3">
           <Target className="w-8 h-8 text-secondary" />
         </div>
-        <h3 className="text-2xl font-display font-bold text-secondary">{t('booking.step4.title')}</h3>
+        <h3 className="text-2xl font-display font-bold">{t('booking.step4.title')}</h3>
         <p className="text-muted-foreground mt-2">{t('booking.step4.subtitle')}</p>
       </div>
 

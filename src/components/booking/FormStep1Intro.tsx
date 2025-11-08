@@ -20,7 +20,7 @@ const FormStep1Intro = ({ onNext }: FormStep1IntroProps) => {
           </p>
         </div>
         
-        <h2 className="text-4xl md:text-5xl font-display font-bold text-secondary">
+        <h2 className="text-4xl md:text-5xl font-display font-bold text-gradient">
           {t('booking.step1.title')}
         </h2>
         
