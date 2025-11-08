@@ -42,7 +42,7 @@ const FormStep3Business = ({ form, onNext, onPrevious }: FormStep3BusinessProps)
         <div className="inline-block p-3 bg-gradient-to-br from-secondary/20 to-primary/20 rounded-full mb-3">
           <Briefcase className="w-8 h-8 text-secondary" />
         </div>
-        <h3 className="text-2xl font-display font-bold">{t('booking.step3.title')}</h3>
+        <h3 className="text-2xl font-display font-bold text-secondary">{t('booking.step3.title')}</h3>
         <p className="text-muted-foreground mt-2">{t('booking.step3.subtitle')}</p>
       </div>
 

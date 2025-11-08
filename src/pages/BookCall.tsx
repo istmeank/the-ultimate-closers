@@ -9,7 +9,7 @@ const BookCall = () => {
   const { t } = useLanguage();
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background pt-24 pb-12">
+    <div className="min-h-screen bg-gradient-to-br from-primary via-primary/90 to-primary/80 pt-24 pb-12">
       {/* Language Selector - Fixed Position */}
       <div className="fixed top-4 right-4 z-50">
         <LanguageSelector />

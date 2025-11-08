@@ -19,7 +19,7 @@ const FormStep7Confirmation = ({ bookingData }: FormStep7ConfirmationProps) => {
       </div>
 
       <div className="space-y-4">
-        <h2 className="text-4xl md:text-5xl font-display font-bold text-gradient">
+        <h2 className="text-4xl md:text-5xl font-display font-bold text-secondary">
           {t('booking.step7.success')}
         </h2>
         

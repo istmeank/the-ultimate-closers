@@ -27,7 +27,7 @@ const FormStep2Identity = ({ form, onNext, onPrevious }: FormStep2IdentityProps)
         <div className="inline-block p-3 bg-gradient-to-br from-secondary/20 to-primary/20 rounded-full mb-3">
           <User className="w-8 h-8 text-secondary" />
         </div>
-        <h3 className="text-2xl font-display font-bold">{t('booking.step2.title')}</h3>
+        <h3 className="text-2xl font-display font-bold text-secondary">{t('booking.step2.title')}</h3>
         <p className="text-muted-foreground mt-2">{t('booking.step2.subtitle')}</p>
       </div>
 
