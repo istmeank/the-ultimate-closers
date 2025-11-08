@@ -1,24 +1,46 @@
 <!doctype html>
-<html>
+<html lang="fr">
   <head>
     <meta charset="utf-8" />
-    <title>Not Found</title>
-    <meta http-equiv="refresh" content="0;url=/" />
+    <title>Redirection - The Ultimate Closers</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: system-ui, -apple-system, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+      .loader {
+        color: white;
+        text-align: center;
+      }
+    </style>
   </head>
   <body>
+    <div class="loader">
+      <p>Redirection en cours...</p>
+    </div>
     <script>
       (function() {
-        var redirectTo = '/';
-        // Preserve client-side route so the app can handle it
-        var l = window.location;
-        var path = l.pathname + l.search + l.hash;
-        if (path && path !== '/' && path !== '/index.html') {
-          sessionStorage.setItem('gh:redirect', path);
+        // Preserve the requested path for SPA routing
+        var pathToRedirect = window.location.pathname + window.location.search + window.location.hash;
+        
+        // Store the path if it's not the root
+        if (pathToRedirect && pathToRedirect !== '/' && pathToRedirect !== '/index.html') {
+          sessionStorage.setItem('gh:redirect', pathToRedirect);
+          console.log('SPA Redirect: Preserving path', pathToRedirect);
         }
-        l.replace(redirectTo);
+        
+        // Redirect to root immediately
+        window.location.replace('/');
       })();
     </script>
   </body>
-  </html>
+</html>
 
 
