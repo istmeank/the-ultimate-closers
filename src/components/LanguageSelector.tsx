@@ -1,4 +1,12 @@
 import { useLanguage, Language } from '@/contexts/LanguageContext';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { ChevronDown } from 'lucide-react';
 
 interface LanguageSelectorProps {
   className?: string;
@@ -13,24 +21,36 @@ const LanguageSelector = ({ className = '' }: LanguageSelectorProps) => {
     { code: 'dar', flag: '🇩🇿', label: 'DZ' },
   ];
 
+  const currentLanguage = languages.find((lang) => lang.code === language);
+
   return (
-    <div className={`flex items-center gap-2 bg-muted rounded-full p-1 ${className}`}>
-      {languages.map((lang) => (
-        <button
-          key={lang.code}
-          onClick={() => setLanguage(lang.code)}
-          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-            language === lang.code
-              ? 'bg-secondary text-primary shadow-md'
-              : 'text-muted-foreground hover:text-foreground'
-          }`}
-          aria-label={`Switch to ${lang.label}`}
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button 
+          variant="outline" 
+          size="sm"
+          className={`bg-background/95 backdrop-blur-sm border-border hover:bg-accent hover:text-accent-foreground ${className}`}
         >
-          <span className="mr-1">{lang.flag}</span>
-          {lang.label}
-        </button>
-      ))}
-    </div>
+          <span className="mr-2">{currentLanguage?.flag}</span>
+          {currentLanguage?.label}
+          <ChevronDown className="ml-2 h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="bg-background border-border z-50">
+        {languages.map((lang) => (
+          <DropdownMenuItem
+            key={lang.code}
+            onClick={() => setLanguage(lang.code)}
+            className={`cursor-pointer ${
+              language === lang.code ? 'bg-secondary text-primary font-semibold' : ''
+            }`}
+          >
+            <span className="mr-2">{lang.flag}</span>
+            {lang.label}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 
