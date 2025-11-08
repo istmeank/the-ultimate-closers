@@ -21,7 +21,7 @@ const translations = {
     'hero.title': 'Convertir sans forcer. Performer avec conscience.',
     'hero.subtitle': "L'alliance entre psychologie, IA et éthique pour une vente augmentée.",
     'hero.cta.primary': 'Réserver un audit offert',
-    'hero.cta.secondary': 'Connexion / S\'inscrire',
+    'hero.cta.secondary': 'Connexion',
     
     // About Us
     'about.title': 'Qui sommes-nous ?',
@@ -245,7 +245,7 @@ const translations = {
     'hero.title': 'Convert without pressure. Perform with conscience.',
     'hero.subtitle': 'Merging psychology, AI, and ethics to reinvent selling.',
     'hero.cta.primary': 'Book a Complimentary Audit',
-    'hero.cta.secondary': 'Login / Sign Up',
+    'hero.cta.secondary': 'Login',
     
     // About Us
     'about.title': 'Who We Are',
@@ -469,7 +469,7 @@ const translations = {
     'hero.title': 'نحوّل الزبائن بلا ضغط، و نخدمو بالنية و الفهم.',
     'hero.subtitle': 'البيع الواعي بالذكاء الاصطناعي و النية الصافية.',
     'hero.cta.primary': 'دير معانا audit مجاني',
-    'hero.cta.secondary': 'تسجيل الدخول / إنشاء حساب',
+    'hero.cta.secondary': 'تسجيل الدخول',
     
     // About Us
     'about.title': 'على من احنا؟',
