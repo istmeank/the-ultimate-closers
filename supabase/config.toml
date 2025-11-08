@@ -5,9 +5,3 @@ verify_jwt = true
 
 [functions.delete-user]
 verify_jwt = true
-
-[functions.google-calendar-auth]
-verify_jwt = true
-
-[functions.google-calendar-sync]
-verify_jwt = false

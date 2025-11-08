@@ -16,7 +16,6 @@ import Admin from "./pages/Admin";
 import BookCall from "./pages/BookCall";
 import DashboardCloser from "./pages/DashboardCloser";
 import LeadDetail from "./pages/LeadDetail";
-import CalendarSettings from "./pages/CalendarSettings";
 import SlackSettings from "./pages/SlackSettings";
 import HubSpotSettings from "./pages/HubSpotSettings";
 import CloserLeads from "./pages/CloserLeads";
@@ -75,7 +74,6 @@ const App = () => (
             >
               <Route index element={<DashboardCloser />} />
               <Route path="lead/:id" element={<LeadDetail />} />
-              <Route path="calendar" element={<CalendarSettings />} />
               <Route path="slack" element={<SlackSettings />} />
               <Route path="hubspot" element={<HubSpotSettings />} />
               <Route path="leads" element={<CloserLeads />} />
