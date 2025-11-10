@@ -12,7 +12,7 @@ export const ChatbotQualif = () => {
       {!isOpen && (
         <Button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-lg hover:scale-110 transition-transform z-50 bg-primary hover:bg-primary/90"
+          className="fixed bottom-4 right-4 md:bottom-6 md:right-6 h-16 w-16 rounded-full shadow-lg hover:scale-110 transition-transform z-50 bg-primary hover:bg-primary/90"
           aria-label="Ouvrir le chatbot"
         >
           <MessageCircle className="h-8 w-8 text-background" />
@@ -21,7 +21,7 @@ export const ChatbotQualif = () => {
 
       {/* Fenêtre de conversation */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 w-[400px] h-[600px] bg-background rounded-lg shadow-2xl flex flex-col z-50 border border-secondary/20">
+        <div className="fixed bottom-4 right-4 left-4 md:left-auto md:right-6 md:w-[400px] w-auto h-[85vh] md:h-[600px] max-h-[600px] bg-background rounded-lg shadow-2xl flex flex-col z-50 border border-secondary/20">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b bg-primary text-background rounded-t-lg">
             <div className="flex items-center gap-3">
