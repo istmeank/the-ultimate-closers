@@ -9,19 +9,19 @@ const WhyWeExist = () => {
       icon: Users,
       titleKey: 'why.card1.title',
       textKey: 'why.card1.text',
-      color: 'text-primary',
+      color: 'text-amber-600/80',
     },
     {
       icon: Handshake,
       titleKey: 'why.card2.title',
       textKey: 'why.card2.text',
-      color: 'text-accent',
+      color: 'text-amber-600/80',
     },
     {
       icon: Heart,
       titleKey: 'why.card3.title',
       textKey: 'why.card3.text',
-      color: 'text-primary',
+      color: 'text-amber-600/80',
     },
   ];
 
@@ -48,12 +48,12 @@ const WhyWeExist = () => {
             return (
               <div
                 key={index}
-                className="group relative bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-8 hover:border-primary/30 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 animate-fade-in"
+                className="group relative bg-card/50 backdrop-blur-sm border border-amber-500/20 rounded-2xl p-8 hover:border-amber-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/10 animate-fade-in"
                 style={{ animationDelay: `${index * 150}ms` }}
               >
                 {/* Icon */}
                 <div className="mb-6 flex justify-center">
-                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-16 h-16 rounded-full bg-amber-500/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                     <Icon className={`w-8 h-8 ${pillar.color}`} />
                   </div>
                 </div>
@@ -69,7 +69,7 @@ const WhyWeExist = () => {
                 </div>
 
                 {/* Subtle gradient overlay on hover */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
               </div>
             );
           })}
