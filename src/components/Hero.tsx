@@ -32,12 +32,12 @@ const Hero = () => {
           </div>
 
           {/* Main title */}
-          <h1 className="font-playfair font-bold text-2xl md:text-4xl lg:text-5xl text-background mb-6 leading-tight">
+          <h1 className="font-playfair font-bold text-2xl md:text-4xl lg:text-5xl text-white mb-6 leading-tight">
             {t('hero.title')}
           </h1>
 
           {/* Subtitle */}
-          <p className="font-inter text-lg md:text-xl text-background/90 mb-10 max-w-2xl mx-auto">
+          <p className="font-inter text-lg md:text-xl text-white/90 mb-10 max-w-2xl mx-auto">
             {t('hero.subtitle')}
           </p>
 
@@ -49,7 +49,7 @@ const Hero = () => {
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="bg-background/10 backdrop-blur-sm border-2 border-secondary hover:bg-secondary hover:text-primary text-background font-semibold px-8 py-6 rounded-full transition-all">
+            <Button asChild size="lg" variant="outline" className="bg-background/10 backdrop-blur-sm border-2 border-secondary hover:bg-secondary hover:text-primary text-white font-semibold px-8 py-6 rounded-full transition-all">
               <Link to="/auth">
                 {t('hero.cta.secondary')}
               </Link>

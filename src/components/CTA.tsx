@@ -15,7 +15,7 @@ const CTA = () => {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center animate-fade-in">
-          <h2 className="font-playfair font-bold text-4xl md:text-5xl lg:text-6xl text-background mb-8">
+          <h2 className="font-playfair font-bold text-4xl md:text-5xl lg:text-6xl text-white mb-8">
             {t('cta.title')}
           </h2>
 

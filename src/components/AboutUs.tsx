@@ -24,10 +24,10 @@ const AboutUs = () => {
       <div className="container mx-auto px-4 relative z-10">
         {/* En-tête */}
         <div className="max-w-4xl mx-auto text-center mb-16 animate-fade-in">
-          <h2 className="font-playfair font-bold text-4xl md:text-5xl text-primary mb-6">
+          <h2 className="font-playfair font-bold text-4xl md:text-5xl text-amber-600 dark:text-amber-500 mb-6">
             {t('about.title')}
           </h2>
-          <p className="font-inter text-lg md:text-xl text-muted-foreground leading-relaxed">
+          <p className="font-inter text-lg md:text-xl text-foreground/70 dark:text-foreground/60 leading-relaxed">
             {t('about.subtitle')}
           </p>
         </div>
@@ -41,13 +41,13 @@ const AboutUs = () => {
               <div className="w-32 h-32 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-4xl font-bold text-white shadow-xl">
                 AM
               </div>
-              <h3 className="font-playfair font-bold text-2xl text-primary">
+              <h3 className="font-playfair font-bold text-2xl text-amber-600 dark:text-amber-400">
                 {t('about.abdenacer.name')}
               </h3>
-              <p className="font-inter text-sm font-semibold text-secondary uppercase tracking-wider">
+              <p className="font-inter text-sm font-semibold text-amber-500 uppercase tracking-wider">
                 {t('about.abdenacer.role')}
               </p>
-              <p className="font-inter text-base text-muted-foreground leading-relaxed">
+              <p className="font-inter text-base text-foreground/70 dark:text-foreground/60 leading-relaxed">
                 {t('about.abdenacer.description')}
               </p>
             </div>
@@ -59,13 +59,13 @@ const AboutUs = () => {
               <div className="w-32 h-32 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center text-4xl font-bold text-white shadow-xl">
                 NS
               </div>
-              <h3 className="font-playfair font-bold text-2xl text-primary">
+              <h3 className="font-playfair font-bold text-2xl text-amber-600 dark:text-amber-400">
                 {t('about.naim.name')}
               </h3>
               <p className="font-inter text-sm font-semibold text-accent uppercase tracking-wider">
                 {t('about.naim.role')}
               </p>
-              <p className="font-inter text-base text-muted-foreground leading-relaxed">
+              <p className="font-inter text-base text-foreground/70 dark:text-foreground/60 leading-relaxed">
                 {t('about.naim.description')}
               </p>
             </div>
@@ -74,7 +74,7 @@ const AboutUs = () => {
 
         {/* Manifesto */}
         <div className="max-w-3xl mx-auto mb-16 text-center animate-fade-in" style={{ animationDelay: '0.2s' }}>
-          <blockquote className="font-playfair text-2xl md:text-3xl font-semibold text-primary italic border-l-4 border-secondary pl-6 py-4 bg-card/50 backdrop-blur-sm rounded-r-2xl shadow-lg">
+          <blockquote className="font-playfair text-2xl md:text-3xl font-semibold text-amber-700 dark:text-amber-400 italic border-l-4 border-amber-500 pl-6 py-4 bg-card/50 backdrop-blur-sm rounded-r-2xl shadow-lg">
             {t('about.manifesto')}
           </blockquote>
         </div>
@@ -90,7 +90,7 @@ const AboutUs = () => {
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               
               <div className="relative z-10 flex flex-col items-center text-center gap-3">
-                <div className={`p-3 rounded-full bg-background border-2 border-border group-hover:border-secondary transition-all ${color}`}>
+                <div className={`p-3 rounded-full bg-background border-2 border-border group-hover:border-amber-500 transition-all ${color}`}>
                   <Icon className="w-6 h-6" />
                 </div>
                 <span className="font-inter font-semibold text-xs md:text-sm text-foreground">

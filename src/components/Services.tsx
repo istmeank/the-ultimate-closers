@@ -36,7 +36,7 @@ const Services = () => {
     <section id="services" className="py-24 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center mb-16 animate-fade-in">
-          <h2 className="font-playfair font-bold text-4xl md:text-5xl text-primary mb-6">
+          <h2 className="font-playfair font-bold text-4xl md:text-5xl text-amber-600 dark:text-amber-500 mb-6">
             {t('services.title')}
           </h2>
         </div>
@@ -58,14 +58,14 @@ const Services = () => {
 
                 <CardHeader className="relative z-10">
                   <div className="mb-4 p-3 bg-background rounded-xl w-fit group-hover:scale-110 transition-transform">
-                    <Icon className="w-8 h-8 text-secondary" />
+                    <Icon className="w-8 h-8 text-amber-600 dark:text-amber-500" />
                   </div>
-                  <CardTitle className="font-playfair text-xl text-primary">
+                  <CardTitle className="font-playfair text-xl text-amber-700 dark:text-amber-400">
                     {t(service.titleKey)}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="relative z-10">
-                  <CardDescription className="font-inter text-muted-foreground">
+                  <CardDescription className="font-inter text-foreground/70 dark:text-foreground/60">
                     {t(service.textKey)}
                   </CardDescription>
                 </CardContent>

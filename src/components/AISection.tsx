@@ -30,10 +30,10 @@ const AISection = () => {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center mb-16 animate-fade-in">
-          <h2 className="font-playfair font-bold text-4xl md:text-5xl text-background mb-6">
+          <h2 className="font-playfair font-bold text-4xl md:text-5xl text-white mb-6">
             {t('ai.title')}
           </h2>
-          <p className="font-inter text-lg md:text-xl text-background/90 leading-relaxed">
+          <p className="font-inter text-lg md:text-xl text-white/90 leading-relaxed">
             {t('ai.text')}
           </p>
         </div>
@@ -51,9 +51,9 @@ const AISection = () => {
               
               <div className="relative z-10 flex flex-col items-center text-center gap-4">
                 <div className="p-4 rounded-full bg-accent/20 border-2 border-accent group-hover:border-secondary group-hover:rotate-12 transition-all">
-                  <Icon className="w-10 h-10 text-accent group-hover:text-secondary transition-colors" />
+                  <Icon className="w-10 h-10 text-accent group-hover:text-amber-400 transition-colors" />
                 </div>
-                <h3 className="font-inter font-bold text-lg text-background">
+                <h3 className="font-inter font-bold text-lg text-white">
                   {t(key)}
                 </h3>
               </div>
