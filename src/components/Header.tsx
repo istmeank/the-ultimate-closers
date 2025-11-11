@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import LanguageSelector from '@/components/LanguageSelector';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import logo from '@/assets/logo.png';
 
 const Header = () => {
@@ -45,6 +46,9 @@ const Header = () => {
 
           {/* Language Selector & Mobile Menu */}
           <div className="flex items-center gap-4">
+            {/* Theme Toggle */}
+            <ThemeToggle />
+            
             {/* Language Selector */}
             <LanguageSelector />
 
