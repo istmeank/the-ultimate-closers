@@ -29,14 +29,14 @@ const LanguageSelector = ({ className = '' }: LanguageSelectorProps) => {
         <Button 
           variant="outline" 
           size="sm"
-          className={`bg-background/95 backdrop-blur-sm border-border hover:bg-accent hover:text-accent-foreground ${className}`}
+          className={`bg-background/95 backdrop-blur-sm border-border hover:bg-accent hover:text-accent-foreground rounded-full ${className}`}
         >
           <span className="mr-2">{currentLanguage?.flag}</span>
           {currentLanguage?.label}
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="bg-background border-border z-50">
+      <DropdownMenuContent align="end" className="bg-background border-border z-50 rounded-2xl">
         {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
