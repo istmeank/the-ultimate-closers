@@ -4,6 +4,7 @@ import { LanguageProvider } from '@/contexts/LanguageContext';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import AboutUs from '@/components/AboutUs';
+import WhyWeExist from '@/components/WhyWeExist';
 import Mission from '@/components/Mission';
 import Services from '@/components/Services';
 import AISection from '@/components/AISection';
@@ -29,6 +30,7 @@ const Index = () => {
         <main>
           <Hero />
           <AboutUs />
+          <WhyWeExist />
           <Mission />
           <Services />
           <AISection />

@@ -40,6 +40,16 @@ const translations = {
     'about.value5': 'Progression',
     'about.value6': 'Adaptabilité',
     
+    // Why We Exist
+    'why.title': 'Pourquoi The Ultimate Closers existe',
+    'why.subtitle': 'The Ultimate Closers est né pour remettre l\'humain au centre de la vente digitalisée.',
+    'why.card1.title': 'L\'humain au centre',
+    'why.card1.text': 'Pour remettre l\'humain au centre de la vente digitalisée.',
+    'why.card2.title': 'Vente respectueuse',
+    'why.card2.text': 'Montrer qu\'une transaction peut être propre, claire, respectueuse, tout en étant efficace.',
+    'why.card3.title': 'Éthique algérienne',
+    'why.card3.text': 'Apporter confiance, éthique et psychologie de la vente sur le marché algérien.',
+    
     // Mission
     'mission.title': "L'éthique comme stratégie.",
     'mission.text': "Chez The Ultimate Closers, chaque conversion est une conversation honnête. L'IA amplifie la compréhension, jamais la manipulation.",
@@ -264,6 +274,16 @@ const translations = {
     'about.value5': 'Growth',
     'about.value6': 'Adaptability',
     
+    // Why We Exist
+    'why.title': 'Why The Ultimate Closers Exists',
+    'why.subtitle': 'The Ultimate Closers was born to put humanity back at the center of digitalized sales.',
+    'why.card1.title': 'Human-Centered',
+    'why.card1.text': 'To put humanity back at the center of digitalized sales.',
+    'why.card2.title': 'Respectful Sales',
+    'why.card2.text': 'To show that a transaction can be clean, clear, respectful, while being effective.',
+    'why.card3.title': 'Algerian Ethics',
+    'why.card3.text': 'To bring trust, ethics and sales psychology to the Algerian market.',
+    
     // Mission
     'mission.title': 'Ethics as strategy.',
     'mission.text': 'At The Ultimate Closers, every conversion is an honest conversation. AI amplifies understanding, never manipulation.',
@@ -487,6 +507,16 @@ const translations = {
     'about.value4': 'الوعي',
     'about.value5': 'التطور',
     'about.value6': 'التكيف',
+    
+    // Why We Exist
+    'why.title': 'علاش The Ultimate Closers موجودة',
+    'why.subtitle': 'The Ultimate Closers تخلقات باش ترجع الإنسان للمركز ديال البيع الرقمي.',
+    'why.card1.title': 'الإنسان في المركز',
+    'why.card1.text': 'باش نرجعو الإنسان للمركز ديال البيع الرقمي.',
+    'why.card2.title': 'البيع المحترم',
+    'why.card2.text': 'نوريو بلي المعاملة يمكن تكون نقية، واضحة، محترمة، وفنفس الوقت فعالة.',
+    'why.card3.title': 'الأخلاقيات الجزائرية',
+    'why.card3.text': 'نجيبو الثقة، الأخلاق و علم نفس البيع للسوق الجزائري.',
     
     // Mission
     'mission.title': 'النية الصافية هي الاستراتيجية.',
