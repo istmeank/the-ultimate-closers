@@ -18,14 +18,14 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 167 69% 18%;
 
-    /* Malachite Deep Green - Primary Brand */
-    --primary: 167 69% 18%;
-    --primary-foreground: 0 0% 98%;
-    --primary-glow: 167 69% 35%;
+    /* Golden Primary - Light Mode */
+    --primary: 44 73% 66%;
+    --primary-foreground: 167 69% 18%;
+    --primary-glow: 44 100% 75%;
 
-    /* Golden Accent */
-    --secondary: 44 73% 66%;
-    --secondary-foreground: 167 69% 18%;
+    /* Malachite Green Accent */
+    --secondary: 167 69% 18%;
+    --secondary-foreground: 0 0% 98%;
     --gold: 44 73% 66%;
     --gold-glow: 44 100% 75%;
 
@@ -75,11 +75,11 @@ All colors MUST be HSL.
     --popover: 0 0% 10%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 44 73% 66%;
-    --primary-foreground: 0 0% 7%;
+    --primary: 167 69% 18%;
+    --primary-foreground: 0 0% 98%;
 
-    --secondary: 167 69% 35%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 44 73% 66%;
+    --secondary-foreground: 167 69% 18%;
 
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 65%;
