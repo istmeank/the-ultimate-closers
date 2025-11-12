@@ -26,9 +26,9 @@ const Hero = () => {
       <div className="container mx-auto px-4 z-10">
         <div className="max-w-4xl mx-auto text-center animate-fade-in">
           {/* Neural halo effect */}
-          <div className="inline-flex items-center gap-2 mb-6 px-6 py-3 bg-primary/20 backdrop-blur-sm border border-secondary/30 rounded-lg">
-            <Sparkles className="w-5 h-5 text-secondary animate-glow-pulse" />
-            <span className="font-inter text-sm text-secondary font-medium">Closing is Art - Not Tbla3it</span>
+          <div className="inline-flex items-center gap-2 mb-6 px-6 py-3 bg-primary/20 backdrop-blur-sm border border-gold/30 rounded-lg">
+            <Sparkles className="w-5 h-5 text-gold animate-glow-pulse" />
+            <span className="font-inter text-sm text-gold font-medium">Closing is Art - Not Tbla3it</span>
           </div>
 
           {/* Main title */}

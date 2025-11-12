@@ -80,6 +80,8 @@ All colors MUST be HSL.
 
     --secondary: 44 73% 66%;
     --secondary-foreground: 167 69% 18%;
+    --gold: 44 73% 66%;
+    --gold-glow: 44 100% 75%;
 
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 65%;
