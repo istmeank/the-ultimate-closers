@@ -26,7 +26,7 @@ const Footer = () => {
 
           {/* Quote */}
           <blockquote className="max-w-2xl">
-            <p className="font-playfair text-xl md:text-2xl text-amber-400 italic">
+            <p className="font-playfair text-xl md:text-2xl text-secondary italic">
               "{t('footer.quote')}"
             </p>
           </blockquote>
@@ -34,7 +34,7 @@ const Footer = () => {
           {/* Contact Email */}
           <a 
             href="mailto:contact@theultimateclosers.com"
-            className="flex items-center gap-2 text-white/80 hover:text-amber-400 transition-colors group"
+            className="flex items-center gap-2 text-white/80 hover:text-secondary transition-colors group"
           >
             <Mail className="w-5 h-5" />
             <span className="font-inter text-lg">contact@theultimateclosers.com</span>
@@ -47,7 +47,7 @@ const Footer = () => {
                 key={label}
                 href={href}
                 aria-label={label}
-                className="p-3 rounded-full bg-white/10 hover:bg-amber-500 hover:text-primary text-white transition-all hover:scale-110"
+                className="p-3 rounded-full bg-white/10 hover:bg-secondary hover:text-primary text-white transition-all hover:scale-110"
               >
                 <Icon className="w-5 h-5" />
               </a>
@@ -57,7 +57,7 @@ const Footer = () => {
           {/* Legal */}
           <div className="pt-8 border-t border-white/20 w-full flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-white/60">
             <p>© {new Date().getFullYear()} The Ultimate Closers. All rights reserved.</p>
-            <Link to="/legal" className="hover:text-amber-400 transition-colors">
+            <Link to="/legal" className="hover:text-secondary transition-colors">
               Mentions légales & politique de confidentialité
             </Link>
           </div>

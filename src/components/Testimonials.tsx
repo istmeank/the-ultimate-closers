@@ -16,7 +16,7 @@ const Testimonials = () => {
     <section id="testimonials" className="py-24 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center mb-16 animate-fade-in">
-          <h2 className="font-playfair font-bold text-4xl md:text-5xl text-amber-600 dark:text-amber-500 mb-6">
+          <h2 className="font-playfair font-bold text-4xl md:text-5xl text-secondary mb-6">
             {t('testimonials.title')}
           </h2>
         </div>
@@ -35,15 +35,15 @@ const Testimonials = () => {
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_0%,rgba(233,196,106,0.2),transparent_70%)]" />
 
               <CardContent className="p-8 relative z-10">
-                <Quote className="w-10 h-10 text-amber-500 mb-4 opacity-50" />
+                <Quote className="w-10 h-10 text-secondary mb-4 opacity-50" />
                 
-                <p className="font-inter text-base text-foreground/70 dark:text-foreground/60 mb-6 leading-relaxed">
+                <p className="font-inter text-base text-foreground/80 mb-6 leading-relaxed">
                   "{t(testimonial.cardKey)}"
                 </p>
 
                 <div className="flex items-center gap-3">
-                  <Avatar className="border-2 border-amber-500">
-                    <AvatarFallback className="bg-amber-600 dark:bg-amber-500 text-white font-semibold">
+                  <Avatar className="border-2 border-secondary">
+                    <AvatarFallback className="bg-secondary text-primary font-semibold">
                       {testimonial.initials}
                     </AvatarFallback>
                   </Avatar>

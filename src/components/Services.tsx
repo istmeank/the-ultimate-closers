@@ -36,7 +36,7 @@ const Services = () => {
     <section id="services" className="py-24 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center mb-16 animate-fade-in">
-          <h2 className="font-playfair font-bold text-4xl md:text-5xl text-amber-600 dark:text-amber-500 mb-6">
+          <h2 className="font-playfair font-bold text-4xl md:text-5xl text-secondary mb-6">
             {t('services.title')}
           </h2>
         </div>
@@ -54,18 +54,18 @@ const Services = () => {
                 <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-50 group-hover:opacity-100 transition-opacity`} />
                 
                 {/* Glow effect */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)]" />
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
 
                 <CardHeader className="relative z-10">
                   <div className="mb-4 p-3 bg-background rounded-xl w-fit group-hover:scale-110 transition-transform">
-                    <Icon className="w-8 h-8 text-amber-600 dark:text-amber-500" />
+                    <Icon className="w-8 h-8 text-secondary" />
                   </div>
-                  <CardTitle className="font-playfair text-xl text-amber-700 dark:text-amber-400">
+                  <CardTitle className="font-playfair text-xl text-secondary">
                     {t(service.titleKey)}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="relative z-10">
-                  <CardDescription className="font-inter text-foreground/70 dark:text-foreground/60">
+                  <CardDescription className="font-inter text-foreground/80">
                     {t(service.textKey)}
                   </CardDescription>
                 </CardContent>

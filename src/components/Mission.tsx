@@ -15,10 +15,10 @@ const Mission = () => {
     <section id="mission" className="py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center mb-16 animate-fade-in">
-          <h2 className="font-playfair font-bold text-4xl md:text-5xl text-amber-600 dark:text-amber-500 mb-6">
+          <h2 className="font-playfair font-bold text-4xl md:text-5xl text-secondary mb-6">
             {t('mission.title')}
           </h2>
-          <p className="font-inter text-lg md:text-xl text-foreground/70 dark:text-foreground/60 leading-relaxed">
+          <p className="font-inter text-lg md:text-xl text-foreground/80 leading-relaxed">
             {t('mission.text')}
           </p>
         </div>
@@ -35,7 +35,7 @@ const Mission = () => {
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               
               <div className="relative z-10 flex flex-col items-center text-center gap-4">
-                <div className={`p-4 rounded-full bg-background border-2 border-border group-hover:border-amber-500 transition-all ${color}`}>
+                <div className={`p-4 rounded-full bg-background border-2 border-border group-hover:border-secondary transition-all ${color}`}>
                   <Icon className="w-8 h-8" />
                 </div>
                 <span className="font-inter font-semibold text-sm md:text-base text-foreground">

@@ -34,7 +34,7 @@ const Results = () => {
     <section id="results" className="py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center mb-16 animate-fade-in">
-          <h2 className="font-playfair font-bold text-4xl md:text-5xl text-amber-600 dark:text-amber-500 mb-6">
+          <h2 className="font-playfair font-bold text-4xl md:text-5xl text-secondary mb-6">
             {t('results.title')}
           </h2>
         </div>
@@ -53,7 +53,7 @@ const Results = () => {
                 <div className={`p-4 rounded-full bg-muted group-hover:scale-110 transition-transform ${color}`}>
                   <Icon className="w-10 h-10" />
                 </div>
-                <h3 className="font-playfair font-bold text-2xl text-amber-600 dark:text-amber-400">
+                <h3 className="font-playfair font-bold text-2xl text-secondary">
                   {t(key)}
                 </h3>
               </div>
