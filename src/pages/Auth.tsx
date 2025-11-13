@@ -90,7 +90,7 @@ const Auth = () => {
           backgroundRepeat: 'no-repeat'
         }}
       >
-        <div className="absolute inset-0 bg-primary/80 backdrop-blur-sm" />
+        <div className="absolute inset-0 bg-secondary/80 backdrop-blur-sm" />
       </div>
 
       {/* Debug Info */}
