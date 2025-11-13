@@ -109,7 +109,7 @@ const Auth = () => {
             <div className="flex justify-center mb-4">
               <img src={logo} alt="The Ultimate Closers Logo" className="w-20 h-20 object-contain" />
             </div>
-            <h1 className="font-playfair font-bold text-3xl text-primary">
+            <h1 className="font-playfair font-bold text-3xl text-secondary">
               {t('auth.title')}
             </h1>
             <p className="font-inter text-muted-foreground">
