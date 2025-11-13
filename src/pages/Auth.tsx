@@ -9,9 +9,11 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 import logo from '@/assets/logo.png';
+import handshake from '@/assets/hero-handshake.jpg';
 import LanguageSelector from '@/components/LanguageSelector';
 import DebugInfo from '@/components/DebugInfo';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const emailSchema = z.string().email('Email invalide').refine(
   (email) => email.endsWith('@theultimateclosers.com'),
@@ -77,19 +79,27 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary via-primary to-primary/90 p-4">
+    <div className="min-h-screen flex items-center justify-center relative p-4">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: `url(${handshake})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        <div className="absolute inset-0 bg-primary/80 backdrop-blur-sm" />
+      </div>
+
       {/* Debug Info */}
       <DebugInfo />
       
-      {/* Language Selector - Fixed Position */}
-      <div className="fixed top-4 right-4 z-50">
+      {/* Theme Toggle & Language Selector - Fixed Position */}
+      <div className="fixed top-4 right-4 z-50 flex items-center gap-3">
+        <ThemeToggle />
         <LanguageSelector />
-      </div>
-
-      {/* Animated background elements */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-secondary/30 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1.5s' }} />
       </div>
 
       <Card className="w-full max-w-md relative z-10 bg-background/95 backdrop-blur-sm border-secondary/20 shadow-2xl animate-fade-in">

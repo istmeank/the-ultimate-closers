@@ -1,6 +1,7 @@
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Linkedin, Instagram, Youtube, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import logo from '@/assets/logo.png';
 
 const Footer = () => {
@@ -40,7 +41,7 @@ const Footer = () => {
             <span className="font-inter text-lg">contact@theultimateclosers.com</span>
           </a>
 
-          {/* Social Links */}
+          {/* Social Links & Theme Toggle */}
           <div className="flex items-center gap-6">
             {socialLinks.map(({ icon: Icon, href, label }) => (
               <a
@@ -52,6 +53,7 @@ const Footer = () => {
                 <Icon className="w-5 h-5" />
               </a>
             ))}
+            <ThemeToggle />
           </div>
 
           {/* Legal */}
