@@ -131,7 +131,7 @@ export const Dashboard = () => {
         {statCards.map((stat) => (
           <Card
             key={stat.title}
-            className="bg-background/95 backdrop-blur-sm border-secondary/20 p-6 hover:shadow-lg transition-shadow"
+            className="bg-background/95 dark:bg-[hsl(167,69%,18%)]/80 backdrop-blur-sm border-secondary/20 dark:border-gold/20 p-6 hover:shadow-lg transition-shadow"
           >
             <div className="flex items-center justify-between">
               <div>

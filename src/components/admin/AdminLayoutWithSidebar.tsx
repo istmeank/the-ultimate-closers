@@ -38,7 +38,7 @@ export const AdminLayoutWithSidebar = () => {
         </div>
 
         {/* Header avec accent vert */}
-        <header className="fixed top-0 left-0 right-0 h-14 flex items-center justify-between px-4 bg-secondary/90 backdrop-blur-sm border-b border-secondary/30 z-40">
+        <header className="fixed top-0 left-0 right-0 h-14 flex items-center justify-between px-4 bg-secondary/90 dark:bg-black/50 backdrop-blur-sm border-b border-secondary/30 dark:border-white/10 z-40">
           <div className="flex items-center gap-3">
             <SidebarTrigger className="text-white hover:text-secondary-foreground" />
             <img 
@@ -70,7 +70,7 @@ export const AdminLayoutWithSidebar = () => {
 
         <UnifiedSidebar />
         
-        <main className="flex-1 pt-14 p-8 relative z-10">
+        <main className="flex-1 pt-14 p-8 relative z-10 dark:bg-black/50">
           <Outlet />
         </main>
       </div>
