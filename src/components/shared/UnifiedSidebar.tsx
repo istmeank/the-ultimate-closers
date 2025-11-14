@@ -142,7 +142,7 @@ export const UnifiedSidebar = () => {
   const closerItems = visibleItems.filter(i => i.href.startsWith('/dashboard-closer'));
 
   return (
-    <Sidebar collapsible="icon" className="bg-primary border-r border-primary-foreground/10">
+    <Sidebar collapsible="icon" className="bg-[hsl(167,69%,18%)] border-r border-gold/10">
       <SidebarContent className="pt-20">
         {/* Section Admin */}
         {adminItems.length > 0 && (
