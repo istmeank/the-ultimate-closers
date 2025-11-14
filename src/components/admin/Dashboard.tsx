@@ -123,7 +123,7 @@ export const Dashboard = () => {
 
   return (
     <div className="space-y-6">
-      <h2 className="font-playfair font-bold text-3xl text-primary">
+      <h2 className="font-playfair font-bold text-3xl text-primary dark:text-gold">
         Vue d'ensemble
       </h2>
 
@@ -135,14 +135,14 @@ export const Dashboard = () => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground font-inter mb-1">
+                <p className="text-sm text-muted-foreground dark:text-white/70 font-inter mb-1">
                   {stat.title}
                 </p>
-                <p className="text-3xl font-bold text-primary">
+                <p className="text-3xl font-bold text-primary dark:text-gold">
                   {stat.value}
                 </p>
               </div>
-              <stat.icon className={`w-10 h-10 ${stat.color}`} />
+              <stat.icon className={`w-10 h-10 ${stat.color} dark:text-gold`} />
             </div>
           </Card>
         ))}
