@@ -156,15 +156,15 @@ const LeadDetail = () => {
               <ArrowLeft className="mr-2 h-4 w-4" />
               Retour
             </Button>
-            <div>
-              <h1 className="font-playfair text-3xl text-primary">{lead.full_name}</h1>
-              <p className="text-muted-foreground">
-                Créé {formatDistanceToNow(new Date(lead.created_at), { 
-                  addSuffix: true, 
-                  locale: fr 
-                })}
-              </p>
-            </div>
+          <div>
+            <h1 className="font-playfair text-3xl text-primary dark:text-gold">{lead.full_name}</h1>
+            <p className="text-muted-foreground dark:text-white/70">
+              Créé {formatDistanceToNow(new Date(lead.created_at), { 
+                addSuffix: true, 
+                locale: fr 
+              })}
+            </p>
+          </div>
           </div>
           
           <div className="flex items-center gap-2">
@@ -180,28 +180,40 @@ const LeadDetail = () => {
           {/* Colonne principale - Timeline */}
           <div className="lg:col-span-2 space-y-6">
             {/* Timeline des interactions */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-playfair text-xl">Timeline des Interactions</CardTitle>
+            <Card className="group relative overflow-hidden border-2 hover:border-secondary transition-all duration-300 bg-background dark:bg-black/80">
+              {/* Gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+              
+              {/* Glow effect */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
+
+              <CardHeader className="relative z-10">
+                <CardTitle className="font-playfair text-xl dark:text-gold">Timeline des Interactions</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="relative z-10">
                 <InteractionsTimeline leadId={lead.id} />
               </CardContent>
             </Card>
 
             {/* Deals associés */}
             {deals && deals.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="font-playfair text-xl">Deals Associés</CardTitle>
+              <Card className="group relative overflow-hidden border-2 hover:border-secondary transition-all duration-300 bg-background dark:bg-black/80">
+                {/* Gradient background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+                
+                {/* Glow effect */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
+
+                <CardHeader className="relative z-10">
+                  <CardTitle className="font-playfair text-xl dark:text-gold">Deals Associés</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="relative z-10">
                   <div className="space-y-4">
                     {deals.map((deal) => (
-                      <div key={deal.id} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div key={deal.id} className="flex items-center justify-between p-4 border rounded-lg dark:border-white/10">
                         <div>
-                          <h4 className="font-semibold">{deal.offer_name}</h4>
-                          <p className="text-sm text-muted-foreground">
+                          <h4 className="font-semibold dark:text-white">{deal.offer_name}</h4>
+                          <p className="text-sm text-muted-foreground dark:text-white/70">
                             Montant: {(deal.amount_cents / 100).toLocaleString('fr-FR')} €
                           </p>
                         </div>
@@ -217,41 +229,53 @@ const LeadDetail = () => {
           {/* Sidebar - Informations et actions */}
           <div className="space-y-6">
             {/* Informations du lead */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-playfair text-lg">Informations</CardTitle>
+            <Card className="group relative overflow-hidden border-2 hover:border-secondary transition-all duration-300 bg-background dark:bg-black/80">
+              {/* Gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+              
+              {/* Glow effect */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
+
+              <CardHeader className="relative z-10">
+                <CardTitle className="font-playfair text-lg dark:text-gold">Informations</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="relative z-10 space-y-4">
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Email</label>
-                  <p className="text-sm">{lead.email}</p>
+                  <label className="text-sm font-medium text-muted-foreground dark:text-white/70">Email</label>
+                  <p className="text-sm dark:text-white">{lead.email}</p>
                 </div>
                 
                 {lead.phone && (
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Téléphone</label>
-                    <p className="text-sm">{lead.phone}</p>
+                    <label className="text-sm font-medium text-muted-foreground dark:text-white/70">Téléphone</label>
+                    <p className="text-sm dark:text-white">{lead.phone}</p>
                   </div>
                 )}
                 
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Source</label>
+                  <label className="text-sm font-medium text-muted-foreground dark:text-white/70">Source</label>
                   <Badge variant="outline" className="mt-1">{lead.source}</Badge>
                 </div>
                 
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Intérêt</label>
-                  <p className="text-sm">{lead.interest || 'Non spécifié'}</p>
+                  <label className="text-sm font-medium text-muted-foreground dark:text-white/70">Intérêt</label>
+                  <p className="text-sm dark:text-white">{lead.interest || 'Non spécifié'}</p>
                 </div>
               </CardContent>
             </Card>
 
             {/* Actions rapides */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-playfair text-lg">Actions Rapides</CardTitle>
+            <Card className="group relative overflow-hidden border-2 hover:border-secondary transition-all duration-300 bg-background dark:bg-black/80">
+              {/* Gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+              
+              {/* Glow effect */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
+
+              <CardHeader className="relative z-10">
+                <CardTitle className="font-playfair text-lg dark:text-gold">Actions Rapides</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="relative z-10 space-y-3">
                 {lead.phone && (
                   <Button onClick={handleCall} className="w-full" variant="outline">
                     <Phone className="mr-2 h-4 w-4" />

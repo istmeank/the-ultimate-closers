@@ -41,22 +41,25 @@ export const KanbanColumn = ({ column, leads, isUpdating }: KanbanColumnProps) =
   };
 
   return (
-    <div className={`bg-background/80 backdrop-blur-sm rounded-2xl border-2 ${getColumnColor(column.color)} transition-all hover:shadow-lg`}>
-      <CardHeader className="pb-3">
+    <div className={`group relative overflow-hidden bg-background/80 dark:bg-black/80 backdrop-blur-sm rounded-2xl border-2 ${getColumnColor(column.color)} transition-all hover:shadow-lg`}>
+      {/* Gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-30 group-hover:opacity-50 transition-opacity" />
+      
+      <CardHeader className="relative z-10 pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="font-playfair font-bold text-lg text-primary">
+          <CardTitle className="font-playfair font-bold text-lg text-primary dark:text-gold">
             {column.title}
           </CardTitle>
-          <Badge variant="outline" className="text-xs">
+          <Badge variant="outline" className="text-xs dark:text-white/80">
             {leads.length}
           </Badge>
         </div>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-muted-foreground dark:text-white/60">
           {column.description}
         </p>
       </CardHeader>
       
-      <CardContent className="pt-0">
+      <CardContent className="relative z-10 pt-0">
         <Droppable droppableId={column.id}>
           {(provided, snapshot) => (
             <div

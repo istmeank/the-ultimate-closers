@@ -113,18 +113,24 @@ export const StatsCards = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {statCards.map((stat) => (
-        <Card key={stat.title} className="hover:shadow-lg transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+        <Card key={stat.title} className="group relative overflow-hidden border-2 hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 bg-background dark:bg-black/80">
+          {/* Gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+          
+          {/* Glow effect */}
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
+
+          <CardHeader className="relative z-10 flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground dark:text-white/70">
               {stat.title}
             </CardTitle>
-            <div className={`p-2 rounded-lg ${stat.bgColor}`}>
-              <stat.icon className={`h-4 w-4 ${stat.color}`} />
+            <div className="p-2 rounded-lg bg-background dark:bg-gold/20">
+              <stat.icon className="h-4 w-4 text-secondary dark:text-gold" />
             </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-primary">{stat.value}</div>
-            <p className="text-xs text-muted-foreground mt-1">
+          <CardContent className="relative z-10">
+            <div className="text-2xl font-bold text-primary dark:text-gold">{stat.value}</div>
+            <p className="text-xs text-muted-foreground dark:text-white/60 mt-1">
               {stat.description}
             </p>
           </CardContent>

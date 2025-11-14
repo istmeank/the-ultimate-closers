@@ -84,15 +84,21 @@ export const LeadCard = ({ lead, hubspotSynced = false, onSyncSuccess }: LeadCar
 
 
   return (
-    <Card className="p-4 hover:shadow-lg transition-all cursor-pointer border-primary/20 hover:border-primary/40">
-      <CardContent className="p-0 space-y-3">
+    <Card className="group relative overflow-hidden p-4 border-2 hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer bg-background dark:bg-black/80">
+      {/* Gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+      
+      {/* Glow effect */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
+
+      <CardContent className="relative z-10 p-0 space-y-3">
         {/* Header avec nom et score */}
         <div className="flex justify-between items-start">
           <div className="flex-1 min-w-0">
-            <h4 className="font-semibold text-primary truncate">
+            <h4 className="font-semibold text-primary dark:text-gold truncate">
               {lead.full_name}
             </h4>
-            <p className="text-sm text-muted-foreground truncate">
+            <p className="text-sm text-muted-foreground dark:text-white/70 truncate">
               {lead.email}
             </p>
           </div>
