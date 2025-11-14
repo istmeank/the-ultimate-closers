@@ -24,6 +24,8 @@ import CloserSettings from "./pages/CloserSettings";
 import AccessDenied from "./pages/AccessDenied";
 import DziriBERTDemo from "./pages/DziriBERTDemo";
 import NotFound from "./pages/NotFound";
+import { GoogleCalendarSettings } from "./pages/GoogleCalendarSettings";
+import { GoogleCalendarCallback } from "./pages/GoogleCalendarCallback";
 import { Dashboard } from "@/components/admin/Dashboard";
 import { ContentEditor } from "@/components/admin/ContentEditor";
 import { FormationsManager } from "@/components/admin/FormationsManager";
@@ -49,6 +51,7 @@ const App = () => (
             <Route path="/access-denied" element={<AccessDenied />} />
             <Route path="/reserver-appel" element={<BookCall />} />
             <Route path="/dziribert-demo" element={<DziriBERTDemo />} />
+            <Route path="/google-calendar/callback" element={<GoogleCalendarCallback />} />
             <Route 
               path="/admin" 
               element={
@@ -76,6 +79,7 @@ const App = () => (
               <Route path="lead/:id" element={<LeadDetail />} />
               <Route path="slack" element={<SlackSettings />} />
               <Route path="hubspot" element={<HubSpotSettings />} />
+              <Route path="calendar" element={<GoogleCalendarSettings />} />
               <Route path="leads" element={<CloserLeads />} />
               <Route path="profile" element={<CloserProfile />} />
               <Route path="settings" element={<CloserSettings />} />
