@@ -95,15 +95,21 @@ export default function CloserProfile() {
         </p>
       </div>
 
-      <Card className="p-6 bg-background/95 backdrop-blur-sm border-secondary/20">
-        <div className="space-y-6">
-          <div className="flex items-center gap-3 pb-4 border-b">
-            <div className="p-3 rounded-lg bg-primary/10">
-              <User className="w-6 h-6 text-primary" />
+      <Card className="group relative overflow-hidden p-6 bg-background/95 dark:bg-black/80 backdrop-blur-sm border-2 hover:border-secondary transition-all duration-300">
+        {/* Gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+        
+        {/* Glow effect */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
+
+        <div className="relative z-10 space-y-6">
+          <div className="flex items-center gap-3 pb-4 border-b dark:border-white/10">
+            <div className="p-3 rounded-lg bg-primary/10 dark:bg-gold/20">
+              <User className="w-6 h-6 text-primary dark:text-gold" />
             </div>
             <div>
-              <h2 className="font-semibold text-lg">Informations personnelles</h2>
-              <p className="text-sm text-muted-foreground">Vos coordonnées et détails</p>
+              <h2 className="font-semibold text-lg dark:text-gold">Informations personnelles</h2>
+              <p className="text-sm text-muted-foreground dark:text-white/70">Vos coordonnées et détails</p>
             </div>
           </div>
 
@@ -145,15 +151,21 @@ export default function CloserProfile() {
         </div>
       </Card>
 
-      <Card className="p-6 bg-background/95 backdrop-blur-sm border-secondary/20">
-        <div className="space-y-6">
-          <div className="flex items-center gap-3 pb-4 border-b">
-            <div className="p-3 rounded-lg bg-primary/10">
-              <Target className="w-6 h-6 text-primary" />
+      <Card className="group relative overflow-hidden p-6 bg-background/95 dark:bg-black/80 backdrop-blur-sm border-2 hover:border-secondary transition-all duration-300">
+        {/* Gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+        
+        {/* Glow effect */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
+
+        <div className="relative z-10 space-y-6">
+          <div className="flex items-center gap-3 pb-4 border-b dark:border-white/10">
+            <div className="p-3 rounded-lg bg-primary/10 dark:bg-gold/20">
+              <Target className="w-6 h-6 text-primary dark:text-gold" />
             </div>
             <div>
-              <h2 className="font-semibold text-lg">Préférences de travail</h2>
-              <p className="text-sm text-muted-foreground">Configurez votre charge de travail</p>
+              <h2 className="font-semibold text-lg dark:text-gold">Préférences de travail</h2>
+              <p className="text-sm text-muted-foreground dark:text-white/70">Configurez votre charge de travail</p>
             </div>
           </div>
 
@@ -167,7 +179,7 @@ export default function CloserProfile() {
               value={profile.max_concurrent_leads}
               onChange={(e) => setProfile({ ...profile, max_concurrent_leads: parseInt(e.target.value) })}
             />
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-muted-foreground dark:text-white/60 mt-1">
               Les leads sont assignés automatiquement en fonction de cette limite
             </p>
           </div>

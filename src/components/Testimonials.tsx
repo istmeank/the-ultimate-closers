@@ -25,33 +25,33 @@ const Testimonials = () => {
           {testimonials.map((testimonial, index) => (
             <Card
               key={testimonial.cardKey}
-              className="group relative overflow-hidden border-2 hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale"
+              className="group relative overflow-hidden border-2 hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale bg-background dark:bg-black/80"
               style={{ animationDelay: `${index * 0.15}s` }}
             >
-              {/* Glass blur effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              {/* Gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
               
-              {/* Glow */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_0%,rgba(233,196,106,0.2),transparent_70%)]" />
+              {/* Glow effect */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
 
               <CardContent className="p-8 relative z-10">
-                <Quote className="w-10 h-10 text-secondary mb-4 opacity-50" />
+                <Quote className="w-10 h-10 text-secondary dark:text-gold mb-4 opacity-50" />
                 
-                <p className="font-inter text-base text-foreground/80 mb-6 leading-relaxed">
+                <p className="font-inter text-base text-foreground/80 dark:text-white/90 mb-6 leading-relaxed">
                   "{t(testimonial.cardKey)}"
                 </p>
 
                 <div className="flex items-center gap-3">
-                  <Avatar className="border-2 border-secondary">
-                    <AvatarFallback className="bg-secondary text-primary font-semibold">
+                  <Avatar className="border-2 border-secondary dark:border-gold">
+                    <AvatarFallback className="bg-secondary dark:bg-gold text-primary dark:text-black font-semibold">
                       {testimonial.initials}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-inter font-semibold text-sm text-foreground">
+                    <p className="font-inter font-semibold text-sm text-foreground dark:text-white">
                       {t(testimonial.nameKey)}
                     </p>
-                    <p className="text-xs text-muted-foreground">{testimonial.flag}</p>
+                    <p className="text-xs text-muted-foreground dark:text-white/60">{testimonial.flag}</p>
                   </div>
                 </div>
               </CardContent>

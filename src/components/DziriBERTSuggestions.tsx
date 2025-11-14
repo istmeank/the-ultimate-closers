@@ -66,15 +66,21 @@ export const DziriBERTSuggestions = ({
 
   if (isAvailable === false) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+      <Card className="group relative overflow-hidden border-2 hover:border-secondary transition-all duration-300 bg-background dark:bg-black/80">
+        {/* Gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+        
+        {/* Glow effect */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
+
+        <CardHeader className="relative z-10">
+          <CardTitle className="flex items-center gap-2 dark:text-gold">
             <Sparkles className="h-5 w-5" />
             DziriBERT - Suggestions Darija
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
+        <CardContent className="relative z-10">
+          <p className="text-sm text-muted-foreground dark:text-white/70">
             ⚠️ L'API DziriBERT n'est pas disponible. Assurez-vous qu'elle est démarrée sur{' '}
             <code className="text-xs bg-muted px-1 py-0.5 rounded">http://localhost:8000</code>
           </p>
@@ -84,14 +90,20 @@ export const DziriBERTSuggestions = ({
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+    <Card className="group relative overflow-hidden border-2 hover:border-secondary transition-all duration-300 bg-background dark:bg-black/80">
+      {/* Gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+      
+      {/* Glow effect */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
+
+      <CardHeader className="relative z-10">
+        <CardTitle className="flex items-center gap-2 dark:text-gold">
           <Sparkles className="h-5 w-5" />
           DziriBERT - Suggestions Darija
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="relative z-10 space-y-4">
         <div className="flex gap-2">
           <Input
             value={text}
@@ -115,17 +127,17 @@ export const DziriBERTSuggestions = ({
 
         {suggestions.length > 0 && (
           <div className="space-y-2">
-            <p className="text-sm font-medium">Suggestions :</p>
+            <p className="text-sm font-medium dark:text-white">Suggestions :</p>
             <div className="grid gap-2">
               {suggestions.map((pred, index) => {
                 const completed = text.replace(/\[MASK\]/gi, pred.word);
                 return (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors"
+                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors dark:border-white/10"
                   >
                     <div className="flex-1">
-                      <p className="font-medium">{completed}</p>
+                      <p className="font-medium dark:text-white">{completed}</p>
                       <div className="flex items-center gap-2 mt-1">
                         <Badge variant="secondary" className="text-xs">
                           Score: {pred.score.toFixed(2)}
