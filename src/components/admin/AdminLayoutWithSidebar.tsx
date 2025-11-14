@@ -34,7 +34,7 @@ export const AdminLayoutWithSidebar = () => {
             backgroundRepeat: 'no-repeat'
           }}
         >
-          <div className="absolute inset-0 bg-[hsl(167,69%,18%)]/80 backdrop-blur-sm" />
+          <div className="absolute inset-0 bg-[hsl(167,69%,18%)]/60 dark:bg-[hsl(167,69%,10%)]/90 backdrop-blur-sm" />
         </div>
 
         {/* Header avec accent vert */}
