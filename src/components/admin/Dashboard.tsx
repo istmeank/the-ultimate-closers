@@ -128,12 +128,19 @@ export const Dashboard = () => {
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {statCards.map((stat) => (
+        {statCards.map((stat, index) => (
           <Card
             key={stat.title}
-            className="bg-background/95 dark:bg-[hsl(167,69%,18%)]/80 backdrop-blur-sm border-secondary/20 dark:border-gold/20 p-6 hover:shadow-lg transition-shadow"
+            className="group relative overflow-hidden bg-background/95 dark:bg-[hsl(167,69%,18%)]/80 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale p-6"
+            style={{ animationDelay: `${index * 0.1}s` }}
           >
-            <div className="flex items-center justify-between">
+            {/* Gradient background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+            
+            {/* Glow effect */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)]" />
+
+            <div className="relative z-10 flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground dark:text-white/70 font-inter mb-1">
                   {stat.title}
@@ -142,19 +149,27 @@ export const Dashboard = () => {
                   {stat.value}
                 </p>
               </div>
-              <stat.icon className={`w-10 h-10 ${stat.color} dark:text-gold`} />
+              <stat.icon className={`w-10 h-10 ${stat.color} dark:text-gold group-hover:scale-110 transition-transform`} />
             </div>
           </Card>
         ))}
       </div>
 
-      <Card className="bg-background/95 backdrop-blur-sm border-secondary/20 p-6">
-        <h3 className="font-playfair font-bold text-xl text-primary mb-4">
-          Bienvenue dans le panel d'administration
-        </h3>
-        <p className="text-muted-foreground font-inter">
-          Utilisez les onglets ci-dessus pour gérer le contenu du site, les formations, les utilisateurs et consulter les statistiques.
-        </p>
+      <Card className="group relative overflow-hidden bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale p-6">
+        {/* Gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+        
+        {/* Glow effect */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)]" />
+
+        <div className="relative z-10">
+          <h3 className="font-playfair font-bold text-xl text-primary mb-4">
+            Bienvenue dans le panel d'administration
+          </h3>
+          <p className="text-muted-foreground font-inter">
+            Utilisez les onglets ci-dessus pour gérer le contenu du site, les formations, les utilisateurs et consulter les statistiques.
+          </p>
+        </div>
       </Card>
     </div>
   );

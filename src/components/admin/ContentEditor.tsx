@@ -85,23 +85,37 @@ export const ContentEditor = () => {
       </div>
 
       {sections.length === 0 ? (
-        <Card className="bg-background/95 backdrop-blur-sm border-secondary/20 p-6">
-          <p className="text-muted-foreground font-inter">
+        <Card className="group relative overflow-hidden bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale p-6">
+          {/* Gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+          
+          {/* Glow effect */}
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)]" />
+
+          <p className="relative z-10 text-muted-foreground font-inter">
             Aucun contenu à modifier pour le moment. Ajoutez des sections de contenu depuis la base de données.
           </p>
         </Card>
       ) : (
         <div className="grid gap-6">
-          {sections.map((section) => (
+          {sections.map((section, index) => (
             <Card
               key={section.id}
-              className="bg-background/95 backdrop-blur-sm border-secondary/20 p-6"
+              className="group relative overflow-hidden bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale p-6"
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <h3 className="font-playfair font-bold text-xl text-primary mb-4">
-                Section: {section.section_id}
-              </h3>
+              {/* Gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
               
-              <div className="space-y-4">
+              {/* Glow effect */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)]" />
+
+              <div className="relative z-10">
+                <h3 className="font-playfair font-bold text-xl text-primary mb-4">
+                  Section: {section.section_id}
+                </h3>
+                
+                <div className="space-y-4">
                 <div>
                   <Label htmlFor={`${section.id}-fr`} className="text-primary">
                     Français
@@ -175,13 +189,14 @@ export const ContentEditor = () => {
                   />
                 </div>
 
-                <Button
-                  onClick={() => handleSave(section)}
-                  className="bg-secondary hover:bg-secondary/90 text-primary"
-                >
-                  <Save className="w-4 h-4 mr-2" />
-                  Sauvegarder
-                </Button>
+                  <Button
+                    onClick={() => handleSave(section)}
+                    className="bg-secondary hover:bg-secondary/90 text-primary"
+                  >
+                    <Save className="w-4 h-4 mr-2" />
+                    Sauvegarder
+                  </Button>
+                </div>
               </div>
             </Card>
           ))}

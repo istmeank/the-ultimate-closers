@@ -188,76 +188,91 @@ export const FormationsManager = () => {
       </div>
 
       {formations.length === 0 ? (
-        <Card className="bg-background/95 backdrop-blur-sm border-secondary/20 p-6">
-          <p className="text-muted-foreground font-inter">
+        <Card className="group relative overflow-hidden bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale p-6">
+          {/* Gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+          
+          {/* Glow effect */}
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)]" />
+
+          <p className="relative z-10 text-muted-foreground font-inter">
             Aucune formation pour le moment. Cliquez sur "Ajouter" pour créer votre première formation.
           </p>
         </Card>
       ) : (
         <div className="grid gap-4">
-          {formations.map((formation) => (
+          {formations.map((formation, index) => (
             <Card
               key={formation.id}
-              className="bg-background/95 backdrop-blur-sm border-secondary/20 p-6"
+              className="group relative overflow-hidden bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale p-6"
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex gap-4 flex-1">
-                  {formation.thumbnail_url ? (
-                    <img
-                      src={formation.thumbnail_url}
-                      alt={formation.title}
-                      className="w-24 h-24 object-cover rounded"
-                    />
-                  ) : (
-                    <div className="w-24 h-24 bg-muted rounded flex items-center justify-center">
-                      <FileText className="w-8 h-8 text-muted-foreground" />
-                    </div>
-                  )}
-                  <div className="flex-1">
-                    <h3 className="font-playfair font-bold text-lg text-primary">
-                      {formation.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {formation.description}
-                    </p>
-                    <div className="flex items-center gap-4 mt-2 text-sm">
-                      <span className="text-muted-foreground">
-                        Durée: {formation.duration_minutes} min
-                      </span>
-                      <span className="text-muted-foreground">
-                        Type: {formation.file_type}
-                      </span>
+              {/* Gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+              
+              {/* Glow effect */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)]" />
+
+              <div className="relative z-10">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex gap-4 flex-1">
+                    {formation.thumbnail_url ? (
+                      <img
+                        src={formation.thumbnail_url}
+                        alt={formation.title}
+                        className="w-24 h-24 object-cover rounded group-hover:scale-105 transition-transform"
+                      />
+                    ) : (
+                      <div className="w-24 h-24 bg-muted rounded flex items-center justify-center group-hover:scale-105 transition-transform">
+                        <FileText className="w-8 h-8 text-muted-foreground" />
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <h3 className="font-playfair font-bold text-lg text-primary">
+                        {formation.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {formation.description}
+                      </p>
+                      <div className="flex items-center gap-4 mt-2 text-sm">
+                        <span className="text-muted-foreground">
+                          Durée: {formation.duration_minutes} min
+                        </span>
+                        <span className="text-muted-foreground">
+                          Type: {formation.file_type}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-2">
-                    <Label htmlFor={`publish-${formation.id}`} className="text-sm">
-                      Publié
-                    </Label>
-                    <Switch
-                      id={`publish-${formation.id}`}
-                      checked={formation.is_published}
-                      onCheckedChange={() => togglePublish(formation)}
-                    />
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-2">
+                      <Label htmlFor={`publish-${formation.id}`} className="text-sm">
+                        Publié
+                      </Label>
+                      <Switch
+                        id={`publish-${formation.id}`}
+                        checked={formation.is_published}
+                        onCheckedChange={() => togglePublish(formation)}
+                      />
+                    </div>
+                    <Button
+                      onClick={() => {
+                        setEditingFormation(formation);
+                        setOpen(true);
+                      }}
+                      variant="outline"
+                      size="sm"
+                    >
+                      Modifier
+                    </Button>
+                    <Button
+                      onClick={() => handleDelete(formation.id)}
+                      variant="destructive"
+                      size="sm"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </div>
-                  <Button
-                    onClick={() => {
-                      setEditingFormation(formation);
-                      setOpen(true);
-                    }}
-                    variant="outline"
-                    size="sm"
-                  >
-                    Modifier
-                  </Button>
-                  <Button
-                    onClick={() => handleDelete(formation.id)}
-                    variant="destructive"
-                    size="sm"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
                 </div>
               </div>
             </Card>

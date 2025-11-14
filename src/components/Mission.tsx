@@ -28,14 +28,17 @@ const Mission = () => {
           {values.map(({ key, icon: Icon, color }, index) => (
             <div
               key={key}
-              className="group relative p-8 rounded-2xl bg-card backdrop-blur-sm border border-border hover:border-secondary transition-all duration-300 hover:shadow-lg hover:-translate-y-1 animate-fade-in-scale"
+              className="group relative overflow-hidden p-8 rounded-2xl bg-card backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              {/* Glassmorphism effect */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              {/* Gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+              
+              {/* Glow effect */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)]" />
               
               <div className="relative z-10 flex flex-col items-center text-center gap-4">
-                <div className={`p-4 rounded-full bg-background border-2 border-border group-hover:border-secondary transition-all ${color}`}>
+                <div className={`p-4 rounded-full bg-background border-2 border-border group-hover:border-secondary group-hover:scale-110 transition-transform ${color}`}>
                   <Icon className="w-8 h-8" />
                 </div>
                 <span className="font-inter font-semibold text-sm md:text-base text-foreground">

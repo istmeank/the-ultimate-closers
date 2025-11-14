@@ -29,25 +29,33 @@ const FormStep1Intro = ({ onNext }: FormStep1IntroProps) => {
         </p>
       </div>
 
-      <div className="bg-card/50 backdrop-blur-sm border border-secondary/20 rounded-2xl p-6 md:p-8 space-y-4">
-        <h3 className="text-xl font-semibold text-secondary">
-          ⚡ {t('booking.step1.what')}
-        </h3>
+      <div className="group relative overflow-hidden bg-card/50 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale rounded-2xl p-6 md:p-8 space-y-4">
+        {/* Gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity rounded-2xl" />
         
-        <ul className="space-y-3 text-muted-foreground">
-          <li className="flex items-start gap-3">
-            <span className="text-secondary mt-1">•</span>
-            <span>{t('booking.step1.item1')}</span>
-          </li>
-          <li className="flex items-start gap-3">
-            <span className="text-secondary mt-1">•</span>
-            <span>{t('booking.step1.item2')}</span>
-          </li>
-          <li className="flex items-start gap-3">
-            <span className="text-secondary mt-1">•</span>
-            <span>{t('booking.step1.item3')}</span>
-          </li>
-        </ul>
+        {/* Glow effect */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)] rounded-2xl" />
+
+        <div className="relative z-10">
+          <h3 className="text-xl font-semibold text-secondary">
+            ⚡ {t('booking.step1.what')}
+          </h3>
+          
+          <ul className="space-y-3 text-muted-foreground">
+            <li className="flex items-start gap-3">
+              <span className="text-secondary mt-1">•</span>
+              <span>{t('booking.step1.item1')}</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="text-secondary mt-1">•</span>
+              <span>{t('booking.step1.item2')}</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="text-secondary mt-1">•</span>
+              <span>{t('booking.step1.item3')}</span>
+            </li>
+          </ul>
+        </div>
       </div>
 
       <div className="bg-gradient-to-r from-destructive/10 to-destructive/5 border border-destructive/20 rounded-xl p-6">

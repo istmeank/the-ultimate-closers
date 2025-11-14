@@ -29,21 +29,21 @@ const Testimonials = () => {
               style={{ animationDelay: `${index * 0.15}s` }}
             >
               {/* Gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
               
               {/* Glow effect */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)]" />
 
               <CardContent className="p-8 relative z-10">
-                <Quote className="w-10 h-10 text-secondary dark:text-gold mb-4 opacity-50" />
+                <Quote className="w-10 h-10 text-secondary dark:text-gold mb-4 opacity-50 group-hover:scale-110 transition-transform" />
                 
                 <p className="font-inter text-base text-foreground/80 dark:text-white/90 mb-6 leading-relaxed">
                   "{t(testimonial.cardKey)}"
                 </p>
 
                 <div className="flex items-center gap-3">
-                  <Avatar className="border-2 border-secondary dark:border-gold">
-                    <AvatarFallback className="bg-secondary dark:bg-gold text-primary dark:text-black font-semibold">
+                  <Avatar className="border-2 border-secondary dark:border-gold group-hover:scale-110 transition-transform">
+                    <AvatarFallback className="bg-primary dark:bg-gold text-background dark:text-black font-semibold">
                       {testimonial.initials}
                     </AvatarFallback>
                   </Avatar>

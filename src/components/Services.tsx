@@ -10,13 +10,13 @@ const Services = () => {
       icon: TrendingUp,
       titleKey: 'services.card1.title',
       textKey: 'services.card1.text',
-      gradient: 'from-secondary/10 to-primary/10',
+      gradient: 'from-primary/10 to-accent/10',
     },
     {
       icon: Users,
       titleKey: 'services.card2.title',
       textKey: 'services.card2.text',
-      gradient: 'from-accent/10 to-secondary/10',
+      gradient: 'from-primary/10 to-accent/10',
     },
     {
       icon: LineChart,
@@ -28,7 +28,7 @@ const Services = () => {
       icon: Bot,
       titleKey: 'services.card4.title',
       textKey: 'services.card4.text',
-      gradient: 'from-accent/10 to-primary/10',
+      gradient: 'from-primary/10 to-accent/10',
     },
   ];
 

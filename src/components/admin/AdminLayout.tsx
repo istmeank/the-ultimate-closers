@@ -32,26 +32,26 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary via-primary to-primary/90">
       {/* Header */}
-      <header className="bg-background/10 backdrop-blur-sm border-b border-secondary/20 sticky top-0 z-50">
+      <header className="bg-white/80 dark:bg-primary/30 backdrop-blur-sm border-b border-secondary/20 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <img src={logo} alt="Logo" className="w-10 h-10 object-contain" />
               <div>
-                <h1 className="font-playfair font-bold text-xl text-background">
+                <h1 className="font-playfair font-bold text-xl text-primary dark:text-background">
                   Admin Dashboard
                 </h1>
-                <p className="text-sm text-background/70 font-inter">
+                <p className="text-sm text-muted-foreground dark:text-background/80 font-inter">
                   {user?.email}
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <LanguageSelector className="bg-background/10" />
+              <LanguageSelector className="bg-background/10 dark:bg-primary/20" />
               <Button
                 onClick={handleSignOut}
                 variant="outline"
-                className="border-background/20 text-background hover:bg-background/10"
+                className="border-border dark:border-primary/30 text-foreground dark:text-background hover:bg-muted dark:hover:bg-primary/20"
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 Déconnexion
