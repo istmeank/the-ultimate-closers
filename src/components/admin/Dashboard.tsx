@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card } from '@/components/ui/card';
 import { Users, FileText, TrendingUp, Calendar } from 'lucide-react';
+import handshake from '@/assets/hero-handshake.jpg';
 export const Dashboard = () => {
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -149,18 +150,27 @@ export const Dashboard = () => {
           </Card>)}
       </div>
 
-      <Card className="group relative overflow-hidden bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale p-6">
-        {/* Gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+      <Card className="group relative overflow-hidden bg-background/95 dark:bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale p-6">
+        {/* Background image pour light mode */}
+        <div 
+          className="absolute inset-0 dark:hidden bg-cover bg-center opacity-40"
+          style={{ backgroundImage: `url(${handshake})` }}
+        />
         
-        {/* Glow effect */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)] bg-[#10433c]" />
+        {/* Overlay vert pour light mode */}
+        <div className="absolute inset-0 dark:hidden bg-secondary/60" />
+        
+        {/* Gradient background pour dark mode */}
+        <div className="hidden dark:block absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+        
+        {/* Glow effect pour dark mode */}
+        <div className="hidden dark:block absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)] bg-[#10433c]" />
 
-        <div className="relative z-10">
-          <h3 className="font-playfair font-bold text-xl mb-4 text-[#e8c669]">
+        <div className="relative z-10 bg-white dark:bg-transparent p-6 rounded-lg">
+          <h3 className="font-playfair font-bold text-xl mb-4 text-secondary dark:text-[#e8c669]">
             Bienvenue dans le panel d'administration
           </h3>
-          <p className="text-muted-foreground font-inter">
+          <p className="text-foreground dark:text-muted-foreground font-inter">
             Utilisez les onglets ci-dessus pour gérer le contenu du site, les formations, les utilisateurs et consulter les statistiques.
           </p>
         </div>
