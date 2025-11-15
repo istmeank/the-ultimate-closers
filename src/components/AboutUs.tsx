@@ -102,7 +102,7 @@ const AboutUs = () => {
         <div className="max-w-3xl mx-auto mb-16 text-center animate-fade-in" style={{
         animationDelay: '0.2s'
       }}>
-          <blockquote className="font-playfair text-2xl md:text-3xl font-semibold text-secondary italic border-l-4 border-secondary pl-6 py-4 backdrop-blur-sm rounded-r-2xl shadow-lg bg-[#016946]">
+          <blockquote className="font-playfair text-2xl md:text-3xl font-semibold text-secondary italic border-l-4 border-secondary pl-6 py-4 bg-card/50 backdrop-blur-sm rounded-r-2xl shadow-lg">
             {t('about.manifesto')}
           </blockquote>
         </div>
