@@ -2,20 +2,20 @@ import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logoTUC from "@/assets/logo.png";
 import { useLanguage } from "@/contexts/LanguageContext";
-
 interface FormStep1IntroProps {
   onNext: () => void;
 }
-
-const FormStep1Intro = ({ onNext }: FormStep1IntroProps) => {
-  const { t } = useLanguage();
-  
-  return (
-    <div className="space-y-8 animate-fade-in">
+const FormStep1Intro = ({
+  onNext
+}: FormStep1IntroProps) => {
+  const {
+    t
+  } = useLanguage();
+  return <div className="space-y-8 animate-fade-in">
       <div className="text-center space-y-4">
         <div className="flex flex-col items-center gap-3 mb-4">
           <img src={logoTUC} alt="The Ultimate Closers" className="w-20 h-20 object-contain" />
-          <p className="font-playfair text-2xl font-semibold text-green-600 dark:text-green-500">
+          <p className="font-playfair text-2xl font-semibold text-[#0e4e40]">
             The Ultimate Closers
           </p>
         </div>
@@ -65,17 +65,11 @@ const FormStep1Intro = ({ onNext }: FormStep1IntroProps) => {
       </div>
 
       <div className="flex justify-center pt-4">
-        <Button
-          onClick={onNext}
-          size="lg"
-          className="bg-gradient-to-r from-secondary to-primary hover:shadow-[0_0_40px_rgba(233,196,106,0.5)] transition-all px-12 py-6 text-lg font-bold group"
-        >
+        <Button onClick={onNext} size="lg" className="bg-gradient-to-r from-secondary to-primary hover:shadow-[0_0_40px_rgba(233,196,106,0.5)] transition-all px-12 py-6 text-lg font-bold group">
           {t('booking.step1.button')}
           <Sparkles className="ml-2 w-5 h-5 group-hover:rotate-180 transition-transform duration-500" />
         </Button>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default FormStep1Intro;
