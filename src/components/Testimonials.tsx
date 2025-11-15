@@ -2,32 +2,38 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Quote } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-
 const Testimonials = () => {
-  const { t } = useLanguage();
-
-  const testimonials = [
-    { cardKey: 'testimonials.card1', nameKey: 'testimonials.name1', flag: '🇩🇿', initials: 'S' },
-    { cardKey: 'testimonials.card2', nameKey: 'testimonials.name2', flag: '🇫🇷', initials: 'M' },
-    { cardKey: 'testimonials.card3', nameKey: 'testimonials.name3', flag: '🇩🇿', initials: 'Y' },
-  ];
-
-  return (
-    <section id="testimonials" className="py-24 bg-muted/30">
+  const {
+    t
+  } = useLanguage();
+  const testimonials = [{
+    cardKey: 'testimonials.card1',
+    nameKey: 'testimonials.name1',
+    flag: '🇩🇿',
+    initials: 'S'
+  }, {
+    cardKey: 'testimonials.card2',
+    nameKey: 'testimonials.name2',
+    flag: '🇫🇷',
+    initials: 'M'
+  }, {
+    cardKey: 'testimonials.card3',
+    nameKey: 'testimonials.name3',
+    flag: '🇩🇿',
+    initials: 'Y'
+  }];
+  return <section id="testimonials" className="py-24 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center mb-16 animate-fade-in">
-          <h2 className="font-playfair font-bold text-4xl md:text-5xl text-secondary mb-6">
+          <h2 className="font-playfair font-bold text-4xl md:text-5xl mb-6 text-[#016946]">
             {t('testimonials.title')}
           </h2>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {testimonials.map((testimonial, index) => (
-            <Card
-              key={testimonial.cardKey}
-              className="group relative overflow-hidden border-2 hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale bg-background dark:bg-black/80"
-              style={{ animationDelay: `${index * 0.15}s` }}
-            >
+          {testimonials.map((testimonial, index) => <Card key={testimonial.cardKey} className="group relative overflow-hidden border-2 hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale bg-background dark:bg-black/80" style={{
+          animationDelay: `${index * 0.15}s`
+        }}>
               {/* Gradient background */}
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
               
@@ -55,12 +61,9 @@ const Testimonials = () => {
                   </div>
                 </div>
               </CardContent>
-            </Card>
-          ))}
+            </Card>)}
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default Testimonials;
