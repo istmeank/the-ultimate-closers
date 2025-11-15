@@ -3,34 +3,52 @@ import { Linkedin, Instagram, Youtube, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import logo from '@/assets/logo.png';
-
 const Footer = () => {
-  const { t } = useLanguage();
-
-  const socialLinks = [
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
-    { icon: Instagram, href: '#', label: 'Instagram' },
-    { icon: Youtube, href: '#', label: 'YouTube' },
-  ];
-
-  return (
-    <footer className="relative bg-gradient-to-b from-[#0a0520] via-[#050211] to-black text-white py-16 overflow-hidden">
+  const {
+    t
+  } = useLanguage();
+  const socialLinks = [{
+    icon: Linkedin,
+    href: '#',
+    label: 'LinkedIn'
+  }, {
+    icon: Instagram,
+    href: '#',
+    label: 'Instagram'
+  }, {
+    icon: Youtube,
+    href: '#',
+    label: 'YouTube'
+  }];
+  return <footer className="relative bg-gradient-to-b from-[#0a0520] via-[#050211] to-black text-white py-16 overflow-hidden">
       {/* Constellation background effect */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-[10%] left-[15%] w-1 h-1 bg-gold rounded-full animate-pulse" />
         <div className="absolute top-[25%] left-[25%] w-1 h-1 bg-white rounded-full" />
-        <div className="absolute top-[15%] left-[35%] w-0.5 h-0.5 bg-gold rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
+        <div className="absolute top-[15%] left-[35%] w-0.5 h-0.5 bg-gold rounded-full animate-pulse" style={{
+        animationDelay: '0.5s'
+      }} />
         <div className="absolute top-[40%] left-[20%] w-1 h-1 bg-white rounded-full" />
-        <div className="absolute top-[50%] left-[10%] w-0.5 h-0.5 bg-gold rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-[50%] left-[10%] w-0.5 h-0.5 bg-gold rounded-full animate-pulse" style={{
+        animationDelay: '1s'
+      }} />
         
-        <div className="absolute top-[20%] right-[20%] w-1 h-1 bg-gold rounded-full animate-pulse" style={{ animationDelay: '0.3s' }} />
+        <div className="absolute top-[20%] right-[20%] w-1 h-1 bg-gold rounded-full animate-pulse" style={{
+        animationDelay: '0.3s'
+      }} />
         <div className="absolute top-[35%] right-[15%] w-0.5 h-0.5 bg-white rounded-full" />
-        <div className="absolute top-[45%] right-[25%] w-1 h-1 bg-gold rounded-full animate-pulse" style={{ animationDelay: '0.7s' }} />
+        <div className="absolute top-[45%] right-[25%] w-1 h-1 bg-gold rounded-full animate-pulse" style={{
+        animationDelay: '0.7s'
+      }} />
         <div className="absolute top-[60%] right-[30%] w-0.5 h-0.5 bg-white rounded-full" />
-        <div className="absolute top-[70%] right-[18%] w-1 h-1 bg-gold rounded-full animate-pulse" style={{ animationDelay: '1.2s' }} />
+        <div className="absolute top-[70%] right-[18%] w-1 h-1 bg-gold rounded-full animate-pulse" style={{
+        animationDelay: '1.2s'
+      }} />
         
         <div className="absolute bottom-[20%] left-[40%] w-1 h-1 bg-white rounded-full" />
-        <div className="absolute bottom-[30%] left-[50%] w-0.5 h-0.5 bg-gold rounded-full animate-pulse" style={{ animationDelay: '0.8s' }} />
+        <div className="absolute bottom-[30%] left-[50%] w-0.5 h-0.5 bg-gold rounded-full animate-pulse" style={{
+        animationDelay: '0.8s'
+      }} />
         <div className="absolute bottom-[15%] right-[45%] w-1 h-1 bg-white rounded-full" />
         
         {/* Constellation lines */}
@@ -62,32 +80,26 @@ const Footer = () => {
 
           {/* Quote */}
           <blockquote className="max-w-2xl">
-            <p className="font-playfair text-xl md:text-2xl text-secondary italic">
+            <p className="font-playfair text-xl md:text-2xl italic text-[#e8d759]/[0.88]">
               "{t('footer.quote')}"
             </p>
           </blockquote>
 
           {/* Contact Email */}
-          <a 
-            href="mailto:contact@theultimateclosers.com"
-            className="flex items-center gap-2 text-white/80 hover:text-secondary transition-colors group"
-          >
+          <a href="mailto:contact@theultimateclosers.com" className="flex items-center gap-2 text-white/80 hover:text-secondary transition-colors group">
             <Mail className="w-5 h-5" />
             <span className="font-inter text-lg">contact@theultimateclosers.com</span>
           </a>
 
           {/* Social Links & Theme Toggle */}
           <div className="flex items-center gap-6">
-            {socialLinks.map(({ icon: Icon, href, label }) => (
-              <a
-                key={label}
-                href={href}
-                aria-label={label}
-                className="p-3 rounded-full bg-white/10 hover:bg-secondary hover:text-primary text-white transition-all hover:scale-110"
-              >
+            {socialLinks.map(({
+            icon: Icon,
+            href,
+            label
+          }) => <a key={label} href={href} aria-label={label} className="p-3 rounded-full bg-white/10 hover:bg-secondary hover:text-primary text-white transition-all hover:scale-110">
                 <Icon className="w-5 h-5" />
-              </a>
-            ))}
+              </a>)}
             <ThemeToggle />
           </div>
 
@@ -100,8 +112,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
