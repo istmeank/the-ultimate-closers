@@ -61,7 +61,7 @@ export const AdminLayoutWithSidebar = () => {
 
         <UnifiedSidebar />
         
-        <main className="flex-1 pt-14 p-8 relative z-10 dark:bg-black/50">
+        <main className="flex-1 pt-14 p-8 relative z-10 bg-[#030d0b]">
           <Outlet />
         </main>
       </div>
