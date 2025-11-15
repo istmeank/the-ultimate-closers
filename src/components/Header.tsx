@@ -25,7 +25,7 @@ const Header = () => {
           {/* Logo */}
           <a href="#hero" className="flex items-center gap-3 group">
             <img src={logo} alt="The Ultimate Closers Logo" className="w-10 h-10 object-contain" />
-            <span className="font-playfair font-bold text-xl text-primary dark:text-gold group-hover:text-secondary transition-colors">
+            <span className="font-playfair font-bold text-xl text-gold dark:text-primary group-hover:text-secondary transition-colors">
               The Ultimate Closers
             </span>
           </a>
