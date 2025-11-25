@@ -9,18 +9,18 @@ const DashboardCloser = () => {
   return (
     <div className="space-y-6">
       {/* Header avec image de poignée de main */}
-      <div className="relative rounded-lg overflow-hidden">
+      <div className="relative rounded-lg overflow-hidden border">
         <img 
           src={handshakeImage} 
           alt={t('closer.title')}
-          className="w-full h-48 object-cover opacity-60"
+          className="w-full h-48 object-cover opacity-70"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70 flex items-center px-8">
           <div>
-            <h1 className="font-playfair text-4xl text-background font-bold drop-shadow-lg">
+            <h1 className="font-playfair text-4xl text-primary-foreground font-bold drop-shadow-lg">
               {t('closer.title')}
             </h1>
-            <p className="text-background/90 mt-2 font-inter text-lg">
+            <p className="text-primary-foreground/90 mt-2 font-inter text-lg">
               {t('closer.subtitle')}
             </p>
           </div>

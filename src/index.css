@@ -75,11 +75,13 @@ All colors MUST be HSL.
     --popover: 0 0% 10%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 167 69% 18%;
-    --primary-foreground: 0 0% 98%;
+    /* Golden Primary - Dark Mode */
+    --primary: 44 73% 66%;
+    --primary-foreground: 0 0% 7%;
 
-    --secondary: 44 73% 66%;
-    --secondary-foreground: 167 69% 18%;
+    /* Malachite Green Secondary - Dark Mode */
+    --secondary: 167 69% 18%;
+    --secondary-foreground: 0 0% 98%;
     --gold: 44 73% 66%;
     --gold-glow: 44 100% 75%;
 
