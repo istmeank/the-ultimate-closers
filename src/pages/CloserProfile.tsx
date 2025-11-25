@@ -5,8 +5,10 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 import { User, Briefcase, Target } from 'lucide-react';
+import profileImage from '@/assets/abdenacer-profile.png';
 
 export default function CloserProfile() {
   const [loading, setLoading] = useState(true);
@@ -88,11 +90,17 @@ export default function CloserProfile() {
 
   return (
     <div className="space-y-6 p-6 max-w-3xl mx-auto">
-      <div>
-        <h1 className="font-playfair text-3xl text-primary mb-2">Mon Profil Closer</h1>
-        <p className="text-muted-foreground">
-          Gérez vos informations et préférences
-        </p>
+      <div className="flex items-center gap-6">
+        <Avatar className="w-24 h-24 border-4 border-primary dark:border-gold shadow-lg">
+          <AvatarImage src={profileImage} alt="Abdenacer Maredj" />
+          <AvatarFallback className="text-2xl">AM</AvatarFallback>
+        </Avatar>
+        <div>
+          <h1 className="font-playfair text-3xl text-primary dark:text-gold mb-2">Mon Profil Closer</h1>
+          <p className="text-muted-foreground dark:text-white/70">
+            Gérez vos informations et préférences
+          </p>
+        </div>
       </div>
 
       <Card className="group relative overflow-hidden p-6 bg-background/95 dark:bg-black/80 backdrop-blur-sm border-2 hover:border-secondary transition-all duration-300">
