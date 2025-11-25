@@ -2,8 +2,15 @@ import { ReactNode } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { 
   Sidebar, 
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
   SidebarProvider, 
-  SidebarTrigger
+  SidebarTrigger,
+  useSidebar
 } from '@/components/ui/sidebar';
 import { 
   LayoutDashboard, 
@@ -83,7 +90,7 @@ export const CloserLayout = ({ children }: CloserLayoutProps) => {
           </div>
         </header>
 
-        <SidebarContent />
+        <CloserSidebarContent />
         
         <main className="flex-1 pt-14 p-8">
           {children || <Outlet />}
@@ -93,8 +100,9 @@ export const CloserLayout = ({ children }: CloserLayoutProps) => {
   );
 };
 
-const SidebarContent = () => {
+const CloserSidebarContent = () => {
   const { t } = useLanguage();
+  const { open } = useSidebar();
   
   const sidebarItems = [
     {
@@ -136,27 +144,34 @@ const SidebarContent = () => {
 
   return (
     <Sidebar collapsible="icon" className="bg-secondary dark:bg-primary border-r border-primary-foreground/10">
-      <div className="p-4 pt-20">
-        <nav className="space-y-2">
-          {sidebarItems.map((item) => (
-            <NavLink
-              key={item.href}
-              to={item.href}
-              end={item.href === '/dashboard-closer'}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300 ${
-                  isActive
-                    ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-[0_0_15px_hsl(44,73%,66%/0.4)] dark:bg-secondary/20 dark:text-secondary dark:border-secondary'
-                    : 'text-secondary-foreground/90 hover:text-primary hover:bg-primary/10 dark:text-primary-foreground/70 dark:hover:text-secondary dark:hover:bg-secondary/10'
-                }`
-              }
-            >
-              <item.icon className="w-4 h-4 flex-shrink-0" />
-              <span className="font-medium">{item.label}</span>
-            </NavLink>
-          ))}
-        </nav>
-      </div>
+      <SidebarContent>
+        <SidebarGroup className="pt-20">
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {sidebarItems.map((item) => (
+                <SidebarMenuItem key={item.href}>
+                  <SidebarMenuButton asChild>
+                    <NavLink
+                      to={item.href}
+                      end={item.href === '/dashboard-closer'}
+                      className={({ isActive }) =>
+                        `flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300 ${
+                          isActive
+                            ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-[0_0_15px_hsl(44,73%,66%/0.4)] dark:bg-secondary/20 dark:text-secondary dark:border-secondary'
+                            : 'text-secondary-foreground/90 hover:text-primary hover:bg-primary/10 dark:text-primary-foreground/70 dark:hover:text-secondary dark:hover:bg-secondary/10'
+                        }`
+                      }
+                    >
+                      <item.icon className="w-4 h-4 flex-shrink-0" />
+                      {open && <span className="font-medium">{item.label}</span>}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
     </Sidebar>
   );
 };
