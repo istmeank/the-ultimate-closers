@@ -147,3 +147,24 @@ La mémoire de Claude est volatile entre sessions. Ce journal est le **fil rouge
 - Blocages rencontrés : aucun.
 - Apprentissages : LEARNING-009 — une baseline propre est ~3x plus courte (879 lignes) que la somme des 30 migrations Lovable bordéliques car elle ne contient QUE l'état final, pas l'historique des erreurs et corrections ; LEARNING-010 — l'autocritique grep automatisée (compter wrappings, clauses TO, fonctions DEFINER) doit devenir un script CI obligatoire avant tout apply_migration.
 - Prochaine étape : présenter la baseline à Nacer pour validation explicite → si OK, tâche #15 (apply baseline sur TUC-v2 via mcp__supabase__apply_migration) + tâche #11 (tests non-régression via get_advisors + smoke tests RLS) + tâche #12 (ADR-001 sécurité dans DECISIONS.md).
+
+## 2026-06-07 — Session 9 — Apply baseline TUC-v2 + tests non-régression + ADR-001
+- Objectif initial : tâches #15 (apply baseline) + #11 (tests) + #12 (ADR-001) — finaliser la Vague 1 sécurité.
+- Ce qui a été fait :
+  1. Diagnostic état Supabase TUC-v2 (llxgyomevketvypusafl) : 0 migration appliquée, schéma public vide → terrain neuf pour la baseline.
+  2. 1ère tentative apply_migration (baseline complète) → ÉCHEC : `has_role` créée avant `user_roles` (erreur d'ordre, validation SQL strict).
+  3. Réorganisation : split en 3 migrations versionnées :
+     - `tuc_v2_baseline` (20260607194643) : extensions + enum + update_updated_at_column + tables Domain 0/1/3/4 + transverse + triggers updated_at + handle_new_user → SUCCÈS
+     - `tuc_v2_rls_policies_and_storage` (20260607194749) : 35 policies RLS public + 6 policies storage + 3 buckets → SUCCÈS
+     - `tuc_v2_security_hardening` (20260607194841) : REVOKE EXECUTE sur SECURITY DEFINER handle_new_user et has_role + 3 indexes FK manquants (formations.created_by, site_analytics.user_id, site_content.updated_by) + restriction listing buckets publics → SUCCÈS
+  4. Vérifications via get_advisors security + performance :
+     - **AVANT hardening** : 10 warnings sécurité, 49 warnings performance
+     - **APRÈS hardening** : 4 warnings sécurité résiduels (2 documentés BLOCKER H8/H9 = call_bookings et site_analytics INSERT public à durcir avec Edge Function rate-limited en Vague 2 ; 2 sur fonction `rls_auto_enable` qui est INTERNE Supabase, hors notre contrôle).
+  5. Tests SQL via execute_sql (résultats) : **17 tables publiques, RLS activée à 100%, 35 policies RLS + 6 storage, 66 indexes B-Tree/GIN, 9 triggers, 4 valeurs enum, 3 buckets, 4 fonctions publiques**.
+  6. Génération types TypeScript via generate_typescript_types → sauvé dans `src/lib/database.types.ts` + README explicatif pour le frontend.
+  7. ADR-001 écrit dans `.claude/memory/DECISIONS.md` : modèle RBAC owner > admin > closer > user via table user_roles + has_role SECURITY DEFINER + RLS optimisée wrappée + tokens en clair acceptés en MVP (BLOCKER-001).
+- Vérification règle d'or : 3 migrations toutes versionnées et idempotentes (vérifiables via supabase migration list) ; 17/17 tables RLS activée ; 0 SECURITY DEFINER exposé en RPC ; 0 USING true non justifié et non documenté (les 2 restants sont commentés BLOCKER H8/H9) ; types TS générés cohérents avec le schéma appliqué ; conformité 13/15 checklist supabase-auth-rls.
+- Décisions prises : ADR-001 (architecture sécurité acceptée) ; tokens OAuth en clair = BLOCKER-001 ouvert pour Vague 2 ; INSERT publics call_bookings/site_analytics = BLOCKER H8/H9 ouverts pour Vague 2 (Edge Functions Upstash rate-limited).
+- Blocages rencontrés : ordre de création fonctions vs tables (résolu par split migration) ; `rls_auto_enable` warning (faux positif, fonction Supabase interne).
+- Apprentissages : LEARNING-011 — PostgreSQL valide les bodies SQL des fonctions LANGUAGE SQL strict au moment du CREATE FUNCTION → toujours créer les tables référencées AVANT les fonctions ; LEARNING-012 — `REVOKE EXECUTE FROM anon, authenticated, public` sur SECURITY DEFINER ne casse PAS les triggers ni les policies RLS (qui s'exécutent en SECURITY DEFINER implicit) — c'est la solution propre pour bloquer les RPC publics sans perdre la fonctionnalité ; LEARNING-013 — Supabase MCP apply_migration tracé automatiquement dans schema_migrations avec version YYYYMMDDHHMMSS, parfait pour le rollback.
+- Prochaine étape : tâche #16 (Nacer update .env frontend pour pointer vers TUC-v2) + tâche #13 (déconnecter Lovable) → Vague 1 sécurité totalement bouclée.
