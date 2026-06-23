@@ -1019,3 +1019,35 @@ Nacer a posé les 4 questions fondatrices et confirmé les nouvelles dimensions 
   1. `git add . && git commit -m "feat: squelette Silicate v0.6 appliqué — P11/P19/P22/ΔP3/P13/P14/ΔP13 + hooks lifecycle"` 
   2. Suggérer à Nacer d'intégrer l'insight P17 adaptabilité dans `skeleton-modules/00-INDEX.md` (v0.7)
   3. Attaquer T28 (couche d'abstraction services) — premier vrai ticket backlog
+
+---
+
+## Session 32 — 2026-06-23 — Pierres restantes P16 / P16-B / P18 / P21
+
+**Durée estimée** : 45 min  
+**Score squelette** : 20/23 → **23/23** ✅ COMPLET
+
+### Ce qui a été fait
+
+**P16 — 12 sections obligatoires orchestrateur** :
+Ajout d'un bloc `§ Silicate v0.6 — Sections P16 obligatoires` à la fin de `orchestrateur.md` avec les 10 sections manquantes (Agents disponibles, Flux de délégation, Déclencheurs, Anti-patterns, Escalade, Interaction mémoire, Validation finale, Exemples de délégation, Sources, Statut). Les 2 sections déjà présentes (Rôle, Contexte/Périmètre) conservées dans la structure existante.
+
+**P16-B — Relay SILICATE → TUC tech** :
+Ajout d'un bloc `§ P16-B — Relay SILICATE → TUC tech` dans `orchestrateur.md`. Tableau des 7 étapes avec statut (6/7 complets, étape 7 = audit Q3 2026). Signal de relay complet tracé.
+
+**P18 — Q-POLES appliqué aux 16 agents** :
+Résultats Q-POLES-1 à Q-POLES-5 documentés dans la section "Agents disponibles" (P16 §3). Tableau complet des 16 agents avec couche/mode/pôle/déclencheur.
+
+**P21 — Matrice Managed vs Local** :
+Création de `docs/infrastructure-decision.md`. 5 questions appliquées à TUC tech. Verdict : LOCAL obligatoire pour gouvernance et données sensibles (Q2 + Q5 bloquants). Managed optionnel pour tâches API autonomes non sensibles uniquement.
+
+**ADR-032** : P21 — verdict LOCAL + Managed optionnel.  
+**ADR-033** : score 23/23 — squelette v0.6 complet.
+
+### Rituel de fermeture
+
+**Décidé** : TUC tech = LOCAL (principal) pour toute gouvernance et données RGPD. Managed = optionnel, jamais pour données prospects.
+
+**Appris** : Les 12 sections P16 ne remplacent pas la structure existante de l'orchestrateur — elles la complètent. La cohabitation MODE 1/MODE 2 (existant) + § P16 (Silicate) est propre et non redondante.
+
+**Dérivé** : Prochaine priorité = T28 (couche d'abstraction services) — fondation technique AVANT T01-T27. Puis : proposer l'insight ADR-031 (P17 adaptabilité) au squelette Silicate v0.7.

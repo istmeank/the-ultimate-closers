@@ -138,3 +138,31 @@
   - `rls_auto_enable` : résidu `search_path=pg_catalog` corrigé via M5 (`tuc_v2_fix_rls_auto_enable_search_path`)
   - Résultat post-M5 : `get_advisors` = 0 advisors sécurité
 - **Migration** : `supabase/migrations/20260610000001_tuc_v2_fix_rls_auto_enable_search_path.sql`
+
+---
+
+## BLOCKER-008 — index.lock git bloqué (NTFS)
+
+**Date** : 2026-06-23  
+**Statut** : ouvert  
+**Agent** : orchestrateur (session 32)
+
+### Symptôme
+`fatal: Unable to create '.git/index.lock': File exists` — le sandbox Linux ne peut pas supprimer un lock créé sur NTFS Windows.
+
+### Cause probable
+Le hook `snapshot-git.sh` (P22 — Stop hook) a créé un lock lors d'une session précédente et ne l'a pas libéré (session interrompue ou contexte saturé).
+
+### Action requise de Nacer
+Dans un terminal Windows (PowerShell ou CMD) :
+```powershell
+# PowerShell
+Remove-Item "D:\GitHub\the-ultimate-closers\.git\index.lock" -Force
+
+# Puis commit :
+git -C "D:\GitHub\the-ultimate-closers" add .claude/agents/orchestrateur.md docs/infrastructure-decision.md .claude/memory/DECISIONS.md .claude/memory/JOURNAL.md .claude/memory/BLOCKERS.md
+git -C "D:\GitHub\the-ultimate-closers" commit -m "feat: squelette Silicate v0.6 complet - P16/P16-B/P18/P21 + ADR-032/033 - Score 23/23"
+```
+
+### Résolution
+Marquer BLOCKER-008 `résolu` après exécution.

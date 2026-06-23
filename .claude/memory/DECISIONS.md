@@ -49,3 +49,45 @@ Pour qu'aucune décision importante ne soit perdue, contredite par accident, ou 
 - Décision : le squelette Silicate est **contextuel** — il s'adapte selon le type d'instance cible : (1) Entreprise / entité juridique → toutes les pierres dont P17 ; (2) Repo / projet technique → P17 remplacée par "architecture technique + agents codeurs + couche services" ; (3) Communauté / programme → P17 adaptée selon les besoins. L'INDEX du squelette doit mentionner cette adaptabilité (suggestion à remonter à Nacer pour skeleton-modules/00-INDEX.md).
 - Conséquences : TUC tech score 20/24 pierres (P17 = N/A, non comptée dans le score repo tech). Score effectif : 20/23 pierres applicables.
 - Lien JOURNAL : session 31 — 2026-06-23
+
+---
+
+## ADR-032 — P21 : Managed Agents = LOCAL par défaut pour TUC tech
+
+**Date** : 2026-06-23  
+**Session** : 32  
+**Statut** : Actif  
+**Décideur** : Nacer (approbation via "continue les Pierres restantes")
+
+### Contexte
+Pierre 21 du squelette Silicate v0.6 exige l'application de la matrice Managed vs Local avant tout déploiement cloud.
+
+### Décision
+TUC tech reste **LOCAL (principal)** pour toute la gouvernance et les données sensibles.  
+Managed Agents = optionnel uniquement pour tâches API autonomes **non sensibles** (veille, scripts génériques).  
+Q2 et Q5 sont **bloquants** : filesystem local requis + données prospects RGPD.
+
+### Conséquences
+- Aucun agent de gouvernance ne migre en cloud sans nouvelle décision explicite
+- Toute tâche Managed candidate doit repasser les 5 questions P21
+- Détail dans `docs/infrastructure-decision.md`
+
+---
+
+## ADR-033 — Score squelette Silicate v0.6 : 23/23
+
+**Date** : 2026-06-23  
+**Session** : 32  
+**Statut** : Actif  
+**Décideur** : Nacer
+
+### Contexte
+Session 31 avait atteint 20/23. 4 pierres restantes (P16, P16-B, P18, P21) implémentées en session 32.
+
+### Décision
+TUC tech est **conforme à 100% du squelette Silicate v0.6** (23/23 pierres applicables).  
+P17 reste N/A (ADR-031 — repos/projets n'ont pas de forme juridique).
+
+### Conséquences
+- Prochaine évolution : v0.7 du squelette (P17 adaptabilité à remonter à SILICATE)
+- T28 (couche d'abstraction services) = prochaine priorité technique absolue
