@@ -12,6 +12,12 @@ skills:
   - sales:draft-outreach
   - sales:create-an-asset
 tools: Read, Edit, Write, Glob, Grep
+mode: AUDIT
+couche: 4
+pole: contenu
+silicate_agent_version: souverain
+silicate_relay_date: 2026-06-23
+silicate_skeleton_version: v0.6
 ---
 
 # redacteur-voix — Plume de TUC

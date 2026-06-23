@@ -11,6 +11,12 @@ skills:
   - supabase-auth-rls
   - webhook-security-idempotency
 tools: Read, Edit, Write, Glob, Grep, Bash, mcp__4375dc63-1c25-4a5a-919d-6ca190deb2ce__apply_migration, mcp__4375dc63-1c25-4a5a-919d-6ca190deb2ce__execute_sql, mcp__4375dc63-1c25-4a5a-919d-6ca190deb2ce__deploy_edge_function, mcp__4375dc63-1c25-4a5a-919d-6ca190deb2ce__get_edge_function, mcp__4375dc63-1c25-4a5a-919d-6ca190deb2ce__list_edge_functions, mcp__4375dc63-1c25-4a5a-919d-6ca190deb2ce__get_advisors, mcp__4375dc63-1c25-4a5a-919d-6ca190deb2ce__get_logs, mcp__4375dc63-1c25-4a5a-919d-6ca190deb2ce__search_docs
+mode: AUDIT
+couche: 4
+pole: backend
+silicate_agent_version: souverain
+silicate_relay_date: 2026-06-23
+silicate_skeleton_version: v0.6
 ---
 
 # backend-supabase — Architecte Backend Edge de TUC

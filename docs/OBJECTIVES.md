@@ -45,3 +45,48 @@ C'est la métrique unique qui prouve que TUC livre sa promesse : libérer le clo
 
 ## Révision
 Ce fichier est révisé tous les 3 mois (en équipe de cadrage avec Nacer). Toute modification = ADR.
+
+---
+
+## P13 — Critères de succès en 3 formes (Squelette Silicate v0.6)
+
+> Un système de gouvernance IA se mesure en 3 formes complémentaires.
+
+### Forme 1 — Production (ce qu'on livre)
+- Nombre de tâches backlog complétées / sprint
+- Nombre de migrations appliquées sans régression
+- Nombre de features livrées sans bug critique (0 advisor sécurité post-migration)
+- Délai moyen T01→T27 : cible < 3 mois MVP
+
+### Forme 2 — Qualité (comment on le livre)
+- 0 violation de véto éthique sur le trimestre
+- Couverture RLS : 100 % des tables publiques (actuellement 17/17 ✅)
+- Audit Lighthouse > 90 sur les pages principales
+- BLOCKER ouverts < 3 à tout moment
+- Suggestions SGT actives évaluées dans les 7 jours
+
+### Forme 3 — Impact (pourquoi on le livre)
+- Closers actifs utilisant TUC : cible 10 à 6 mois / 50 à 12 mois
+- MRR : cible 3k€ à 6 mois / 15k€ à 12 mois
+- Satisfaction closer (NPS cible > 50)
+- LULG : système d'acquisition opérationnel via TUC à M9
+
+---
+
+## P14 — Les 3 Paradigmes de gouvernance IA (Squelette Silicate v0.6)
+
+### Paradigme 1 — IA ponctuelle (outil à la demande)
+Prompt unique sans mémoire. Résultat jetable. Aucune capitalisation.
+*TUC n'est plus ici depuis la session 1.*
+
+### Paradigme 2 — IA avec mémoire et règles (assistant structuré)
+Mémoire + CLAUDE.md + rules. Pas encore d'agents autonomes.
+*TUC a traversé ce paradigme en sessions 1-4.*
+
+### Paradigme 3 — IA orchestrée avec agents et doctrine vivante (gouvernance)
+Agents spécialisés, mémoire active, rituel de session, filtre éthique, hooks lifecycle.
+
+**TUC est en Paradigme 3 depuis la session 5.** Score actuel : 20/24 pierres (post session 31).
+
+### Chemin de progression
+→ Paradigme 3 complet : appliquer P21 (Matrice Managed Agents) + intégrer ANK (Paradigme 3 avec LLM propriétaire)

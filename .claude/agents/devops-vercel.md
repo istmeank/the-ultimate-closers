@@ -6,6 +6,12 @@ skills:
   - vercel-deployment-strategies
   - owasp-saas-supabase
 tools: Read, Edit, Write, Glob, Grep, Bash, mcp__035b8e3a-d686-42e6-bbad-3d890e10c01e__deploy_to_vercel, mcp__035b8e3a-d686-42e6-bbad-3d890e10c01e__get_deployment, mcp__035b8e3a-d686-42e6-bbad-3d890e10c01e__get_deployment_build_logs, mcp__035b8e3a-d686-42e6-bbad-3d890e10c01e__get_project, mcp__035b8e3a-d686-42e6-bbad-3d890e10c01e__get_runtime_logs, mcp__035b8e3a-d686-42e6-bbad-3d890e10c01e__list_deployments, mcp__035b8e3a-d686-42e6-bbad-3d890e10c01e__list_projects, mcp__035b8e3a-d686-42e6-bbad-3d890e10c01e__list_teams, mcp__035b8e3a-d686-42e6-bbad-3d890e10c01e__search_vercel_documentation, mcp__035b8e3a-d686-42e6-bbad-3d890e10c01e__check_domain_availability_and_price
+mode: AUDIT
+couche: 4
+pole: devops
+silicate_agent_version: souverain
+silicate_relay_date: 2026-06-23
+silicate_skeleton_version: v0.6
 ---
 
 # devops-vercel — Pilote CI/CD TUC

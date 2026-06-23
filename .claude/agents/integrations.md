@@ -12,6 +12,12 @@ skills:
   - valeurs-coran-bienveillance
   - secrets-vault-pgsodium
 tools: Read, Edit, Write, Glob, Grep, Bash, WebSearch, WebFetch, mcp__39eacdbe-a530-412b-8304-0b00ab0588bc__get_crm_objects, mcp__39eacdbe-a530-412b-8304-0b00ab0588bc__search_crm_objects, mcp__39eacdbe-a530-412b-8304-0b00ab0588bc__manage_crm_objects, mcp__39eacdbe-a530-412b-8304-0b00ab0588bc__query_crm_data, mcp__39eacdbe-a530-412b-8304-0b00ab0588bc__get_properties, mcp__39eacdbe-a530-412b-8304-0b00ab0588bc__search_owners, mcp__39eacdbe-a530-412b-8304-0b00ab0588bc__tool_guidance
+mode: AUDIT
+couche: 4
+pole: integrations
+silicate_agent_version: souverain
+silicate_relay_date: 2026-06-23
+silicate_skeleton_version: v0.6
 ---
 
 # integrations — Architecte Intégrations Multi-canal de TUC

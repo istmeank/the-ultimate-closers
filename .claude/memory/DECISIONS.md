@@ -32,3 +32,20 @@ Pour qu'aucune décision importante ne soit perdue, contredite par accident, ou 
 - Conformité skill `supabase-auth-rls` : 13/15 checklist (items manquants : RBAC JWT app_metadata et getClaims SSR — N/A pour Vite SPA).
 - Lien rapport audit : `docs/security-audit-baseline.md`
 - Lien BLOCKERS ouverts : BLOCKER-001 (tokens), H8/H9 (rate limit INSERT public)
+
+## ADR-026 — Silicate = holding ET incubateur en période de maturation
+- Date : 2026-06-23
+- Statut : acceptée (réactivé — remplace la version abandonnée en session 29)
+- Contexte : session 29 avait abandonné ADR-026 en interprétant Silicate comme "architecte de gouvernance uniquement, pas holding". Nacer corrige en session 31 : Silicate est les deux — **holding ET incubateur**, en période de maturation active.
+- Décision : Silicate = structure qui (1) chapeaute LULG + TUC + ANK sur le plan identitaire et de gouvernance ET (2) incube des entités selon une méthodologie reproductible (le squelette). La forme juridique est en maturation — pas encore constituée. La gouvernance est en bêta et se prouve par les sessions elles-mêmes.
+- Conséquences : le squelette Silicate (v0.6 et suivants) est à la fois l'outil de gouvernance interne ET le produit d'incubation exportable vers d'autres entreprises plus tard. TUC construit le système d'acquisition de LULG. LULG est prioritaire (Nacer). ANK est le LLM commun.
+- Alternatives écartées : "Silicate = simple architecte sans dimension holding" (trop limitatif, ne reflète pas la vision fondatrice).
+- Lien JOURNAL : session 31 — 2026-06-23
+
+## ADR-031 — P17 (forme juridique + couches MBA) = N/A pour les repos et projets techniques
+- Date : 2026-06-23
+- Statut : acceptée
+- Contexte : lors de l'application du squelette Silicate v0.6 sur TUC tech (repo GitHub), la pierre P17 (forme juridique + architecture management 5 couches) ne s'applique pas. Un repo n'est pas une entreprise — il n'a pas de forme juridique, pas de couches managériales au sens MBA.
+- Décision : le squelette Silicate est **contextuel** — il s'adapte selon le type d'instance cible : (1) Entreprise / entité juridique → toutes les pierres dont P17 ; (2) Repo / projet technique → P17 remplacée par "architecture technique + agents codeurs + couche services" ; (3) Communauté / programme → P17 adaptée selon les besoins. L'INDEX du squelette doit mentionner cette adaptabilité (suggestion à remonter à Nacer pour skeleton-modules/00-INDEX.md).
+- Conséquences : TUC tech score 20/24 pierres (P17 = N/A, non comptée dans le score repo tech). Score effectif : 20/23 pierres applicables.
+- Lien JOURNAL : session 31 — 2026-06-23

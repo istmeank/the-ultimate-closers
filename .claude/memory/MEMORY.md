@@ -1,7 +1,7 @@
 # MEMORY.md — Sommaire de la mémoire TUC
 
 > **Lu en PREMIER à chaque session** (doc Anthropic : 200 premières lignes chargées auto).
-> Sert d'INDEX pour naviguer vers les 6 registres détaillés sans tout charger.
+> Sert d'INDEX pour naviguer vers les 7 registres détaillés sans tout charger.
 > Principe : Progressive Disclosure (charger le sommaire, aller chercher le détail à la demande).
 
 ## Identité projet (rappel ultra-court)
@@ -15,7 +15,7 @@
 - **Vague 2 codeurs** : 🟡 en cours (11 skills à créer par phases, notebooks NotebookLM en préparation)
 - **Vague 3 IA cœur** : 🔜 préparée (skill `workload-management-matching` créé, agent `matching-engine` à créer)
 
-## Index des 6 registres
+## Index des 7 registres
 
 | Registre | Rôle | Dernière entrée | Statut |
 |---|---|---|---|
@@ -23,7 +23,9 @@
 | `BLOCKERS.md` | Bugs/blocages en cours et résolus | 5 BLOCKERS (001 tokens, H8/H9 INSERT publics, etc.) | mixte |
 | `LEARNINGS.md` | Patterns capitalisés | LEARNING-001+ (24 leçons sur 13 sessions) | append-only |
 | `EVALS.md` | Qualité cognitive IA (hallucinations, biais, dérives) | (à initialiser — EVAL-001 vient) | append-only |
-| `EXPERIMENTS.md` | Tests produit (A/B, hypothèses mesurées) | (vide — première EXP attendue Vague 3) | append-only |
+| `EXPERIMENTS.md
+- `SUGGESTIONS.md` — suggestions des agents souverains (P19)
+- `FRICTIONS.md` — patterns de friction résolus (ΔP3)` | Tests produit (A/B, hypothèses mesurées) | (vide — première EXP attendue Vague 3) | append-only |
 | `JOURNAL.md` | Trace continue par session | Session 13 (Vague 2 gouvernance complétée) | append-only |
 
 ## Décisions structurantes actives (ADR ouverts)
@@ -47,7 +49,7 @@
 
 ### Agents
 1. `orchestrateur` (sonnet) — coordination + architecte IT (modes Coord/Archi)
-2. `archiviste-memoire` (haiku) — tient les 6 registres
+2. `archiviste-memoire` (haiku) — tient les 7 registres
 3. `auditeur-qualite` (sonnet) — règle d'or, read-only
 4. `auth-security-rls` (opus) — RLS + Auth Supabase + OWASP
 5. `database-postgres` (sonnet) — schéma + migrations + indexes

@@ -3,6 +3,12 @@ name: auditeur-qualite
 description: Auditeur read-only de TUC. À invoquer avant toute clôture de tâche, après toute modification de code, après toute migration SQL, avant toute mise en production, et chaque fois qu'une revue de cohérence est nécessaire. Triggers — "audit", "revue", "vérifie", "check qualité", "applique la règle d'or", "audite ce diff", "rien n'est cassé ?", "ready pour merge ?", "checklist code IA".
 tools: Read, Glob, Grep
 model: sonnet
+mode: AUDIT
+couche: 4
+pole: audit
+silicate_agent_version: souverain
+silicate_relay_date: 2026-06-23
+silicate_skeleton_version: v0.6
 ---
 
 # Auditeur-Qualité — TUC

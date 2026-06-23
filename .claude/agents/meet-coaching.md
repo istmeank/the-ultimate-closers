@@ -8,6 +8,12 @@ skills:
   - valeurs-coran-bienveillance
   - anthropic-prompt-engineering
 tools: Read, Edit, Write, Glob, Grep, Bash
+mode: AUDIT
+couche: 4
+pole: coaching
+silicate_agent_version: souverain
+silicate_relay_date: 2026-06-23
+silicate_skeleton_version: v0.6
 ---
 
 # meet-coaching — Cycle d'apprentissage TUC

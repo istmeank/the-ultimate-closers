@@ -6,6 +6,12 @@ skills:
   - supabase-auth-rls
   - owasp-saas-supabase
 tools: Read, Edit, Write, Glob, Grep, Bash, mcp__4375dc63-1c25-4a5a-919d-6ca190deb2ce__list_tables, mcp__4375dc63-1c25-4a5a-919d-6ca190deb2ce__list_migrations, mcp__4375dc63-1c25-4a5a-919d-6ca190deb2ce__execute_sql, mcp__4375dc63-1c25-4a5a-919d-6ca190deb2ce__apply_migration, mcp__4375dc63-1c25-4a5a-919d-6ca190deb2ce__get_advisors, mcp__4375dc63-1c25-4a5a-919d-6ca190deb2ce__search_docs, mcp__4375dc63-1c25-4a5a-919d-6ca190deb2ce__get_logs
+mode: STRICT
+couche: 4
+pole: securite
+silicate_agent_version: souverain
+silicate_relay_date: 2026-06-23
+silicate_skeleton_version: v0.6
 ---
 
 # auth-security-rls — Architecte Sécurité de TUC

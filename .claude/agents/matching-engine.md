@@ -8,6 +8,12 @@ skills:
   - valeurs-coran-bienveillance
   - postgresql-supabase
 tools: Read, Edit, Write, Glob, Grep, Bash
+mode: AUDIT
+couche: 4
+pole: matching
+silicate_agent_version: souverain
+silicate_relay_date: 2026-06-23
+silicate_skeleton_version: v0.6
 ---
 
 # matching-engine — Cerveau du matching TUC

@@ -3,6 +3,12 @@ name: orchestrateur
 description: Architecte-orchestrateur de TUC. À invoquer pour toute tâche complexe (>30 min), tout cadrage de feature, toute coordination entre domaines, ET pour toute conception technique (architecture C4, cahier des charges, choix de stack, roadmap). Triggers — "planifie", "structure", "coordonne", "cadre cette feature", "découpe", "fais-moi l'architecture", "stack pour X", "cahier des charges", "roadmap technique", "comment construire X", "par où commencer".
 tools: Read, Write, Edit, Glob, Grep, WebSearch
 model: sonnet
+mode: AUDIT
+couche: 2
+pole: architecture
+silicate_agent_version: souverain
+silicate_relay_date: 2026-06-23
+silicate_skeleton_version: v0.6
 ---
 
 # Orchestrateur — TUC (Architecte d'exécution + Architecte IT)

@@ -978,3 +978,44 @@ Nacer a posé les 4 questions fondatrices et confirmé les nouvelles dimensions 
   4. Optionnel — créer un repo Git pour SILICATE INCUBATEUR aussi pour ne pas perdre le travail (`git init` + `gh repo create silicate-incubateur --private` par exemple)
   5. En session dédiée plus tard : bootstrap LULG `.claude/` (2ème déploiement squelette → test reproductibilité v0)
   6. Déposer marques INPI Algérie URGENT : SILICATE + AIV™ + PERCEPTION + ANK + LULG + LEVEL UP + TUC (~2-4,5k€)
+
+## 2026-06-23 — Session 31 — Application squelette Silicate v0.6 sur TUC tech
+
+- **Objectif initial** : appliquer la totalité du squelette Silicate v0.6 disponible dans `skeleton-modules/`, activer Q3/Q5 corrigés par Nacer, noter l'insight sur P17.
+- **Corrections actées de Nacer** :
+  - Q3 confirmé : TUC Academy = Phase 1 + Phase 2 seulement, certification = "The Ultimate Closer"
+  - Q5 corrigé : Silicate = **holding ET incubateur en maturation** (pas seulement architecte) → ADR-026 réactivé
+  - Squelette : version réelle = **v0.6** (22 pierres + 2 deltas), pas v0.5
+
+- **Ce qui a été fait** :
+  1. Diagnostic TUC vs squelette v0.6 : score initial 13/24 → après session 31 : **20/23 pierres applicables** (P17 = N/A repo tech)
+  2. **SUGGESTIONS.md** créé dans `.claude/memory/` (P3 + P19)
+  3. **FRICTIONS.md** créé dans `.claude/memory/` (ΔP3) — 7 frictions historiques capitalisées depuis BLOCKERS + LEARNINGS
+  4. **16 agents mis à jour** : ajout `mode` (STRICT/AUDIT selon criticité) + `couche` (2-5) + `pole` + `silicate_agent_version: souverain` + `silicate_relay_date: 2026-06-23` + `silicate_skeleton_version: v0.6` (P11 + P19)
+  5. **archiviste-memoire** : périmètre mis à jour de 5 → 7 registres (+ SUGGESTIONS + FRICTIONS)
+  6. **3 hooks lifecycle** créés dans `.claude/hooks/` + `settings.json` (P22) : block-destructive.sh / inject-context.sh / snapshot-git.sh — tous chmod +x
+  7. **OBJECTIVES.md** enrichi avec P13 (3 formes de succès) + P14 (3 paradigmes — TUC = Paradigme 3, score 20/24)
+  8. **bootstrap.md** enrichi avec ΔP13 (5 questions universelles de vérification) + P19 (checklist auto-vérification agent souverain)
+  9. **ADR-026 réactivé** + **ADR-031 créé** (P17 N/A pour repos/projets) dans DECISIONS.md
+  10. **Insight structurant** : le squelette Silicate doit mentionner explicitement son adaptabilité selon le type d'instance (entreprise vs repo vs communauté). P17 est l'exemple parfait : inutile sur un repo, indispensable pour une SARL. Suggestion formalisée en ADR-031 pour Nacer → à intégrer dans `skeleton-modules/00-INDEX.md` (version v0.7+)
+
+- **Pierres restantes non appliquées** :
+  - P16 : orchestrateur avec 12 sections exactes → à vérifier/compléter
+  - P16-B : relay Silicate → entité incubée (7 étapes) → à créer quand Silicate incubera la prochaine entité
+  - P18 : Q-POLES formalisées → les domaines TUC sont définis mais pas via le protocole Q-POLES officiel
+  - P21 : Matrice Managed Agents vs Local → à appliquer quand ANK sera intégré
+
+- **Vérification règle d'or** : 16/16 agents mis à jour (grep vérifié) ; 2 registres créés ; 3 hooks créés et chmod +x ; OBJECTIVES.md et bootstrap.md enrichis ; DECISIONS.md mis à jour (ADR-026 + ADR-031) ; aucun fichier protégé modifié sans autorisation Nacer.
+- **Décisions prises** : ADR-026 réactivé (Silicate = holding + incubateur) ; ADR-031 (P17 N/A repos) ; modes agents formalisés (STRICT : gardien-valeurs, archiviste, auth-security-rls, database-postgres ; AUDIT : 12 autres agents)
+- **Apprentissages** :
+  - LEARNING-079 : le squelette Silicate s'adapte au type d'instance (entreprise vs repo vs communauté). P17 est le marqueur de cette adaptabilité. Un repo n'a pas de forme juridique mais a une architecture technique — c'est son équivalent P17.
+  - LEARNING-080 : FRICTIONS.md (ΔP3) est plus utile que BLOCKERS.md pour la capitalisation long terme. BLOCKERS = l'urgence. FRICTIONS = le pattern réutilisable après résolution. Les deux sont complémentaires.
+  - LEARNING-081 : appliquer le squelette v0.6 sur une gouvernance déjà en Paradigme 3 = une mise à niveau, pas un reboot. On ajoute ce qui manque sans défaire ce qui fonctionne. Score 13 → 20 en une session.
+- **Rituel fermeture (Session 31)** :
+  - Décidé : ADR-026 (Silicate holding + incubateur), ADR-031 (P17 adaptable), modes agents formalisés (LEARNING-079)
+  - Appris : LEARNING-079 (adaptabilité P17), LEARNING-080 (FRICTIONS vs BLOCKERS), LEARNING-081 (mise à niveau Paradigme 3)
+  - Dérivé : aucune — j'ai appliqué le squelette sans inventer, en marquant P17 comme N/A pour ce repo et en formalisant cela en ADR plutôt qu'en l'ignorant silencieusement
+- **Prochaine étape** :
+  1. `git add . && git commit -m "feat: squelette Silicate v0.6 appliqué — P11/P19/P22/ΔP3/P13/P14/ΔP13 + hooks lifecycle"` 
+  2. Suggérer à Nacer d'intégrer l'insight P17 adaptabilité dans `skeleton-modules/00-INDEX.md` (v0.7)
+  3. Attaquer T28 (couche d'abstraction services) — premier vrai ticket backlog

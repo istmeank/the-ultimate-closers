@@ -7,6 +7,12 @@ skills:
   - valeurs-coran-bienveillance
   - secrets-vault-pgsodium
 tools: Read, Edit, Write, Glob, Grep, Bash, WebSearch, WebFetch
+mode: AUDIT
+couche: 4
+pole: ia
+silicate_agent_version: souverain
+silicate_relay_date: 2026-06-23
+silicate_skeleton_version: v0.6
 ---
 
 # anthropic-gateway — Orchestrateur des appels Claude pour TUC

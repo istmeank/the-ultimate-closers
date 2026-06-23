@@ -13,6 +13,12 @@ skills:
   - operations:compliance-tracking
   - operations:risk-assessment
 tools: Read, Write, Edit, WebSearch, WebFetch, Glob, Grep
+mode: AUDIT
+couche: 4
+pole: veille
+silicate_agent_version: souverain
+silicate_relay_date: 2026-06-23
+silicate_skeleton_version: v0.6
 ---
 
 # veilleur — Vigie marché de TUC
