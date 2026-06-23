@@ -21,6 +21,48 @@ Faire passer les closers à un niveau d'excellence rare en supprimant la frictio
 
 Détails dans `docs/ARCHITECTURE.md`.
 
+---
+
+## Position dans le réseau SILICATE (ajouté session 31 — 2026-06-13)
+
+Ce repo est positionné comme **extension du pôle tech TUC business** = **Branches code** du réseau SILICATE.
+
+```
+              ☁️ Sage Roi des Nuages
+
+            🌳 TUC business — Branches corporate (D:\Startup LABEL\Startup The Ultimate Closers Agency Closing\)
+       →    🌳 TUC tech (CRM) — Branches code    ←  CE REPO
+            🪵 ANK — Tronc (à créer, sera intégré dans TUC en An 2)
+            🌱 LULG — Racines (D:\Startup LABEL\Startup LEVEL UP for Ladies & Gentlemen\)
+            🟫 SILICATE — Argile (D:\Startup LABEL\SILICATE INCUBATEUR\)
+```
+
+**Position hiérarchique** : l'orchestrateur de ce repo est un **sous-directeur du pôle tech** sous gouvernance corporate TUC. Il n'est PAS au-dessus des autres entités du réseau — il est un pair méthodologique parmi un réseau coordonné.
+
+**Architecture évolution** : ce repo applique l'architecture Supabase MVP → Backend custom Twenty-like (ADR-025, cf. `docs/architecture-evolution.md`). T28 du backlog `taches-a-faire/` pose la couche d'abstraction services AVANT toute autre tâche, pour préparer la transition future sans douleur.
+
+**Squelette commun** : ce repo honore les 8 pierres angulaires du squelette de gouvernance reproductible Silicate v0 → `D:\Startup LABEL\SILICATE INCUBATEUR\docs\skeleton-gouvernance-v0.md` (constitution / `.claude/` standardisée / mémoire append-only / règle d'or 4 portes / rituel fermeture 3 questions / filtre éthique 5 vétos / anti-invention / protection méthodologique).
+
+**Lien stratégique** : TUC construit le **système d'acquisition complet de LULG**. Ce CRM est l'un des outils de cette mission. Plus tard, ANK sera intégré dans ce CRM pour devenir l'intelligence vivante du closing.
+
+## Bootstrap de session — lire en priorité absolue
+
+> *Approuvé session 4 par Abdenacer Maredj. Raison : Claude n'a pas de mémoire inter-session. Sans ce bootstrap, chaque session repart de zéro et risque de contredire les décisions passées, refaire ce qui a été fait, ou inventer ce qui a été sourcé.*
+
+**À chaque nouvelle session dans ce dossier, Claude lit dans cet ordre avant toute action :**
+
+1. **Ce fichier (`CLAUDE.md`)** — constitution TUC tech, périmètre, règles non-négociables
+2. **`.claude/memory/JOURNAL.md`** — dernière session, état courant, prochaine étape
+3. **`.claude/memory/DECISIONS.md`** — ADR actifs (décisions architecturales en vigueur)
+4. **`.claude/memory/LEARNINGS.md`** — leçons capitalisées (garde-fou anti-invention)
+
+**Signal de confirmation** : après relecture, Claude confirme en début de réponse :
+> *"Bootstrap effectué — dernière session : [date et titre] — dernier ADR : [numéro] — prêt."*
+
+**Temps estimé** : 5-10 min. Non-négociable avant toute action sur TUC tech.
+
+---
+
 ## Règles de travail (non-négociables)
 
 ### 🔴 RÈGLE D'OR

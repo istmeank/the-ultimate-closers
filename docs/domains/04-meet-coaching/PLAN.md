@@ -34,5 +34,5 @@ Préparer le closer avant le meet (briefing), synchroniser calendrier, transcrir
 - `.claude/skills/coaching-feedback-constructif/` (à créer V3)
 
 ## Agents owner
-- Lead : `integrations` (calendrier, transcription), `ia-orchestration` (briefing, critique)
+- Lead : `integrations` (calendrier, transcription), `anthropic-gateway` (briefing, critique)
 - Support : `frontend-react` (UI coaching), `gardien-valeurs` (calibration feedback)

@@ -36,4 +36,4 @@ Capter le prospect, l'enrichir, le scorer, le qualifier. Sortie : prospect prêt
 
 ## Agents owner
 - Lead : `frontend-react`, `backend-supabase`
-- Support : `database-postgres`, `auth-security-rls`, `ia-orchestration` (V3+)
+- Support : `database-postgres`, `auth-security-rls`, `anthropic-gateway` (V3+)

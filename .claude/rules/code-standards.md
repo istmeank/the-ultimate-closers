@@ -66,3 +66,77 @@ paths:
 - **Taille de fichier maximale : 300 lignes**. Au-delà → découper en sous-modules (composants React enfants, helpers, hooks). Justification : un fichier > 300 lignes devient impossible à raisonner correctement, et l'agent IA perd en pertinence.
 - **Dépendances circulaires interdites** : aucun module ne peut importer un module qui l'importe en retour, même indirectement. À détecter via `madge` ou équivalent dans le CI.
 - **Imports par domaine** : un fichier du domaine X ne peut importer d'un domaine Y que via les interfaces explicites (events, API typées), pas directement depuis l'implémentation interne. Bounded contexts strict.
+
+## 🔴 Règle d'abstraction stricte (ADR-025, session 27)
+
+> **Référence obligatoire** : `docs/architecture-evolution.md` — stratégie 3 phases Supabase MVP → Backend custom Twenty-like.
+
+### Principe
+TUC adopte une **couche d'abstraction service** entre les composants/pages React et le backend (Supabase aujourd'hui, NestJS-like demain). L'objectif : pouvoir migrer le backend sans toucher au code applicatif.
+
+### Architecture obligatoire `src/`
+```
+src/
+├── components/      ← ne connaît QUE les services et hooks
+├── pages/           ← idem
+├── hooks/           ← peuvent consommer services, jamais supabase directement
+│
+├── lib/
+│   ├── services/    ← couche d'abstraction (interface stable)
+│   │   ├── auth.service.ts
+│   │   ├── leads.service.ts
+│   │   ├── matching.service.ts
+│   │   ├── messaging.service.ts
+│   │   ├── meet.service.ts
+│   │   ├── storage.service.ts
+│   │   ├── realtime.service.ts
+│   │   ├── integrations.service.ts
+│   │   ├── secrets.service.ts
+│   │   └── ai.service.ts
+│   │
+│   └── adapters/    ← implémentations spécifiques (changeables)
+│       └── supabase/  ← MVP
+│           └── *.supabase.ts
+│
+└── integrations/
+    └── supabase/    ← exclusivement utilisé par les adapters Supabase
+```
+
+### Interdictions absolues
+- ❌ `import { supabase }` dans `src/components/**` ou `src/pages/**` → **BLOCKER**
+- ❌ `from('table_name')` directement appelé hors `src/lib/adapters/` → BLOCKER
+- ❌ `supabase.auth.*` appelé hors `src/lib/adapters/supabase/auth.supabase.ts` → BLOCKER
+- ❌ `supabase.functions.invoke` appelé hors `src/lib/adapters/` → BLOCKER
+- ❌ Tout usage de `Vault` Supabase autrement qu'à travers `secrets.service.ts` → BLOCKER
+
+### Obligations
+- ✅ Tout composant React/page consomme uniquement les services depuis `@/lib/services/`
+- ✅ Toute Edge Function appelée via `*.service.ts` (jamais `invoke` direct du composant)
+- ✅ Tout nouveau service expose une **interface TypeScript** documentée avant l'implémentation
+- ✅ Tout service a un test unitaire qui mock l'adapter (pas Supabase) — preuve d'abstraction
+
+### Détection en CI
+```bash
+echo "🔍 Recherche d'imports Supabase orphelins..."
+ORPHANS=$(grep -rn "from '@/integrations/supabase" src/components/ src/pages/ src/hooks/ 2>/dev/null)
+if [ -n "$ORPHANS" ]; then
+  echo "❌ BLOCKER : imports Supabase orphelins détectés :"
+  echo "$ORPHANS"
+  exit 1
+fi
+echo "✅ Aucune fuite d'abstraction Supabase."
+```
+
+### Conséquence sur les tâches T01-T27
+Chaque tâche du backlog `taches-a-faire/` doit créer ou utiliser un service dédié, JAMAIS appeler Supabase directement depuis un composant ou une page. Voir tableau d'impact dans `docs/architecture-evolution.md` section 3.
+
+### Pourquoi
+Sans cette discipline :
+- Migration future Supabase → backend custom = refonte massive (12-18 mois 1 dev)
+- Avec cette discipline = simple changement d'adapter (4-5 mois 1 dev)
+- Économie : **8-13 mois d'effort dev futur** (cf. `docs/architecture-evolution.md` section 3)
+
+### Activation
+- À partir de **T28** (refactor composants existants pour passer par services), **AVANT T01**.
+- Vérifié par `auditeur-qualite` dans tous les audits post-tâche.
+- Mention obligatoire dans le mini-rapport `## RÉSULTAT — Txx` de chaque tâche.

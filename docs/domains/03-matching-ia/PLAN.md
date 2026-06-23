@@ -34,5 +34,5 @@ Choisir le bon closer pour chaque prospect en fonction de la personnalité, de l
 - `.claude/skills/ml-bias-detection/` (à créer V4)
 
 ## Agents owner
-- Lead : `ia-orchestration`, `database-postgres`
+- Lead : `anthropic-gateway`, `database-postgres`
 - Support : `gardien-valeurs` (audit anti-biais), `frontend-react` (UI résultats matching)

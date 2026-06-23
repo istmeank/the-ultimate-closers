@@ -78,3 +78,35 @@ Hiérarchie de réaction :
 ## 8. Versionning de ce bootstrap
 
 Toute modification = nouvel ADR. Version actuelle : **v1.0** (2026-06-07).
+
+## 9. Rituel de fermeture en 3 questions (inspiré note Notion @le_gouverneur_ia)
+
+À la fin de toute session significative (intervention > 30 min, livraison feature, debug majeur), l'agent (ou Nacer en pilote direct) DOIT poser ces 3 questions avant de clôturer :
+
+### Question 1 — Décidé
+> "Ai-je pris aujourd'hui un choix qui aura encore du poids dans 1 mois ?"
+- Si OUI → entrée `ADR-XXX` dans `DECISIONS.md` (via `archiviste-memoire`)
+- Si NON → noter "rien à acter" dans `JOURNAL.md`
+
+### Question 2 — Appris
+> "Ai-je observé un pattern qui change la façon de faire ?"
+- Si OUI → entrée `LEARNING-XXX` dans `LEARNINGS.md`
+- Si NON → noter "rien à capitaliser"
+
+### Question 3 — Dérivé (la plus dure et la plus précieuse)
+> "Ai-je produit, ou ai-je laissé passer, un output cognitivement faux (hallucination, biais d'ancrage, info désuète, raisonnement bancal) ?"
+- Si OUI → entrée `EVAL-XXX` dans `EVALS.md` avec : output évalué, méthode d'évaluation (cross-check humain / LLM-as-judge / confrontation réalité), anomalie, cause probable, action (Keep / Correct / Deprecate / Escalation)
+- Si NON → noter "aucune dérive détectée"
+
+**Règle d'or** : répondre "rien" aux 3 est ACCEPTABLE et HONNÊTE. Ce qui est OBLIGATOIRE, c'est de POSER les 3 questions. Sans cette discipline, le niveau 3 de mémoire (jugement) s'érode silencieusement.
+
+### Format dans le JOURNAL
+
+```
+## YYYY-MM-DD — Session N — Titre
+[... contenu habituel ...]
+- **Rituel fermeture** :
+  - Décidé : ADR-XXX (ou "rien")
+  - Appris : LEARNING-XXX (ou "rien")
+  - Dérivé : EVAL-XXX (ou "aucune dérive")
+```

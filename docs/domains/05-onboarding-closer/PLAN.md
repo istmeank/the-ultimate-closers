@@ -35,4 +35,4 @@ Intégrer un nouveau closer en moins d'une semaine. Suivre sa montée en compét
 
 ## Agents owner
 - Lead : `produit-spec`, `frontend-react`
-- Support : `ia-orchestration` (recos), `gardien-valeurs` (gamification éthique), `database-postgres`
+- Support : `anthropic-gateway` (recos), `gardien-valeurs` (gamification éthique), `database-postgres`

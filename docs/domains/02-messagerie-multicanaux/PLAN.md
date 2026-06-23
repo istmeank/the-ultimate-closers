@@ -38,5 +38,5 @@ Envoyer le bon message, sur le bon canal, au bon moment, avec personnalisation I
 - `.claude/skills/meta-graph-api/` (à créer V4)
 
 ## Agents owner
-- Lead : `integrations`, `ia-orchestration`
+- Lead : `integrations`, `anthropic-gateway`
 - Support : `gardien-valeurs` (véto éthique sur scripts), `redacteur-voix` (templates), `backend-supabase` (pipeline)

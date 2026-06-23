@@ -37,7 +37,7 @@ orchestrateur → Toi (récap + livrables + prochaine étape)
 | Composants UI / pages React | `frontend-react` | Toi | Avant tout merge |
 | Edge Functions / RPC Supabase | `backend-supabase` | Toi | Avant déploiement Edge Function |
 | Intégrations tierces (HubSpot, GCal, WhatsApp…) | `integrations` | Toi + Dev partenaire si nouvelle API critique | Avant clé API en prod |
-| Pipelines IA (Anthropic, DziriBERT, Proton ANK) | `ia-orchestration` | Toi | Avant tout coût IA > 10 $/jour |
+| Pipelines IA (Anthropic, DziriBERT, Proton ANK) | `anthropic-gateway` | Toi | Avant tout coût IA > 10 $/jour |
 | Hébergement / CI/CD / DNS | `devops-vercel` | Toi | Avant toute modif DNS ou env var prod |
 | Monitoring / logs / cache | `observabilite` | (autonome) | Audit hebdo |
 | Spec produit / personas / user stories | `produit-spec` | Toi | Avant modif `docs/REFERENCE.md` |
@@ -79,7 +79,7 @@ Chaque agent termine **systématiquement** sa réponse par ce bloc :
 - `veilleur` + n'importe quel agent (recherche pure, pas d'écriture sur le code)
 - `auditeur-qualite` + `archiviste-memoire` (read sur src vs écriture mémoire — disjoint)
 - `produit-spec` + `redacteur-voix` (PRD vs scripts — fichiers différents)
-- `ia-orchestration` + `frontend-react` (services IA vs UI)
+- `anthropic-gateway` + `frontend-react` (services IA vs UI)
 - N'importe quel agent + `gardien-valeurs` (revue éthique = read-only)
 
 ### Mutuellement exclusifs (jamais en même temps) ❌
