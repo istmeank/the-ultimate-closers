@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { leadsService } from '@/lib/services/leads.service';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -36,17 +36,8 @@ export const InteractionsTimeline = ({ leadId }: InteractionsTimelineProps) => {
   const { data: interactions, isLoading } = useQuery({
     queryKey: ['interactions', leadId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('interactions')
-        .select(`
-          *,
-          profiles:by_user_id(full_name, email)
-        `)
-        .eq('lead_id', leadId)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      return data as Interaction[];
+      const data = await leadsService.listInteractions(leadId);
+      return data as unknown as Interaction[];
     },
   });
 

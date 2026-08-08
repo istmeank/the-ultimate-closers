@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { profilesService } from '@/lib/services/profiles.service';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -28,57 +28,8 @@ export const ClosersManager = () => {
 
   const loadClosers = async () => {
     try {
-      // Récupérer tous les user_ids qui ont le rôle 'closer'
-      const { data: closerRoles, error: rolesError } = await supabase
-        .from('user_roles')
-        .select('user_id')
-        .eq('role', 'closer');
-
-      if (rolesError) throw rolesError;
-      
-      if (!closerRoles || closerRoles.length === 0) {
-        setClosers([]);
-        setLoading(false);
-        return;
-      }
-
-      const closerIds = closerRoles.map(r => r.user_id);
-
-      // Récupérer les profils des closers
-      const { data: closersData, error: closersError } = await supabase
-        .from('profiles')
-        .select('id, full_name, email, is_active, max_concurrent_leads')
-        .in('id', closerIds);
-
-      if (closersError) throw closersError;
-
-      // Enrichir avec les stats d'assignation
-      const enrichedClosers = await Promise.all(
-        (closersData || []).map(async (closer) => {
-          // Compter les leads actifs
-          const { count: currentLeads } = await supabase
-            .from('leads')
-            .select('*', { count: 'exact', head: true })
-            .eq('owner_id', closer.id)
-            .in('status', ['new', 'qualified', 'in_progress']);
-
-          // Récupérer les stats d'assignation
-          const { data: assignmentData } = await supabase
-            .from('closer_assignments')
-            .select('total_assigned, last_assigned_at')
-            .eq('closer_id', closer.id)
-            .single();
-
-          return {
-            ...closer,
-            current_leads: currentLeads || 0,
-            total_assigned: assignmentData?.total_assigned || 0,
-            last_assigned_at: assignmentData?.last_assigned_at || null,
-          };
-        })
-      );
-
-      setClosers(enrichedClosers);
+      const data = await profilesService.listClosersWithStats();
+      setClosers(data as Closer[]);
     } catch (error) {
       console.error('Error loading closers:', error);
       toast.error('Erreur lors du chargement des closers');
@@ -89,12 +40,7 @@ export const ClosersManager = () => {
 
   const toggleCloserActive = async (closerId: string, currentStatus: boolean) => {
     try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ is_active: !currentStatus })
-        .eq('id', closerId);
-
-      if (error) throw error;
+      await profilesService.setActive(closerId, !currentStatus);
 
       toast.success(
         currentStatus ? 'Closer désactivé' : 'Closer activé'

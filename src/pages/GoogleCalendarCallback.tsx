@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { integrationsService } from '@/lib/services/integrations.service';
 import { toast } from 'sonner';
 
 export const GoogleCalendarCallback = () => {
@@ -20,13 +20,7 @@ export const GoogleCalendarCallback = () => {
 
       if (code) {
         try {
-          const { error: exchangeError } = await supabase.functions.invoke('google-calendar-auth', {
-            body: { action: 'exchange_code', code }
-          });
-
-          if (exchangeError) {
-            throw exchangeError;
-          }
+          await integrationsService.exchangeGoogleCode(code);
 
           toast.success('Google Calendar connecté avec succès!');
           navigate('/dashboard-closer/calendar');

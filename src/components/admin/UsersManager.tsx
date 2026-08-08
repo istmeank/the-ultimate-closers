@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { authService } from '@/lib/services/auth.service';
+import { profilesService } from '@/lib/services/profiles.service';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -39,27 +40,14 @@ export const UsersManager = () => {
 
   const loadUsers = async () => {
     try {
-      const { data: profiles, error: profilesError } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const profiles = await profilesService.listAll();
 
-      if (profilesError) throw profilesError;
-
-      // Load roles via edge function (bypass RLS safely)
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error('Session invalide. Veuillez vous reconnecter.');
-
-      const { data: resp, error: rolesError } = await supabase.functions.invoke('list-user-roles', {
-        headers: { Authorization: `Bearer ${session.access_token}` },
-      });
-
-      if (rolesError) throw rolesError;
-      const roles = (resp as any)?.roles ?? [];
+      // Load roles via the auth service (Edge Function bypasses RLS safely)
+      const roles = await authService.listUserRoles();
 
       const usersWithRoles = profiles.map((profile) => ({
         ...profile,
-        roles: roles.filter((r: any) => r.user_id === profile.id).map((r: any) => r.role),
+        roles: roles.filter((r) => r.user_id === profile.id).map((r) => r.role),
       }));
 
       setUsers(usersWithRoles);
@@ -76,29 +64,14 @@ export const UsersManager = () => {
 
   const toggleRole = async (userId: string, role: 'admin' | 'closer', hasRole: boolean) => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        toast({
-          title: 'Session expirée',
-          description: 'Veuillez vous reconnecter',
-          variant: 'destructive',
-        });
-        return;
-      }
-
       const action = hasRole ? 'remove' : 'add';
-      const { error } = await supabase.functions.invoke('manage-user-role', {
-        body: { userId, role, action },
-        headers: { Authorization: `Bearer ${session.access_token}` },
-      });
-
-      if (error) throw error;
+      await authService.manageUserRole({ userId, role, action });
 
       toast({
         title: 'Succès',
         description: hasRole ? `Rôle ${role} retiré` : `Rôle ${role} attribué`,
       });
-      
+
       loadUsers();
     } catch (error: any) {
       toast({
@@ -111,38 +84,13 @@ export const UsersManager = () => {
 
   const deleteUser = async (userId: string, email: string) => {
     try {
-      // Verify session before calling the function
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      
-      if (sessionError || !session) {
-        console.error('Session error:', sessionError);
-        toast({
-          title: 'Session expirée',
-          description: 'Veuillez vous reconnecter',
-          variant: 'destructive',
-        });
-        return;
-      }
-
-      console.log('🔐 Session token present:', !!session.access_token);
-      console.log('🔐 Token preview:', session.access_token.substring(0, 20) + '...');
-
-      const { data, error } = await supabase.functions.invoke('delete-user', {
-        body: { userId },
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-        },
-      });
-
-      if (error) throw error;
-
-      console.log('✅ Delete user response:', data);
+      await authService.deleteUser(userId);
 
       toast({
         title: 'Utilisateur supprimé',
         description: `${email} a été supprimé avec succès`,
       });
-      
+
       loadUsers();
     } catch (error: any) {
       console.error('❌ Delete user error:', error);

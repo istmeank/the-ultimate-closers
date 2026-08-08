@@ -1,14 +1,90 @@
+# The Ultimate Closers — robots.txt
+# Objectif AEO : être lisible et citable par les moteurs de réponse IA.
+# Bloquer un de ces robots revient à interdire à la plateforme correspondante de nous citer.
+
+# --- Moteurs de recherche classiques ---
 User-agent: Googlebot
 Allow: /
 
 User-agent: Bingbot
 Allow: /
 
+# --- Moteurs de réponse IA ---
+# OpenAI — ChatGPT Search
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+# Anthropic — Claude
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Google Gemini et AI Overviews
+User-agent: Google-Extended
+Allow: /
+
+# Apple Intelligence
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Microsoft Copilot
+User-agent: msnbot
+Allow: /
+
+# Meta AI
+User-agent: meta-externalagent
+Allow: /
+
+# Amazon
+User-agent: Amazonbot
+Allow: /
+
+# Mistral
+User-agent: MistralAI-User
+Allow: /
+
+# --- Réseaux sociaux ---
 User-agent: Twitterbot
 Allow: /
 
 User-agent: facebookexternalhit
 Allow: /
 
+User-agent: LinkedInBot
+Allow: /
+
+# --- Règle générale ---
+# Les espaces authentifiés et les rappels OAuth ne sont pas indexables :
+# ils n'apportent aucune valeur en réponse et exposent la surface applicative.
 User-agent: *
 Allow: /
+Disallow: /auth
+Disallow: /access-denied
+Disallow: /google-calendar/
+Disallow: /dziribert-demo
+
+Sitemap: https://theultimateclosers.com/sitemap.xml

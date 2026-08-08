@@ -21,3 +21,13 @@
 ---
 
 <!-- Première suggestion à ajouter ici -->
+
+## SUGGESTION — 2026-07-25 — Mécanisme de propagation des leçons entre entités sœurs
+
+**Émetteur** : archiviste-memoire (session 33)
+
+**Constat** : LULG tech a résolu le problème des diffs CRLF massifs et l'a capitalisé en `LEARNING-004`. TUC tech a le même problème, non résolu, et 265 fichiers pollués (cf. BLOCKER-009). Les deux dépôts sont gouvernés par le même squelette Silicate, mais rien ne fait circuler une leçon de l'un vers l'autre.
+
+**Suggestion** : ajouter au squelette Silicate un registre partagé au niveau de l'incubateur — par exemple `SILICATE INCUBATEUR/docs/LEARNINGS-RESEAU.md` — où remontent les leçons transverses, celles qui ne dépendent ni du langage ni du domaine (outillage Git, conventions de fins de ligne, pièges de gabarit shadcn, pratiques AEO). Chaque entité y puiserait à son bootstrap.
+
+**Non appliquée** — relève d'une décision de Nacer sur le squelette Silicate, hors périmètre d'un dépôt.

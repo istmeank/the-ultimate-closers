@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { User, Session } from '@supabase/supabase-js';
-
-type AppRole = 'admin' | 'closer' | 'owner' | 'client' | 'user' | 'developer';
+import { authService } from '@/lib/services/auth.service';
+import type { AppRole, AuthSession, AuthUser } from '@/lib/services/auth.service';
 
 export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [session, setSession] = useState<AuthSession | null>(null);
   const [role, setRole] = useState<AppRole | null>(null);
   const [userRoles, setUserRoles] = useState<AppRole[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -17,31 +15,29 @@ export const useAuth = () => {
 
   useEffect(() => {
     // Listener pour les changements d'auth
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        // Vérifier le rôle utilisateur avec setTimeout pour éviter le deadlock
-        if (session?.user) {
-          setTimeout(() => {
-            checkUserRole(session.user.id);
-          }, 0);
-        } else {
-          setRole(null);
-          setIsAdmin(false);
-          setIsCloser(false);
-          setIsOwner(false);
-          setLoading(false);
-        }
-      }
-    );
-
-    // Vérifier la session existante
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const subscription = authService.onAuthStateChange((session) => {
       setSession(session);
       setUser(session?.user ?? null);
-      
+
+      // Vérifier le rôle utilisateur avec setTimeout pour éviter le deadlock
+      if (session?.user) {
+        setTimeout(() => {
+          checkUserRole(session.user.id);
+        }, 0);
+      } else {
+        setRole(null);
+        setIsAdmin(false);
+        setIsCloser(false);
+        setIsOwner(false);
+        setLoading(false);
+      }
+    });
+
+    // Vérifier la session existante
+    authService.getSession().then((session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+
       if (session?.user) {
         checkUserRole(session.user.id);
       } else {
@@ -54,22 +50,7 @@ export const useAuth = () => {
 
   const checkUserRole = async (userId: string) => {
     try {
-      const { data, error } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', userId);
-      
-      if (error) {
-        console.error('Error checking user role:', error);
-        // En cas d'erreur, définir le rôle par défaut 'user'
-        setRole('user');
-        setUserRoles(['user']);
-        setIsAdmin(false);
-        setIsCloser(false);
-        setIsOwner(false);
-      } else {
-      // Récupérer tous les rôles de l'utilisateur
-      const roles = data.map(r => r.role as AppRole);
+      const roles = await authService.getUserRoles(userId);
       const allRoles: AppRole[] = roles.length > 0 ? roles : ['user'];
       
       // Determine primary role based on hierarchy: owner > admin > developer > closer > user
@@ -91,7 +72,6 @@ export const useAuth = () => {
       setIsCloser(allRoles.includes('closer'));
       setIsOwner(allRoles.includes('owner'));
       setIsDeveloper(allRoles.includes('developer'));
-      }
     } catch (error) {
       console.error('Error checking user role:', error);
       // En cas d'exception, définir le rôle par défaut 'user'
@@ -107,16 +87,11 @@ export const useAuth = () => {
   };
 
   const signInWithEmail = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    return { error };
+    return authService.signInWithEmail(email, password);
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    return { error };
+    return authService.signOut();
   };
 
   return {

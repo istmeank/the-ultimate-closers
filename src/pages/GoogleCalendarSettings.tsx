@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Calendar, CheckCircle2, XCircle } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { integrationsService } from '@/lib/services/integrations.service';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 
@@ -18,28 +18,12 @@ export const GoogleCalendarSettings = () => {
 
   const checkConnection = async () => {
     if (!user) return;
-    
+
     try {
-      const { data, error } = await supabase
-        .from('google_calendar_tokens')
-        .select('calendar_email, expires_at')
-        .eq('user_id', user.id)
-        .single();
-
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error checking connection:', error);
-        setIsConnected(false);
-        return;
-      }
-
-      if (data && data.expires_at) {
-        const expiresAt = new Date(data.expires_at);
-        const now = new Date();
-        setIsConnected(expiresAt > now);
-        setCalendarEmail(data.calendar_email);
-      } else {
-        setIsConnected(false);
-      }
+      const { connected, calendarEmail } =
+        await integrationsService.getGoogleCalendarConnection(user.id);
+      setIsConnected(connected);
+      setCalendarEmail(calendarEmail);
     } catch (error) {
       console.error('Error:', error);
       setIsConnected(false);
@@ -51,17 +35,11 @@ export const GoogleCalendarSettings = () => {
   const handleConnect = async () => {
     try {
       setLoading(true);
-      
-      // Appeler l'edge function pour obtenir l'URL d'authentification
-      const { data, error } = await supabase.functions.invoke('google-calendar-auth', {
-        body: { action: 'get_auth_url' }
-      });
 
-      if (error) throw error;
-
-      if (data?.authUrl) {
+      const authUrl = await integrationsService.getGoogleAuthUrl();
+      if (authUrl) {
         // Rediriger vers la page d'authentification Google
-        window.location.href = data.authUrl;
+        window.location.href = authUrl;
       }
     } catch (error) {
       console.error('Error connecting:', error);
@@ -76,13 +54,8 @@ export const GoogleCalendarSettings = () => {
 
     try {
       setLoading(true);
-      
-      const { error } = await supabase
-        .from('google_calendar_tokens')
-        .delete()
-        .eq('user_id', user.id);
 
-      if (error) throw error;
+      await integrationsService.disconnectGoogleCalendar(user.id);
 
       setIsConnected(false);
       setCalendarEmail(null);

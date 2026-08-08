@@ -166,3 +166,35 @@ git -C "D:\GitHub\the-ultimate-closers" commit -m "feat: squelette Silicate v0.6
 
 ### Résolution
 Marquer BLOCKER-008 `résolu` après exécution.
+
+---
+
+## BLOCKER-009 — 265 fichiers marqués modifiés sans changement de contenu (CRLF)
+
+**Date** : 2026-07-25
+**Statut** : ouvert
+**Gravité** : moyenne — n'empêche rien, mais rend tout `git diff` illisible et masque les vraies modifications
+
+### Constat
+`git status --porcelain` retourne 265 fichiers modifiés dans TUC tech, dont des fichiers auxquels personne n'a touché depuis des semaines (`CNAME`, `AUTH-PAGE-FIX.md`, `.gitignore`, l'ensemble de `.claude/`). Le diff de `CNAME` affiche 1 insertion et 1 suppression pour une ligne dont le contenu visible est identique — signature classique d'un changement de fin de ligne CRLF / LF.
+
+`.gitattributes` est **absent** du dépôt.
+
+### Cause probable
+Normalisation des fins de ligne entre Windows et les outils qui écrivent dans le dépôt, sans `.gitattributes` pour arbitrer.
+
+### Ce que ça coûte
+Toute revue de diff devient impraticable : une modification réelle de trois lignes se noie dans 265 fichiers de bruit. C'est un obstacle direct à la règle d'or, dont la première porte est « relis ton diff ».
+
+### Note importante — la solution existe déjà dans le réseau
+**LULG tech a rencontré et résolu exactement ce problème** : cf. `LEARNING-004` de LULG (« Un `git diff` massif n'est pas toujours un vrai diff »), résolu par l'ajout d'un `.gitattributes`. La leçon a été capitalisée dans LULG mais **jamais propagée à TUC**.
+
+C'est un défaut de circulation de la mémoire entre entités sœurs du réseau Silicate : deux dépôts gouvernés par le même squelette, l'un ayant la réponse au problème de l'autre, sans mécanisme de transfert.
+
+### Action requise de Nacer
+1. Créer `.gitattributes` à la racine de TUC tech, en s'inspirant de celui de LULG tech.
+2. Relancer la normalisation : `git add --renormalize .` puis un commit dédié `chore: normalisation des fins de ligne (.gitattributes)`, séparé de tout commit fonctionnel.
+3. Vérifier que `git status` redevient propre avant de committer les changements AEO de la session 33.
+
+### Résolution
+Marquer `résolu` après normalisation, et ajouter un LEARNING sur la propagation des leçons entre entités sœurs.

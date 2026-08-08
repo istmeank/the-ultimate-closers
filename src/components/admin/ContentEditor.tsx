@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { contentService } from '@/lib/services/content.service';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,13 +20,8 @@ export const ContentEditor = () => {
 
   const loadContent = async () => {
     try {
-      const { data, error } = await supabase
-        .from('site_content')
-        .select('*')
-        .order('section_id');
-
-      if (error) throw error;
-      setSections(data || []);
+      const data = await contentService.listSiteContent();
+      setSections(data);
     } catch (error: any) {
       toast({
         title: 'Erreur',
@@ -40,14 +35,7 @@ export const ContentEditor = () => {
 
   const handleSave = async (section: any) => {
     try {
-      const { error } = await supabase
-        .from('site_content')
-        .upsert({
-          ...section,
-          updated_at: new Date().toISOString(),
-        });
-
-      if (error) throw error;
+      await contentService.upsertSiteContent(section);
 
       toast({
         title: 'Succès',

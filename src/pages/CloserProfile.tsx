@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { authService } from '@/lib/services/auth.service';
+import { profilesService } from '@/lib/services/profiles.service';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -27,16 +28,11 @@ export default function CloserProfile() {
 
   const loadProfile = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await authService.getCurrentUser();
       if (!user) return;
 
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single();
-
-      if (error) throw error;
+      const data = await profilesService.getById(user.id);
+      if (!data) return;
 
       setProfile({
         full_name: data.full_name || '',
@@ -56,20 +52,15 @@ export default function CloserProfile() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await authService.getCurrentUser();
       if (!user) return;
 
-      const { error } = await supabase
-        .from('profiles')
-        .update({
-          full_name: profile.full_name,
-          bio: profile.bio,
-          max_concurrent_leads: profile.max_concurrent_leads,
-          specialties: profile.specialties,
-        })
-        .eq('id', user.id);
-
-      if (error) throw error;
+      await profilesService.update(user.id, {
+        full_name: profile.full_name,
+        bio: profile.bio,
+        max_concurrent_leads: profile.max_concurrent_leads,
+        specialties: profile.specialties,
+      });
 
       toast.success('Profil mis à jour avec succès');
     } catch (error) {

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { analyticsService } from '@/lib/services/analytics.service';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
@@ -17,7 +17,7 @@ import { ChatbotQualif } from '@/components/ChatbotQualif';
 const Index = () => {
   useEffect(() => {
     // Track page view
-    supabase.from('site_analytics').insert({
+    analyticsService.trackEvent({
       event_type: 'page_view',
       page_path: window.location.pathname,
     });

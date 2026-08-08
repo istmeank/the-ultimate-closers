@@ -3,7 +3,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CallBookingFormData, callBookingSchema } from "@/lib/validations/callBookingSchema";
 import { Form } from "@/components/ui/form";
-import { supabase } from "@/integrations/supabase/client";
+import { analyticsService } from "@/lib/services/analytics.service";
+import { meetService } from "@/lib/services/meet.service";
 import { toast } from "sonner";
 import ProgressIndicator from "./ProgressIndicator";
 import FormStep1Intro from "./FormStep1Intro";
@@ -75,46 +76,40 @@ const CallBookingForm = () => {
 
     try {
       // Track analytics
-      await supabase.from('site_analytics').insert({
+      await analyticsService.trackEvent({
         event_type: 'booking_form_started',
         page_path: '/reserver-appel',
         metadata: {
           industry: data.industry,
           revenue: data.annualRevenue,
           urgency: data.urgency,
-        }
-      });
-
-      // Submit through secure edge function with validation and rate limiting
-      const { data: response, error: functionError } = await supabase.functions.invoke('submit-booking-secure', {
-        body: {
-          first_name: data.firstName,
-          last_name: data.lastName,
-          job_title: data.jobTitle,
-          company_name: data.companyName,
-          company_website: data.companyWebsite || null,
-          company_linkedin: data.companyLinkedin || null,
-          email: data.email,
-          phone: data.phone,
-          industry: data.industry,
-          annual_revenue: data.annualRevenue,
-          sales_team_size: data.salesTeamSize,
-          current_channels: data.currentChannels,
-          main_challenge: data.mainChallenge,
-          call_objective: data.callObjective,
-          has_used_ai_crm: data.hasUsedAiCrm,
-          urgency: data.urgency,
-          preferred_date: data.preferredDate.toISOString(),
-          timezone: data.timezone,
-          preferred_platform: data.preferredPlatform,
-          commitment_confirmed: data.commitmentConfirmed,
-          language: 'fr',
         },
       });
 
-      if (functionError) {
-        throw functionError;
-      }
+      // Submit through secure backend with validation and rate limiting
+      const response = await meetService.submitBooking({
+        first_name: data.firstName,
+        last_name: data.lastName,
+        job_title: data.jobTitle,
+        company_name: data.companyName,
+        company_website: data.companyWebsite || null,
+        company_linkedin: data.companyLinkedin || null,
+        email: data.email,
+        phone: data.phone,
+        industry: data.industry,
+        annual_revenue: data.annualRevenue,
+        sales_team_size: data.salesTeamSize,
+        current_channels: data.currentChannels,
+        main_challenge: data.mainChallenge,
+        call_objective: data.callObjective,
+        has_used_ai_crm: data.hasUsedAiCrm,
+        urgency: data.urgency,
+        preferred_date: data.preferredDate.toISOString(),
+        timezone: data.timezone,
+        preferred_platform: data.preferredPlatform,
+        commitment_confirmed: data.commitmentConfirmed,
+        language: 'fr',
+      });
 
       if (!response?.success) {
         toast.error(response?.error || "Erreur lors de la réservation");
@@ -123,14 +118,14 @@ const CallBookingForm = () => {
       }
 
       // Track successful completion
-      await supabase.from('site_analytics').insert({
+      await analyticsService.trackEvent({
         event_type: 'booking_form_completed',
         page_path: '/reserver-appel',
         metadata: {
           industry: data.industry,
           revenue: data.annualRevenue,
           urgency: data.urgency,
-        }
+        },
       });
 
       setBookingData(data);

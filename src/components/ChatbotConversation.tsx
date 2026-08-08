@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { supabase } from '@/integrations/supabase/client';
+import { aiService } from '@/lib/services/ai.service';
 import { toast } from 'sonner';
 import { CheckCircle, ArrowRight } from 'lucide-react';
 import { detectDarijaLanguage } from '@/lib/darijaDetection';
@@ -98,24 +98,18 @@ export const ChatbotConversation = ({ onClose }: ChatbotConversationProps) => {
         isDarijaSpeaker = darijaResult.isDarija && darijaResult.confidence > 0.7;
       }
 
-      // Appeler l'Edge Function score-lead
-      const { data, error } = await supabase.functions.invoke('score-lead', {
-        body: {
-          leadData: {
-            ...formData,
-            source: 'chatbot',
-            is_business_email: !formData.email.match(/@(gmail|hotmail|yahoo|outlook|live)\./),
-            commitment_confirmed: true,
-            sales_team_size: parseInt(formData.sales_team_size) || 0,
-            is_darija_speaker: isDarijaSpeaker,
-            darija_confidence: finalDarijaConfidence
-          }
-        }
+      // Appeler le service IA (score-lead)
+      const data = await aiService.scoreLead({
+        ...formData,
+        source: 'chatbot',
+        is_business_email: !formData.email.match(/@(gmail|hotmail|yahoo|outlook|live)\./),
+        commitment_confirmed: true,
+        sales_team_size: parseInt(formData.sales_team_size) || 0,
+        is_darija_speaker: isDarijaSpeaker,
+        darija_confidence: finalDarijaConfidence,
       });
 
-      if (error) throw error;
-
-      const scoreMessage = isDarijaSpeaker 
+      const scoreMessage = isDarijaSpeaker
         ? `Merci ! 🇩🇿 Darija détecté. Score: ${data.score}/100`
         : `Merci ! Votre demande a été enregistrée (Score: ${data.score}/100)`;
 

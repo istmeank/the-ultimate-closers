@@ -6,7 +6,7 @@ import { fr } from 'date-fns/locale';
 import { RefreshCw, CheckCircle2, MoreHorizontal } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { integrationsService } from '@/lib/services/integrations.service';
 import { useToast } from '@/hooks/use-toast';
 
 interface LeadCardProps {
@@ -34,11 +34,7 @@ export const LeadCard = ({ lead, hubspotSynced = false, onSyncSuccess }: LeadCar
     setIsSyncing(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke('hubspot-sync', {
-        body: { leadId: lead.id, action: 'create' },
-      });
-
-      if (error) throw error;
+      await integrationsService.syncLead(lead.id, 'create');
 
       toast({
         title: 'Synchronisé',

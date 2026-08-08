@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { analyticsService } from '@/lib/services/analytics.service';
 import { Card } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -15,30 +15,8 @@ export const Analytics = () => {
 
   const loadAnalytics = async () => {
     try {
-      // Get page views for the last 7 days
-      const sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
-      const { data, error } = await supabase
-        .from('site_analytics')
-        .select('*')
-        .eq('event_type', 'page_view')
-        .gte('created_at', sevenDaysAgo.toISOString())
-        .order('created_at', { ascending: true });
-
-      if (error) throw error;
-
-      // Group by date
-      const grouped = data.reduce((acc: any, item: any) => {
-        const date = new Date(item.created_at).toLocaleDateString('fr-FR');
-        if (!acc[date]) {
-          acc[date] = { date, views: 0 };
-        }
-        acc[date].views++;
-        return acc;
-      }, {});
-
-      setPageViews(Object.values(grouped));
+      const data = await analyticsService.getPageViewsByDay(7);
+      setPageViews(data);
     } catch (error: any) {
       toast({
         title: 'Erreur',

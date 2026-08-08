@@ -1051,3 +1051,42 @@ Création de `docs/infrastructure-decision.md`. 5 questions appliquées à TUC t
 **Appris** : Les 12 sections P16 ne remplacent pas la structure existante de l'orchestrateur — elles la complètent. La cohabitation MODE 1/MODE 2 (existant) + § P16 (Silicate) est propre et non redondante.
 
 **Dérivé** : Prochaine priorité = T28 (couche d'abstraction services) — fondation technique AVANT T01-T27. Puis : proposer l'insight ADR-031 (P17 adaptabilité) au squelette Silicate v0.7.
+
+---
+
+## Session 33 — 2026-07-25 — Couche AEO : rendre TUC citable par les moteurs de réponse IA
+
+**Demande de Nacer** : « pour tes suggestions utilise l'archiviste de chacun pour apporter les modifications nécessaires pour les deux repos tech par rapport au moteur de recherche IA gpt, perplexity donc l'AEO ».
+
+### Ce qui a été fait
+
+**Constat de départ** — une récupération HTTP de theultimateclosers.com ne renvoie que les balises `meta`. Aucun titre de section, aucun paragraphe, aucun nom de service. Le site est une SPA React rendue intégralement côté client.
+
+**Couche AEO statique, sans toucher à l'application React** :
+1. `public/robots.txt` — 16 robots IA nommés et explicitement autorisés (GPTBot, OAI-SearchBot, PerplexityBot, ClaudeBot, Claude-SearchBot, Google-Extended, Applebot-Extended, meta-externalagent, Amazonbot, MistralAI-User…), exclusion des routes authentifiées (`/auth`, `/access-denied`, `/google-calendar/`, `/dziribert-demo`), déclaration du sitemap.
+2. `public/llms.txt` — positionnement, définitions du closing éthique et de l'IA en darija, charte relationnelle, section « ce que nous ne faisons pas ».
+3. `public/sitemap.xml` — trois pages publiques, alternances hreflang FR / EN / ar-DZ.
+4. JSON-LD dans `index.html` — graphe `Organization` / `WebSite` / `ProfessionalService` / `FAQPage`, quatre questions rédigées en langage naturel.
+5. Bloc `<noscript>` — contenu de repli sémantique, invisible pour un visiteur humain.
+6. Canonique, `og:locale` FR/EN/AR, directive `robots` avec `max-snippet:-1`.
+
+**ADR-034** créé. **LEARNING-082, 083, 084** ajoutés.
+
+### Vérification règle d'or
+- JSON-LD parsé : valide, types `Organization`, `WebSite`, `ProfessionalService`, `FAQPage`.
+- `sitemap.xml` : XML bien formé (parseur `minidom`).
+- Bloc `<noscript>` : présent, hors du conteneur `#root`, donc sans effet sur l'hydratation React.
+- Aucun fichier protégé modifié. Aucun fichier applicatif touché : seuls `index.html` et `public/` ont changé.
+- Aucun chiffre, aucun témoignage, aucune référence client inventés — tout dérive du brand framework et du site existant.
+
+### Rituel de fermeture (3 questions)
+- **Décidé** : traiter l'AEO par une couche statique plutôt que par une migration vers le rendu serveur. Le pré-rendu reste la solution de fond mais relève d'une décision d'architecture à part entière, incompatible avec la priorité T28 en cours.
+- **Appris** : le format le plus cité par un moteur de réponse n'est pas la page mais la question autonome (LEARNING-083). Et le `llms.txt` sert autant à contrôler le récit qu'à être trouvé : sans définition contrôlée, un modèle décrit l'organisation à partir de fragments trouvés ailleurs (LEARNING-084).
+- **Dérivé** : le `<noscript>` et le JSON-LD dupliquent le discours de l'application React. Rien ne garantit aujourd'hui leur non-divergence — c'est une dette introduite sciemment, à couvrir par une tâche de backlog.
+
+### Prochaine étape
+1. Créer au backlog la tâche de **pré-rendu statique** de toutes les routes publiques.
+2. Créer au backlog la tâche de **contrôle de non-divergence** `<noscript>` / JSON-LD / contenu React.
+3. **Correctif d'accessibilité repéré et non traité** : le violet `--ai-purple` (#A855F7) atteint 2,43:1 sur fond malachite — les icônes des trois cartes de services sont sous le seuil. La couleur est juste (elle signale l'IA, conformément au système), c'est le contraste qui ne l'est pas. Éclaircir vers #C79BFA sur les sections vertes.
+4. Le mode sombre (`.dark`) abandonne le malachite pour un gris neutre `#121212` : la marque disparaît. À traiter si le mode sombre doit vivre.
+5. T28 (couche d'abstraction services) reste la priorité technique.

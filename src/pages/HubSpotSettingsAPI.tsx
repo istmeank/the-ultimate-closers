@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { integrationsService } from '@/lib/services/integrations.service';
 import { Loader2, CheckCircle2, XCircle, RefreshCw } from 'lucide-react';
 
 interface SyncLog {
@@ -36,20 +36,9 @@ export default function HubSpotSettingsAPI() {
   const checkConnection = async () => {
     setIsLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data, error } = await supabase
-        .from('closer_integrations')
-        .select('*')
-        .eq('integration_type', 'hubspot')
-        .eq('is_active', true)
-        .maybeSingle();
-
-      if (error) throw error;
-
-      setIsConnected(!!data);
-      if (data?.access_token) {
+      const { isConnected, hasToken } = await integrationsService.getHubspotConnection();
+      setIsConnected(isConnected);
+      if (hasToken) {
         setApiKey('••••••••••••••••');
       }
     } catch (error) {
@@ -61,15 +50,8 @@ export default function HubSpotSettingsAPI() {
 
   const loadSyncLogs = async () => {
     try {
-      const { data, error } = await supabase
-        .from('external_sync_log')
-        .select('*')
-        .eq('entity_type', 'lead')
-        .order('last_sync', { ascending: false })
-        .limit(10);
-
-      if (error) throw error;
-      setSyncLogs(data || []);
+      const data = await integrationsService.listHubspotSyncLogs(10);
+      setSyncLogs(data);
     } catch (error) {
       console.error('Error loading sync logs:', error);
     }
@@ -87,11 +69,7 @@ export default function HubSpotSettingsAPI() {
 
     setIsTesting(true);
     try {
-      const { data, error } = await supabase.functions.invoke('hubspot-sync', {
-        body: { action: 'test_connection', apiKey },
-      });
-
-      if (error) throw error;
+      const data = await integrationsService.testHubspotConnection(apiKey);
 
       if (data.success) {
         toast({
@@ -115,21 +93,7 @@ export default function HubSpotSettingsAPI() {
 
   const saveApiKey = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { error } = await supabase
-        .from('closer_integrations')
-        .upsert({
-          closer_id: user.id,
-          integration_type: 'hubspot',
-          access_token: apiKey,
-          is_active: true,
-        }, {
-          onConflict: 'closer_id,integration_type',
-        });
-
-      if (error) throw error;
+      await integrationsService.saveHubspotApiKey(apiKey);
       setIsConnected(true);
       setApiKey('••••••••••••••••');
     } catch (error) {
@@ -140,15 +104,11 @@ export default function HubSpotSettingsAPI() {
   const syncAllLeads = async () => {
     setIsSyncing(true);
     try {
-      const { data, error } = await supabase.functions.invoke('hubspot-sync', {
-        body: { action: 'sync_all' },
-      });
-
-      if (error) throw error;
+      const { synced } = await integrationsService.syncAllLeads();
 
       toast({
         title: 'Synchronisation lancée',
-        description: `${data.synced || 0} leads synchronisés avec succès`,
+        description: `${synced || 0} leads synchronisés avec succès`,
       });
 
       await loadSyncLogs();
@@ -165,15 +125,7 @@ export default function HubSpotSettingsAPI() {
 
   const disconnect = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { error } = await supabase
-        .from('closer_integrations')
-        .update({ is_active: false })
-        .eq('integration_type', 'hubspot');
-
-      if (error) throw error;
+      await integrationsService.disconnectHubspot();
 
       setIsConnected(false);
       setApiKey('');

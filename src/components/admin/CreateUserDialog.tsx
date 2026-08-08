@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { UserPlus } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { authService } from '@/lib/services/auth.service';
 
 export const CreateUserDialog = ({ onUserCreated }: { onUserCreated: () => void }) => {
   const [open, setOpen] = useState(false);
@@ -49,26 +49,13 @@ export const CreateUserDialog = ({ onUserCreated }: { onUserCreated: () => void 
         return;
       }
 
-      // Récupérer le token d'authentification (vérifier que la session est valide)
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        toast({ title: 'Erreur', description: 'Session expirée', variant: 'destructive' });
-        return;
-      }
-
-      // Appeler la fonction Edge via le SDK (meilleure pratique)
-      const { data, error } = await supabase.functions.invoke('create-user', {
-        body: {
-          email,
-          password,
-          fullName,
-          roles: roles.length > 0 ? roles : ['user'],
-        },
+      // Création via le service d'authentification (gère la session + Edge Function)
+      await authService.createUser({
+        email,
+        password,
+        fullName,
+        roles: roles.length > 0 ? roles : ['user'],
       });
-
-      if (error) {
-        throw new Error((error as any).message || 'Erreur lors de la création de l\'utilisateur');
-      }
 
       toast({ title: 'Succès', description: `Utilisateur ${email} créé avec succès` });
 

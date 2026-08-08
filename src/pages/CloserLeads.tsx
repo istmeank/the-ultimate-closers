@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { authService } from '@/lib/services/auth.service';
+import { leadsService } from '@/lib/services/leads.service';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -30,17 +31,11 @@ export default function CloserLeads() {
 
   const loadLeads = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await authService.getCurrentUser();
       if (!user) return;
 
-      const { data, error } = await supabase
-        .from('leads')
-        .select('*')
-        .eq('owner_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setLeads(data || []);
+      const data = await leadsService.listForCloser(user.id);
+      setLeads(data);
     } catch (error) {
       console.error('Error loading leads:', error);
     } finally {

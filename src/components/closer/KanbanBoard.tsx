@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, DropResult } from '@hello-pangea/dnd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { authService } from '@/lib/services/auth.service';
+import { leadsService } from '@/lib/services/leads.service';
 import { KanbanColumn } from './KanbanColumn';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -38,29 +39,18 @@ export const KanbanBoard = () => {
   const { data: leads, isLoading } = useQuery({
     queryKey: ['closerLeads'],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await authService.getCurrentUser();
       if (!user) throw new Error('User not authenticated');
 
-      const { data, error } = await supabase
-        .from('leads')
-        .select('*')
-        .eq('owner_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      return data as Lead[];
+      const data = await leadsService.listForCloser(user.id);
+      return data as unknown as Lead[];
     },
   });
 
   // Mutation pour mettre à jour le statut d'un lead
   const updateLeadStatus = useMutation({
     mutationFn: async ({ leadId, newStatus }: { leadId: string; newStatus: string }) => {
-      const { error } = await supabase
-        .from('leads')
-        .update({ status: newStatus })
-        .eq('id', leadId);
-
-      if (error) throw error;
+      await leadsService.updateStatus(leadId, newStatus);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['closerLeads'] });

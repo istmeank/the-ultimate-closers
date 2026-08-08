@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { leadsService } from '@/lib/services/leads.service';
+import { meetService } from '@/lib/services/meet.service';
 import { CloserLayout } from '@/components/closer/CloserLayout';
 import { InteractionsTimeline } from '@/components/closer/InteractionsTimeline';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -28,15 +29,7 @@ const LeadDetail = () => {
     queryKey: ['lead', id],
     queryFn: async () => {
       if (!id) throw new Error('Lead ID is required');
-
-      const { data, error } = await supabase
-        .from('leads')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-      if (error) throw error;
-      return data;
+      return leadsService.getById(id);
     },
     enabled: !!id,
   });
@@ -45,15 +38,7 @@ const LeadDetail = () => {
     queryKey: ['leadDeals', id],
     queryFn: async () => {
       if (!id) return [];
-
-      const { data, error } = await supabase
-        .from('deals')
-        .select('*')
-        .eq('lead_id', id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      return data || [];
+      return meetService.listDealsForLead(id);
     },
     enabled: !!id,
   });

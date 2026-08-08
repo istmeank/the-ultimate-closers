@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { contentService } from '@/lib/services/content.service';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -52,13 +52,8 @@ export const FormationsManager = () => {
 
   const loadFormations = async () => {
     try {
-      const { data, error } = await supabase
-        .from('formations')
-        .select('*')
-        .order('order_index');
-
-      if (error) throw error;
-      setFormations(data || []);
+      const data = await contentService.listFormations();
+      setFormations(data);
     } catch (error: any) {
       toast({
         title: 'Erreur',
@@ -72,20 +67,7 @@ export const FormationsManager = () => {
 
   const handleSave = async (formation: Formation) => {
     try {
-      if (formation.id) {
-        // Update
-        const { error } = await supabase
-          .from('formations')
-          .update(formation)
-          .eq('id', formation.id);
-        if (error) throw error;
-      } else {
-        // Insert
-        const { error } = await supabase
-          .from('formations')
-          .insert(formation);
-        if (error) throw error;
-      }
+      await contentService.saveFormation(formation);
 
       toast({
         title: 'Succès',
@@ -108,12 +90,7 @@ export const FormationsManager = () => {
     if (!confirm('Êtes-vous sûr de vouloir supprimer cette formation ?')) return;
 
     try {
-      const { error } = await supabase
-        .from('formations')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
+      await contentService.deleteFormation(id);
 
       toast({
         title: 'Succès',
@@ -131,12 +108,7 @@ export const FormationsManager = () => {
 
   const togglePublish = async (formation: any) => {
     try {
-      const { error } = await supabase
-        .from('formations')
-        .update({ is_published: !formation.is_published })
-        .eq('id', formation.id);
-
-      if (error) throw error;
+      await contentService.setFormationPublished(formation.id, !formation.is_published);
       loadFormations();
     } catch (error: any) {
       toast({

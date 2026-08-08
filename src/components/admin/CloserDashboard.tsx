@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { authService } from '@/lib/services/auth.service';
+import { leadsService } from '@/lib/services/leads.service';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Flame, Calendar, TrendingUp, Target } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -20,66 +21,16 @@ export const CloserDashboard = () => {
 
   const loadStats = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await authService.getCurrentUser();
       if (!user) return;
 
-      // Count hot leads (score >= 75)
-      const { count: hotLeadsCount } = await supabase
-        .from('leads')
-        .select('*', { count: 'exact', head: true })
-        .eq('owner_id', user.id)
-        .gte('score', 75);
-
-      // Count upcoming appointments (next 7 days)
-      const sevenDaysFromNow = new Date();
-      sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
-      const { count: appointmentsCount } = await supabase
-        .from('appointments')
-        .select('*', { count: 'exact', head: true })
-        .eq('assigned_to', user.id)
-        .eq('status', 'booked')
-        .gte('start_at', new Date().toISOString())
-        .lte('start_at', sevenDaysFromNow.toISOString());
-
-      // Count active deals (via leads ownership)
-      const { data: userLeads } = await supabase
-        .from('leads')
-        .select('id')
-        .eq('owner_id', user.id);
-      
-      const leadIds = userLeads?.map(l => l.id) || [];
-      const { count: dealsCount } = leadIds.length > 0 
-        ? await supabase
-            .from('deals')
-            .select('*', { count: 'exact', head: true })
-            .in('stage', ['qualified', 'proposal', 'negotiation'])
-            .in('lead_id', leadIds)
-        : { count: 0 };
-
-      // Calculate closing rate (via leads ownership)
-      const { data: allDeals } = leadIds.length > 0
-        ? await supabase
-            .from('deals')
-            .select('stage')
-            .in('lead_id', leadIds)
-        : { data: [] };
-      
-      const totalDeals = allDeals?.length || 0;
-      const wonDeals = allDeals?.filter(d => d.stage === 'won').length || 0;
-      const closingRate = totalDeals > 0 ? Math.round((wonDeals / totalDeals) * 100) : 0;
-
-      // Count total leads
-      const { count: totalLeadsCount } = await supabase
-        .from('leads')
-        .select('*', { count: 'exact', head: true })
-        .eq('owner_id', user.id);
-
+      const stats = await leadsService.getCloserPipelineStats(user.id);
       setStats({
-        hotLeads: hotLeadsCount || 0,
-        upcomingAppointments: appointmentsCount || 0,
-        activeDeals: dealsCount || 0,
-        closingRate,
-        totalLeads: totalLeadsCount || 0,
+        hotLeads: stats.hotLeads,
+        upcomingAppointments: stats.upcomingAppointments,
+        activeDeals: stats.activeDeals,
+        closingRate: stats.closingRate,
+        totalLeads: stats.totalLeads,
       });
     } catch (error) {
       console.error('Error loading stats:', error);

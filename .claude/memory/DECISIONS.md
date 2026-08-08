@@ -91,3 +91,55 @@ P17 reste N/A (ADR-031 — repos/projets n'ont pas de forme juridique).
 ### Conséquences
 - Prochaine évolution : v0.7 du squelette (P17 adaptabilité à remonter à SILICATE)
 - T28 (couche d'abstraction services) = prochaine priorité technique absolue
+
+---
+
+## ADR-034 — Stratégie AEO : rendre TUC citable par les moteurs de réponse IA
+
+**Date** : 2026-07-25
+**Session** : 33
+**Statut** : Actif
+**Décideur** : Nacer
+
+### Contexte
+Le site theultimateclosers.com est une SPA React rendue intégralement côté client. Une récupération HTTP de la page d'accueil ne renvoie que les métadonnées : aucun titre de section, aucun paragraphe, aucun contenu de service. Les moteurs de recherche classiques exécutent JavaScript ; les moteurs de réponse IA (ChatGPT Search, Perplexity, Claude, Google AI Overviews) le font mal ou pas du tout et sélectionnent leurs sources sur la structure et l'extractibilité du contenu.
+
+Constat aggravant : le marché de TUC — « closing éthique en Algérie », « IA en darija » — est précisément le type de requête de niche où un moteur de réponse cite volontiers une source spécialisée, même mal classée en SEO traditionnel. L'opportunité est réelle et actuellement inexploitée.
+
+Aucune donnée structurée (`schema.org`) n'existait, ni `sitemap.xml`, ni `llms.txt`. Le `robots.txt` n'interdisait rien (`User-agent: * Allow: /`) mais ne nommait aucun robot IA.
+
+### Décision
+Mise en place d'une couche AEO statique, sans modifier l'application React :
+
+1. **`robots.txt`** — autorisation explicite des 16 robots IA nommés (GPTBot, OAI-SearchBot, PerplexityBot, ClaudeBot, Claude-SearchBot, Google-Extended, Applebot-Extended, meta-externalagent, Amazonbot, MistralAI-User, etc.), interdiction des routes authentifiées (`/auth`, `/access-denied`, `/google-calendar/`, `/dziribert-demo`), déclaration du sitemap.
+2. **`llms.txt`** — résumé structuré destiné aux agents IA : positionnement, périmètre, définitions du closing éthique et de l'IA en darija, charte relationnelle, et surtout une section « ce que nous ne faisons pas ».
+3. **`sitemap.xml`** — pages publiques uniquement, avec alternances hreflang FR / EN / ar-DZ.
+4. **JSON-LD dans `index.html`** — graphe `Organization`, `WebSite`, `ProfessionalService` (catalogue des trois offres IA) et `FAQPage` (quatre questions rédigées en langage naturel).
+5. **Bloc `<noscript>`** — contenu de repli sémantique (H1, définitions, services, charte relationnelle) servi aux robots qui n'exécutent pas JavaScript, remplacé par React à l'hydratation et donc invisible pour un visiteur humain.
+6. **Canonique, `og:locale`, directive `robots` avec `max-snippet:-1`.**
+
+Aucun chiffre, aucun témoignage, aucune référence client n'a été inventé pour nourrir ces fichiers. Tout le contenu dérive du brand framework TUC et du site existant.
+
+### Conséquences
+**Positives** : la page d'accueil devient lisible par un agent qui n'exécute pas JavaScript. Le `FAQPage` structuré est le format le plus directement cité par les moteurs de réponse. Le `llms.txt` donne une définition contrôlée de l'organisation, ce qui réduit le risque qu'un modèle décrive TUC de travers.
+**Négatives** : le bloc `<noscript>` et le JSON-LD dupliquent le contenu de l'application React. Toute évolution du discours produit doit être répercutée aux deux endroits sous peine de divergence. Point de vigilance à intégrer au rituel de fin de tâche produit.
+
+### Limite assumée
+Cette couche traite la page d'accueil. Elle ne remplace pas un pré-rendu statique, qui reste la solution de fond pour l'ensemble des routes. Le pré-rendu est une décision d'architecture à part entière — dépendances, pipeline de build, hébergement — et relève d'une tâche du backlog, pas de cette session.
+
+### Alternatives écartées
+- **Migration vers Next.js / rendu serveur** — écarté pour cette session : refonte de l'architecture, incompatible avec la contrainte « pas de tâche complexe sans cadrage technique » (CLAUDE.md) et avec la priorité T28 en cours.
+- **Pré-rendu au build via un greffon Vite** — écarté pour l'instant : ajoute une dépendance de build et un risque de régression de déploiement, à cadrer dans une tâche dédiée.
+- **Ne rien faire en attendant le pré-rendu** — écarté : les fichiers statiques apportent l'essentiel du gain immédiat pour un risque de régression nul.
+
+### Tâches associées
+- [x] `public/robots.txt` — robots IA nommés + exclusions + sitemap
+- [x] `public/llms.txt`
+- [x] `public/sitemap.xml`
+- [x] JSON-LD `Organization` / `WebSite` / `ProfessionalService` / `FAQPage`
+- [x] Bloc `<noscript>` de repli
+- [ ] **À créer au backlog** : tâche de pré-rendu statique de toutes les routes publiques
+- [ ] **À créer au backlog** : contrôle de non-divergence entre le `<noscript>`, le JSON-LD et le contenu React
+
+### Statut
+Accepté — 2026-07-25. Demandé explicitement par Nacer (« modifications nécessaires par rapport au moteur de recherche IA gpt, perplexity donc l'AEO »).

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { authService } from '@/lib/services/auth.service';
+import { leadsService } from '@/lib/services/leads.service';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Flame, Calendar, TrendingUp, Target } from 'lucide-react';
@@ -8,52 +9,15 @@ export const StatsCards = () => {
   const { data: stats, isLoading } = useQuery({
     queryKey: ['closerStats'],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await authService.getCurrentUser();
       if (!user) throw new Error('User not authenticated');
 
-      // Requêtes parallèles pour les KPIs
-      const [hotLeads, upcomingAppointments, activeDeals, conversionRate] = await Promise.all([
-        // Leads chauds (score >= 75)
-        supabase
-          .from('leads')
-          .select('*', { count: 'exact', head: true })
-          .eq('owner_id', user.id)
-          .gte('score', 75),
-        
-        // RDV à venir (7 prochains jours)
-        supabase
-          .from('appointments')
-          .select('*', { count: 'exact', head: true })
-          .eq('assigned_to', user.id)
-          .gte('start_at', new Date().toISOString())
-          .lt('start_at', new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()),
-        
-        // Deals en cours
-        supabase
-          .from('deals')
-          .select('*, leads!inner(*)', { count: 'exact', head: true })
-          .eq('leads.owner_id', user.id)
-          .in('stage', ['qualified', 'proposal', 'negotiation']),
-        
-        // Taux de conversion (deals won / total leads)
-        supabase
-          .from('leads')
-          .select('id, deals(stage)')
-          .eq('owner_id', user.id)
-      ]);
-
-      // Calculer le taux de conversion
-      const totalLeads = conversionRate.data?.length || 0;
-      const wonDeals = conversionRate.data?.filter(lead => 
-        lead.deals?.some(deal => deal.stage === 'won')
-      ).length || 0;
-      const conversion = totalLeads > 0 ? Math.round((wonDeals / totalLeads) * 100) : 0;
-
+      const stats = await leadsService.getCloserPipelineStats(user.id);
       return {
-        hotLeads: hotLeads.count || 0,
-        upcomingAppointments: upcomingAppointments.count || 0,
-        activeDeals: activeDeals.count || 0,
-        conversionRate: conversion,
+        hotLeads: stats.hotLeads,
+        upcomingAppointments: stats.upcomingAppointments,
+        activeDeals: stats.activeDeals,
+        conversionRate: stats.conversionRate,
       };
     },
   });

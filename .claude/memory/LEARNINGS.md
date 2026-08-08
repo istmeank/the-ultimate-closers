@@ -47,3 +47,18 @@ Sans ce fichier, on retape deux fois les mêmes corrections. Avec, chaque probl�
 - Date : 2026-06-09
 - Contexte : REVOKE EXECUTE FROM anon, authenticated ne suffit pas si un GRANT TO PUBLIC existe. PUBLIC est un groupe implicite PostgreSQL qui couvre tous les rôles présents et futurs.
 - Leçon : toujours révoquer de PUBLIC en premier (`REVOKE ... FROM PUBLIC`), puis affiner avec des GRANTs ciblés. Un REVOKE sur anon/authenticated ne retire pas le grant PUBLIC.
+
+## LEARNING-082 — Une SPA rendue côté client est invisible pour les moteurs de réponse IA
+- Date : 2026-07-25
+- Contexte : récupération HTTP de theultimateclosers.com. La réponse ne contient que les balises `meta` : aucun titre de section, aucun paragraphe, aucun nom de service. Les moteurs classiques exécutent JavaScript, les moteurs de réponse IA le font mal ou pas du tout.
+- Leçon : sur toute SPA, vérifier ce qu'un client sans JavaScript reçoit avant de conclure qu'une page est « en ligne ». Un `curl` sur l'URL suffit. Tant que le pré-rendu n'est pas en place, un bloc `<noscript>` sémantique et un JSON-LD dans `index.html` récupèrent l'essentiel du gain pour un risque de régression nul — ils vivent dans le HTML statique, hors du cycle de rendu React.
+
+## LEARNING-083 — Le format le plus cité par un moteur de réponse est la question, pas la page
+- Date : 2026-07-25
+- Contexte : mise en place de la couche AEO. Les données structurées `FAQPage` et les blocs de définition autonomes sont ce qu'un moteur extrait, parce qu'ils répondent sans dépendre du contexte environnant.
+- Leçon : écrire chaque réponse pour qu'elle tienne seule, sortie de sa page, en 40 à 60 mots. Une définition qui commence par « comme nous l'avons vu plus haut » est inextractible. Cela vaut aussi pour la documentation produit et les articles.
+
+## LEARNING-084 — Le fichier llms.txt sert autant à contrôler le récit qu'à être trouvé
+- Date : 2026-07-25
+- Contexte : rédaction du `llms.txt` de TUC. Sa section « ce que nous ne faisons pas » énonce explicitement l'absence de vente sous pression et de prospection sans consentement.
+- Leçon : sans définition contrôlée, un modèle décrit une organisation à partir de fragments trouvés ailleurs. Le `llms.txt` est le seul endroit où l'on peut poser sa propre définition et ses propres limites. La section « ce que nous ne faisons pas » y a autant de valeur que la section « ce que nous faisons ».

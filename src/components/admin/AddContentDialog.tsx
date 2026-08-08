@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Plus } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { contentService } from '@/lib/services/content.service';
 
 export const AddContentDialog = ({ onContentAdded }: { onContentAdded: () => void }) => {
   const [open, setOpen] = useState(false);
@@ -32,17 +32,13 @@ export const AddContentDialog = ({ onContentAdded }: { onContentAdded: () => voi
         return;
       }
 
-      const { error } = await supabase
-        .from('site_content')
-        .insert({
-          section_id: sectionId.trim(),
-          content_fr: contentFr,
-          content_en: contentEn,
-          content_ar: contentAr,
-          image_url: imageUrl || null,
-        });
-
-      if (error) throw error;
+      await contentService.addSiteContent({
+        section_id: sectionId.trim(),
+        content_fr: contentFr,
+        content_en: contentEn,
+        content_ar: contentAr,
+        image_url: imageUrl || null,
+      });
 
       toast({
         title: 'Succès',

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { integrationsService } from '@/lib/services/integrations.service';
 import { Loader2, CheckCircle2, XCircle, RefreshCw } from 'lucide-react';
 
 interface SyncLog {
@@ -30,18 +30,8 @@ export default function HubSpotSettingsCloser() {
   const checkConnection = async () => {
     setIsLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data, error } = await supabase
-        .from('closer_integrations')
-        .select('is_active, integration_type')
-        .eq('integration_type', 'hubspot')
-        .eq('is_active', true)
-        .maybeSingle();
-
-      if (error) throw error;
-      setIsConnected(!!data);
+      const { isConnected } = await integrationsService.getHubspotConnection();
+      setIsConnected(isConnected);
     } catch (error) {
       console.error('Error checking connection:', error);
     } finally {
@@ -51,15 +41,8 @@ export default function HubSpotSettingsCloser() {
 
   const loadSyncLogs = async () => {
     try {
-      const { data, error } = await supabase
-        .from('external_sync_log')
-        .select('*')
-        .eq('entity_type', 'lead')
-        .order('last_sync', { ascending: false })
-        .limit(10);
-
-      if (error) throw error;
-      setSyncLogs(data || []);
+      const data = await integrationsService.listHubspotSyncLogs(10);
+      setSyncLogs(data);
     } catch (error) {
       console.error('Error loading sync logs:', error);
     }
@@ -68,15 +51,11 @@ export default function HubSpotSettingsCloser() {
   const syncAllLeads = async () => {
     setIsSyncing(true);
     try {
-      const { data, error } = await supabase.functions.invoke('hubspot-sync', {
-        body: { action: 'sync_all' },
-      });
-
-      if (error) throw error;
+      const { synced } = await integrationsService.syncAllLeads();
 
       toast({
         title: 'Synchronisation lancée',
-        description: `${data.synced || 0} leads synchronisés avec succès`,
+        description: `${synced || 0} leads synchronisés avec succès`,
       });
 
       await loadSyncLogs();
