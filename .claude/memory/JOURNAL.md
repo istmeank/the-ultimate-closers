@@ -1559,3 +1559,60 @@ Corrigé en trois temps, sur autorisation explicite de Nacer à chaque étape :
 3. Traiter les deux réserves OAuth, ou les acter comme risque accepté.
 4. Le backlog P0 étant en réalité terminé, la prochaine tâche est **T03**
    (champs `profiles`) puis **T06**, ou directement le P3 dashboard closer.
+
+---
+
+## Session 34 — CLÔTURE (2026-08-08)
+
+### Point de reprise exact — à lire en premier à la prochaine session
+
+**⚠️ 12 commits locaux NON POUSSÉS.** Volontairement : le dépôt est public
+(BLOCKER-014). Ne pas pousser avant d'avoir vérifié qu'il est passé en privé.
+
+**Trois décisions attendent Nacer, dans cet ordre :**
+1. **BLOCKER-014** — passer le dépôt en privé (Settings → General → Danger Zone).
+   Puis vérifier si `.env` figure sur la page GitHub : si oui, rotation des clés.
+   Puis trancher : sortir `.claude/` du suivi Git, ou le garder versionné ?
+2. **BLOCKER-011** — activer la protection contre les mots de passe compromis
+   (Authentication → Policies). Un clic. Le compte concerné porte `owner`+`admin`.
+3. **BLOCKER-013** — la suppression logique doit-elle être garantie par la base
+   (déclencheur) ou par la couche services (test) ?
+
+**En attente côté gouvernance (périmètre SILICATE, pas TUC)** :
+22 fichiers modifiés non commités — 16 agents, `CLAUDE.md`, `DECISIONS.md`,
+`EVALS.md`, `PLANIFICATION.md`, `GLOSSAIRE.md`, `taches-a-faire/README.md`.
+Plus la suggestion d'agent `relais-silicate` (SUGGESTIONS.md).
+
+### Ce que cette session a livré
+- **T28 close et vérifiée** — garde-fou d'abstraction, 83 tests, `npm run verify`
+  vert de bout en bout sur le poste de Nacer. ADR-025 enfin écrite.
+- **Modèle de rôles arrêté et appliqué** (ADR-036) — 7 rôles cumulables, front et
+  base réconciliés, compte fondateur `owner`+`admin`. BLOCKER-010 clos.
+- **T01 et T02 auditées** — faites depuis les sessions 18-19, elles portaient
+  seulement le mauvais statut. Le P0 sécurité était terminé sans qu'on le sache.
+- **BLOCKER-012 clos** — dépôt de migrations réconcilié : 12 fichiers,
+  12 migrations, correspondance exacte. 6 migrations de sécurité restaurées,
+  30 migrations legacy dangereuses supprimées, baseline redécoupée.
+- **BLOCKER-009 clos** — `.gitattributes`, diffs redevenus lisibles.
+- **Ouverts** : BLOCKER-011, 013, 014.
+
+### Rituel de fermeture (3 questions)
+- **Décidé** : ne rien pousser tant que le dépôt est public. Écarter
+  `migration squash` malgré son apparente vocation (il perd buckets et secrets).
+  Séparer strictement l'existence d'un rôle de ses droits.
+- **Appris** : LEARNING-085 à 094. Le fil commun de la journée : **un fichier ne
+  dit pas ce que le système fait**. Le backlog disait T28 pending alors qu'elle
+  était faite ; `types.ts` déclarait 6 rôles quand la base en avait 4 ; la baseline
+  déclarait une fonction jamais déployée ; le dépôt de migrations ne reconstruisait
+  plus la production. À chaque fois, la vérité était dans le système, pas dans le
+  dépôt. Auditer, c'est interroger l'exécution — pas relire les intentions.
+- **Dérivé** : session conduite d'abord sans l'orchestrateur, alors que la
+  constitution le prescrit au-delà de 30 minutes. Corrigé après rappel de Nacer.
+  Et j'ai proposé une méthode manuelle avant d'avoir vérifié ce que proposait la
+  documentation officielle — la recommandation s'est révélée juste, mais elle
+  n'était pas étayée au moment où je l'ai faite.
+
+### Prochaine étape technique, une fois les blocages tranchés
+Le P0 étant en réalité terminé, la voie est libre pour **P3 — dashboard closer**
+(T09 sidebar → T10 kanban, T11 KPI, T12 détail lead). C'est là que le CRM devient
+visible et démontrable. Les fondations le permettent désormais.
