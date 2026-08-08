@@ -1373,3 +1373,19 @@ signalé en SUGGESTIONS.
   légèrement condensé par rapport aux fichiers du dépôt (commentaires d'en-tête
   raccourcis). Le SQL exécutable est identique, mais l'historique Supabase et les
   fichiers ne sont pas caractère pour caractère les mêmes.
+
+### Session 34 (fin) — rôles fondateur attribués, BLOCKER-010 clos
+
+Compte `abdenacer.maredj@theultimateclosers.com` créé par Nacer. Vérifié :
+courriel confirmé, profil créé par le trigger, rôle `user` attribué
+automatiquement — la décision de conserver `user` comme socle se vérifie en acte.
+
+`tuc_v2_grant_founder_roles` appliquée. État final : `owner · admin · user`.
+
+Contrôle de non-hiérarchie : `has_role(id, 'manager')` renvoie `false` pour le
+fondateur, alors qu'il est `owner`. Le modèle cumulatif d'ADR-036 se comporte
+comme décidé — aucun droit n'est hérité implicitement.
+
+**BLOCKER-010 clos.** **BLOCKER-011 ouvert** : la protection contre les mots de
+passe compromis est désactivée. L'alerte est apparue avec le premier compte —
+elle ne pouvait pas exister sur une base sans utilisateur.

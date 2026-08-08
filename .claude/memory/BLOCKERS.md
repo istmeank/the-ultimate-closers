@@ -317,3 +317,50 @@ Décidé par Nacer (ADR-036) : sept rôles cumulables
 **Ne pas clore avant** : l'écriture des politiques RLS pour `manager`, `developer`
 et `client` (tâche T03, `auth-security-rls`). En l'état, ces trois rôles existent
 sans aucun droit — inoffensif, mais inutilisable.
+
+---
+
+## BLOCKER-010 — statut : RÉSOLU (2026-08-08, session 34)
+
+Front et base réconciliés, vérifié sur TUC-v2 :
+
+- Enum à 7 valeurs, dans l'ordre : `owner · admin · manager · closer · developer · client · user`
+- 6 politiques `manager` créées (SELECT sur leads, interactions, appointments,
+  deals, profiles ; UPDATE réassignation sur leads)
+- Compte fondateur : `owner · admin · user` — `has_role` renvoie `true` pour owner
+  et admin, `false` pour manager, ce qui confirme l'absence de hiérarchie
+  implicite décidée en ADR-036
+- `types.ts` régénéré depuis la base réelle — c'était la cause racine
+- Advisors de sécurité : aucune alerte sur les politiques
+
+**Cause racine** : `src/integrations/supabase/types.ts` déclarait six valeurs
+d'enum quand la base n'en avait que quatre, malgré son en-tête « generated — do
+not edit ». Le front s'était aligné sur un fichier de types mensonger.
+Capitalisé en LEARNING-091.
+
+---
+
+## BLOCKER-011 — Protection contre les mots de passe compromis désactivée
+**Ouvert** — 2026-08-08 (session 34)
+**Gravité** : moyenne — aucune faille active, mais protection utilisateur absente
+
+### Constat
+Advisor Supabase `auth_leaked_password_protection` : la vérification des mots de
+passe contre la base HaveIBeenPwned est désactivée. L'alerte n'apparaissait pas
+auparavant — sans aucun compte, l'advisor d'authentification restait muet. Elle
+est apparue à la création du premier compte.
+
+### Ce que ça coûte
+Un utilisateur peut choisir un mot de passe figurant dans une fuite publique
+connue. Le compte est alors vulnérable au bourrage d'identifiants dès sa création.
+Cela concerne d'abord le compte fondateur, qui porte `owner` et `admin`.
+
+### Action requise
+Tableau de bord → Authentication → Policies → activer *Leaked password protection*.
+Activation immédiate, sans migration, sans effet sur les comptes existants.
+Documentation : https://supabase.com/docs/guides/auth/password-security
+
+### Pourquoi c'est cohérent avec la doctrine TUC
+Le premier compte protégé est celui qui détient tous les droits. Et une plateforme
+qui manipule des données de prospects ne peut pas laisser à ses propres utilisateurs
+le soin de deviner ce qu'est un mot de passe sûr.
