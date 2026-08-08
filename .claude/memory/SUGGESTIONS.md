@@ -92,3 +92,52 @@ ré-export du premier afin qu'une seule définition existe.
 **Non appliquée** — suppression de fichier, relève d'un arbitrage de Nacer.
 Le fichier a été aligné dans l'intervalle pour qu'il ne mente plus.
 **Statut** : en attente
+
+---
+
+## SUGGESTION — 2026-08-08 — Il manque un agent relais Silicate dans les entités incubées
+
+**Émetteur** : session 34, à la demande de Nacer.
+**Origine** : intuition de Nacer — « un agent Silicate est toujours sur chaque
+dossier non ? il sert à mettre à jour la gouvernance de l'entité incubée pour
+accueillir la prochaine mise à jour du squelette, car Silicate a besoin de
+remontées pour améliorer la structure ».
+
+**Constat** : cet agent n'existe pas. Les 17 fichiers de `.claude/agents/` sont
+tous des agents métier ou techniques — aucun ne porte le relais vers SILICATE.
+
+Le relais P16-B est **documenté** dans `orchestrateur.md` : sept étapes, six
+marquées complètes, une cadence d'audit trimestriel annoncée pour Q3 2026. Mais un
+tableau dans un fichier n'exécute rien, et personne ne le porte.
+
+**Ce que le manque a déjà produit** :
+- `FRICTIONS.md` et `SUGGESTIONS.md` accumulent des retours depuis la session 31.
+  **Aucun n'a jamais été remonté vers SILICATE.** La suggestion de propagation des
+  leçons entre entités sœurs (session 33) est toujours là, sans destinataire.
+- Le squelette est passé de **v0.6 à v1.5** sans que TUC ne rende rien. L'incubée
+  consomme les mises à jour, ne nourrit pas la matrice — alors que la boucle de
+  retour est précisément ce qui doit faire progresser le squelette.
+- LEARNING-087 avait déjà nommé le problème sous un autre angle : LULG avait résolu
+  le blocage CRLF et capitalisé la leçon ; TUC l'a subi pendant des semaines sans
+  en bénéficier. Deux dépôts, le même squelette, aucun canal entre eux.
+
+**Suggestion** : un agent `relais-silicate`, présent dans chaque entité incubée,
+avec deux missions symétriques :
+1. **Descendante** — appliquer une nouvelle version du squelette : diagnostiquer
+   l'écart entre la version en vigueur et la version courante publiée par
+   SILICATE, proposer le plan de mise à niveau, l'exécuter après validation.
+2. **Montante** — à cadence fixe, agréger `FRICTIONS.md` et `SUGGESTIONS.md` en un
+   rapport destiné à SILICATE, en distinguant ce qui relève de l'entité de ce qui
+   relève du squelette lui-même. C'est cette seconde mission qui manque le plus :
+   sans elle, le squelette évolue à l'aveugle.
+
+Cet agent serait aussi le seul habilité à toucher aux fichiers de gouvernance
+d'une entité incubée — ce qui donnerait sa forme exécutable à la règle posée par
+Nacer : « ce qui est à TUC est écrit par TUC au niveau technique, Silicate ne
+touche que la gouvernance ».
+
+**Non appliquée** — la création d'un agent relève de la gouvernance, donc du
+périmètre SILICATE. Signalée ici pour remontée, conformément à la règle.
+**Urgence** : normale — mais la boucle de retour est rompue depuis la session 31,
+et chaque session qui passe l'allonge.
+**Statut** : en attente

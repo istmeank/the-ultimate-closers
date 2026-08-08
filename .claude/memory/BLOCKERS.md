@@ -461,3 +461,67 @@ Relevé lors de la transposition de la baseline (BLOCKER-012), en comparant le
 nombre de fonctions déclarées dans le fichier et présentes dans `pg_proc`.
 Aucun test ne le couvrait — l'audit portait sur les fichiers, pas sur la base
 (LEARNING-094).
+
+---
+
+## BLOCKER-014 — Le dépôt est public : gouvernance, mémoire et état de sécurité exposés
+**Ouvert** — 2026-08-08 (session 34)
+**Gravité** : haute — exposition déjà réalisée, pas hypothétique
+**Signalé par** : Nacer (« les fichiers de gouvernance ne doivent jamais se
+retrouver sur GitHub »)
+
+### Constat
+`https://github.com/istmeank/the-ultimate-closers` est **public** — page lue sans
+authentification. Vraisemblablement depuis sa création par Lovable.
+
+`origin/main` contient **53 fichiers de `.claude/`** : les 17 agents,
+`contracts.md`, les règles, le bootstrap, les skills custom, la doctrine
+`valeurs-coran-bienveillance`, et l'intégralité des registres de mémoire.
+
+### Ce que ça coûte, par ordre de gravité
+
+**1. `BLOCKERS.md` est une carte des faiblesses, tenue à jour.**
+Ce fichier décrit publiquement l'état de sécurité de la production, blocages
+ouverts compris. Un lecteur y apprend aujourd'hui que la protection contre les
+mots de passe compromis est désactivée sur un compte portant `owner` + `admin`
+(BLOCKER-011), et que la suppression logique n'est garantie par rien
+(BLOCKER-013). L'historique donne en prime la chronologie complète des failles
+passées et de leurs correctifs.
+
+**2. Le squelette Silicate est publié.**
+Le JOURNAL de la session 30 le qualifie d'« asset propriétaire brevetable ». Une
+divulgation publique antérieure détruit la nouveauté requise pour un dépôt de
+brevet, et rend la méthode librement copiable.
+
+**3. La doctrine et la mémoire décisionnelle sont lisibles.**
+34 sessions de journal, les ADR, les learnings — soit la stratégie, les
+arbitrages et les raisonnements internes du projet.
+
+### Action requise de Nacer — immédiate
+GitHub → Settings → General → Danger Zone → **Change visibility → Private**.
+Sans effet sur Vercel, qui conserve son accès par l'intégration.
+
+### Ce que le passage en privé ne règle pas
+- **L'historique demeure.** Effacer suppose de le réécrire (`git filter-repo`),
+  opération lourde et qui invalide tous les clones existants.
+- **Un dépôt public pendant des mois doit être considéré comme copié.** La
+  question n'est donc plus seulement « qui peut lire » mais « que faut-il faire
+  tourner » : toute clé, tout jeton, toute adresse qui aurait transité par le
+  dépôt est à considérer comme connu.
+- **Point à vérifier par Nacer** : la page GitHub liste un fichier `.env` à la
+  racine, alors qu'il est absent de la référence distante en local. Impossible de
+  rafraîchir depuis la session (pas d'accès réseau à github.com). **Si `.env` est
+  bien présent sur la page du dépôt, son contenu est public** — rotation des clés
+  Supabase à envisager.
+
+### Décision de fond à prendre ensuite
+Faut-il seulement rendre le dépôt privé, ou aussi **sortir `.claude/` du suivi
+Git** ? Les deux options se défendent :
+- **Garder `.claude/` versionné, dépôt privé** — la gouvernance reste
+  reproductible et historisée, ce qui est sa raison d'être. Elle suit le sort du
+  code : accessible à tout futur collaborateur du dépôt.
+- **Sortir `.claude/` du suivi** — la gouvernance vit hors du dépôt de code, et
+  n'est plus exposée par une éventuelle ouverture du dépôt ni par un accès
+  développeur. Mais elle perd son historique Git et sa portabilité.
+
+Onze commits locaux ne sont pas poussés, dans l'attente de cette décision.
