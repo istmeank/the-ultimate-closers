@@ -702,7 +702,17 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "owner" | "admin" | "closer" | "user"
+      // Aligné session 34 (ADR-036). Ce fichier n'est importé nulle part :
+      // la source de vérité est `src/integrations/supabase/types.ts`.
+      // Candidat à suppression — voir SUGGESTIONS.md.
+      app_role:
+        | "owner"
+        | "admin"
+        | "manager"
+        | "closer"
+        | "developer"
+        | "client"
+        | "user"
     }
     CompositeTypes: {
       [_ in never]: never

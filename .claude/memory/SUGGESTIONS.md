@@ -68,3 +68,27 @@ du référencement.
 **Non appliquée** — relève d'une tâche de backlog dédiée (candidate P7 Polish),
 avec `frontend-react` en responsable.
 **Statut** : en attente
+
+---
+
+## SUGGESTION — 2026-08-08 — Deux fichiers de types Supabase, un seul utilisé
+
+**Émetteur** : session 34, lors de la mise à jour de l'enum `app_role`.
+
+**Constat** : le dépôt contient deux fichiers de types générés —
+`src/integrations/supabase/types.ts` (importé par le client, source de vérité) et
+`src/lib/database.types.ts` (importé par **aucun** fichier). Le second contenait
+encore l'enum à quatre valeurs, périmé depuis l'extension d'aujourd'hui.
+
+**Pourquoi cela compte** : un fichier de types mort n'est pas neutre. Il est
+plausible, il ressemble à la vérité, et rien n'indique qu'il ne l'est plus.
+Quelqu'un finira par l'importer — c'est exactement le mécanisme qui a produit
+BLOCKER-010.
+
+**Suggestion** : supprimer `src/lib/database.types.ts` et son
+`README.database-types.md`, ou, s'ils doivent rester, faire du second un simple
+ré-export du premier afin qu'une seule définition existe.
+
+**Non appliquée** — suppression de fichier, relève d'un arbitrage de Nacer.
+Le fichier a été aligné dans l'intervalle pour qu'il ne mente plus.
+**Statut** : en attente

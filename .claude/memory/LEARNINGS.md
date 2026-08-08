@@ -92,3 +92,8 @@ Sans ce fichier, on retape deux fois les mêmes corrections. Avec, chaque probl�
 - Date : 2026-08-08
 - Contexte : `AppRole` était redéclaré à l'identique dans trois composants en plus du service. Corriger le service n'aurait rien changé aux écrans.
 - Leçon : la duplication d'un type n'est pas seulement une redondance, c'est une rupture silencieuse de la propagation. Le compilateur ne signale rien : les deux définitions coïncident au moment de la copie, et divergent ensuite sans avertissement. Un type partagé s'importe. Règle applicable au-delà des rôles : toute énumération qui reflète une contrainte de base de données doit avoir exactement une déclaration côté front, dans le service qui l'expose.
+
+## LEARNING-091 — Un fichier de types généré, édité à la main, devient un mensonge que rien ne signale
+- Date : 2026-08-08
+- Contexte : cause racine de BLOCKER-010. `src/integrations/supabase/types.ts` porte l'en-tête « automatically generated — do not edit » et déclarait pourtant six valeurs d'enum quand la base n'en avait que quatre. Le front s'est aligné dessus en toute confiance.
+- Leçon : un fichier généré est un miroir de la base. Édité à la main, il devient la source de vérité de fait du front — et l'écart est invisible : TypeScript valide, la compilation passe, seule la base refuse, à l'exécution, en production. Deux gardes : régénérer systématiquement après toute migration touchant un type ou une table, et considérer toute divergence entre un fichier généré et le schéma comme un incident, pas comme un détail à corriger en passant.

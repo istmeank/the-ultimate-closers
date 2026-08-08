@@ -1331,3 +1331,45 @@ décisions d'architecture consignées, comme convenu avec Nacer.
 4. Reste en attente : les 30+ autres repos du dossier REPO Github n'ont pas été
    creusés au-delà du premier inventaire (cf. réponse en chat) — à reprendre si
    Nacer veut aller plus loin sur l'un d'eux (ex. better-auth, impeccable/taste-skill).
+
+### Session 34 (suite) — migrations de rôles appliquées sur TUC-v2
+
+Connecteur MCP réparé par Nacer. Application immédiate.
+
+**Découverte au moment de vérifier** : `auth.users` est **vide** — zéro compte sur
+TUC-v2. Le compte fondateur n'existe pas encore. La migration d'attribution des
+rôles n'a donc pas été appliquée : elle serait restée sans effet.
+
+**Appliqué** :
+- `tuc_v2_extend_app_role_enum` — enum vérifié à 7 valeurs dans l'ordre voulu :
+  `owner · admin · manager · closer · developer · client · user`
+- `tuc_v2_manager_read_and_reassign` — 6 politiques créées et vérifiées via
+  `pg_policies` (SELECT sur leads, interactions, appointments, deals, profiles ;
+  UPDATE sur leads).
+- **Advisors de sécurité : aucune alerte.**
+
+**Non appliqué** : `tuc_v2_grant_founder_roles` — en attente de la création du
+compte `abdenacer.maredj@theultimateclosers.com`. La migration est idempotente et
+rejouable telle quelle.
+
+**Cause racine de BLOCKER-010 identifiée** : `src/integrations/supabase/types.ts`
+déclarait six valeurs d'enum (`admin, user, closer, owner, client, developer`)
+alors que la base n'en avait que quatre. Ce fichier porte pourtant l'en-tête
+« automatically generated — do not edit ». Il avait donc été édité à la main, ou
+généré depuis un autre projet. Le front s'est aligné sur un fichier de types
+mensonger, et personne ne pouvait le voir : TypeScript validait, la base refusait.
+Types régénérés depuis la base réelle et corrigés.
+
+`src/lib/database.types.ts` contenait encore l'enum à quatre valeurs et n'est
+importé nulle part — fichier mort aligné plutôt que supprimé sans arbitrage,
+signalé en SUGGESTIONS.
+
+### Rituel de fermeture (application)
+- **Décidé** : appliquer l'enum et les droits sans attendre le compte, les deux
+  n'en dépendant pas. Ne pas jouer la migration d'attribution à vide.
+- **Appris** : LEARNING-091 — un fichier de types généré qui a été édité à la main
+  devient la source de vérité de fait du front, sans que rien ne le signale.
+- **Dérivé** : les migrations ont été appliquées par `apply_migration` avec un SQL
+  légèrement condensé par rapport aux fichiers du dépôt (commentaires d'en-tête
+  raccourcis). Le SQL exécutable est identique, mais l'historique Supabase et les
+  fichiers ne sont pas caractère pour caractère les mêmes.
