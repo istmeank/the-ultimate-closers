@@ -198,3 +198,51 @@ C'est un défaut de circulation de la mémoire entre entités sœurs du réseau 
 
 ### Résolution
 Marquer `résolu` après normalisation, et ajouter un LEARNING sur la propagation des leçons entre entités sœurs.
+
+---
+
+## BLOCKER-009 — statut : RÉSOLU (2026-08-08, session 34)
+`.gitattributes` créé (`* text=auto eol=lf` + exceptions Windows et binaires),
+renormalisation effectuée dans un commit dédié `fc8675c`, séparé de tout commit
+fonctionnel. Contrôle : `git diff --cached --ignore-cr-at-eol` ne retournait que
+`.gitattributes` lui-même — aucun contenu modifié. `git status` est revenu propre.
+Leçon de propagation entre entités sœurs capitalisée en LEARNING-087.
+
+---
+
+## BLOCKER-010 — Le front connaît six rôles, la base n'en accepte que quatre
+**Ouvert** — 2026-08-08 (session 34)
+**Gravité** : haute — erreur d'exécution garantie dès qu'un rôle absent de l'enum est écrit
+
+### Constat
+`src/lib/services/auth.service.ts` déclare six rôles :
+`owner | admin | developer | closer | client | user`.
+L'enum PostgreSQL `app_role` (baseline, ADR-001) n'en contient que quatre :
+`owner | admin | closer | user`.
+
+`developer` et `client` sont utilisés dans le code de routage
+(`useAuth.tsx` choisit `developer` comme rôle principal, `UnifiedSidebar.tsx` et
+`ProtectedRoute.tsx` filtrent dessus). Toute écriture de l'un de ces deux rôles
+dans `user_roles` échoue en `invalid input value for enum app_role` (22P02).
+
+Aggravant : le type `AppRole` est redéclaré à l'identique dans trois composants
+au lieu d'être importé du service. Une correction de l'enum ne se propagera pas.
+
+### Ce que ça coûte
+Un utilisateur à qui l'on tenterait d'attribuer le rôle `developer` ou `client`
+ne peut pas être créé. Le front est en avance sur la base — écart introduit sans
+migration correspondante.
+
+### Action requise
+1. **T03** (`database-postgres`) : migration d'extension de l'enum `app_role`.
+   Rappel : `ALTER TYPE ... ADD VALUE` ne s'exécute pas dans un bloc transactionnel
+   sur les versions concernées — migration dédiée.
+2. Décider en amont si `client` et `developer` sont réellement des rôles de
+   sécurité, ou seulement des vues d'interface. Si ce sont des vues, ils n'ont
+   rien à faire dans l'enum et la correction se fait côté front.
+3. Supprimer les trois redéclarations locales de `AppRole` au profit de l'import
+   depuis `@/lib/services/auth.service`.
+
+### Détection
+Écart relevé lors de l'audit T28 en croisant les types du front avec la baseline SQL.
+Aucun test ne le couvrait — aucun test n'existait.

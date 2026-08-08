@@ -143,3 +143,87 @@ Cette couche traite la page d'accueil. Elle ne remplace pas un pré-rendu statiq
 
 ### Statut
 Accepté — 2026-07-25. Demandé explicitement par Nacer (« modifications nécessaires par rapport au moteur de recherche IA gpt, perplexity donc l'AEO »).
+
+---
+
+## ADR-025 — Couche d'abstraction services entre React et le backend
+
+**Date** : 2026-06-13 (proposée, session 27) — **actée le 2026-08-08 (session 34)**
+**Statut** : Acceptée
+**Décideur** : Nacer
+
+### Contexte
+ADR-025 était référencée par `code-standards.md`, par la tâche T28 et par
+`docs/architecture-evolution.md`, mais n'avait jamais été écrite dans ce registre.
+Une décision citée partout et consignée nulle part n'est pas opposable : elle ne
+survit pas au changement de session. Cette entrée comble la lacune et acte
+l'implémentation.
+
+L'intuition d'origine de Nacer : « Supabase est limité et pour les bonnes options
+il faut payer. » La question n'est pas de quitter Supabase aujourd'hui, mais de ne
+pas rendre ce départ impossible demain.
+
+### Décision
+La couche présentation (`src/components`, `src/pages`, `src/hooks`, `src/contexts`)
+ne communique jamais directement avec Supabase. Elle passe par `src/lib/services/`,
+qui expose des interfaces TypeScript stables. Chaque service délègue à un adapter
+`src/lib/adapters/supabase/`, seul endroit du dépôt autorisé à importer le client.
+
+Migrer de backend revient alors à réécrire les adapters, sans toucher un seul écran.
+
+### État au 2026-08-08
+13 services, 13 adapters, 0 accès direct depuis la couche présentation
+(une exception en allowlist : un fichier d'exemple non routé).
+Trois mécanismes rendent la règle exécutoire plutôt que déclarative :
+
+1. `scripts/check-supabase-abstraction.mjs` — échoue sur toute violation, testé
+   dans les deux sens (détection confirmée sur sonde, retour au vert après retrait).
+2. `contracts.test.ts` — 64 assertions vérifiant que chaque adapter honore son
+   interface à l'exécution, là où TypeScript ne dit plus rien.
+3. `substitution.test.ts` — remplace les adapters par des doubles et constate que
+   les services fonctionnent : la démonstration que la bascule de backend est possible.
+
+### Conséquences
+**Positives** : les tâches T01 à T27 produisent désormais du code qui survit à la
+migration. Le dépôt dispose enfin d'un harnais de test — il n'en avait aucun.
+**Négatives** : une indirection supplémentaire à chaque appel, et l'obligation de
+créer un service avant de brancher un écran. C'est le coût assumé : le contournement
+est précisément ce que le garde-fou empêche.
+
+### Alternatives écartées
+- **Accès direct à Supabase, migration le jour venu** — écarté : chiffré à 12-15
+  tâches à refondre contre 3-5 à ajuster (`docs/architecture-evolution.md`).
+- **Migration immédiate vers un backend custom** — écarté : le MVP n'a pas de
+  clients, l'effort n'est pas justifié aujourd'hui.
+- **Convention documentée sans garde-fou automatisé** — écarté : une convention
+  que rien ne vérifie tient jusqu'à la première urgence.
+
+### Lien
+`docs/architecture-evolution.md` · `taches-a-faire/T28-*.md` · `docs/deferred-capabilities.md`
+
+---
+
+## ADR-035 — Le script de vérification d'abstraction est écrit en Node, pas en shell
+
+**Date** : 2026-08-08
+**Session** : 34
+**Statut** : Actif
+
+### Contexte
+La tâche T28 spécifiait `scripts/check-supabase-abstraction.sh`. Le poste de
+travail de Nacer est sous Windows : un `.sh` n'y est pas exécutable nativement
+hors Git Bash. Un garde-fou qu'on ne peut pas lancer sur la machine où l'on
+développe ne protège rien.
+
+### Décision
+Script unique en Node (`scripts/check-supabase-abstraction.mjs`), exposé via
+`npm run check:abstraction`. Node est déjà une dépendance du projet ; le script
+tourne à l'identique sous Windows, Linux et en CI.
+
+Un script `npm run verify` enchaîne les quatre contrôles de la règle d'or :
+abstraction, types, tests, build.
+
+### Conséquences
+Écart assumé avec la lettre du ticket T28, au bénéfice de son intention.
+Les hooks existants de `.claude/hooks/` restent en shell : ils s'exécutent
+côté agent, pas côté poste de travail.

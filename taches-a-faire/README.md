@@ -22,7 +22,7 @@ Chaque fichier `Txx-nom.md` contient un **prompt complet copier-coller** à util
 
 | # | Tâche | Agent | Modèle | Statut | Notes |
 |---|---|---|---|---|---|
-| T28 | Refactor : poser couche d'abstraction services (Supabase MVP → backend custom Twenty-like) | frontend-react + backend-supabase | **opus** | ⏳ pending | Bloque T01-T27. ADR-025 + docs/architecture-evolution.md |
+| T28 | Refactor : poser couche d'abstraction services (Supabase MVP → backend custom Twenty-like) | frontend-react + backend-supabase | **opus** | ✅ completed | `0331f5a` — 13 services + 13 adapters, garde-fou CI, 83 tests. ADR-025 actée. Reste à valider par `npm run verify` sur le poste de Nacer. |
 
 ### P0 — Bloquants sécurité (FAIRE EN PREMIER)
 
@@ -35,7 +35,7 @@ Chaque fichier `Txx-nom.md` contient un **prompt complet copier-coller** à util
 
 | # | Tâche | Agent | Modèle | Statut | Notes |
 |---|---|---|---|---|---|
-| T03 | Migration extension rôles closer/owner/client + profiles fields | database-postgres | ⏳ pending | |
+| T03 | Migration extension rôles closer/owner/client + profiles fields | database-postgres | ⏳ pending | **BLOCKER-010** : le front utilise `developer` et `client`, absents de l'enum `app_role`. Trancher d'abord : rôles de sécurité ou vues d'interface ? |
 | T04 | Trigger auto_assign_closer_to_lead | database-postgres | **sonnet** | ⏳ pending | Dépend T03 |
 | T05 | Triggers log_appointment + log_deal_interaction | database-postgres | **haiku** | ⏳ pending | Dépend T03 |
 | T06 | Hook useAuth multi-rôles + ProtectedRoute requireRole | frontend-react | ⏳ pending | |
@@ -107,6 +107,24 @@ Chaque fichier `Txx-nom.md` contient un **prompt complet copier-coller** à util
 | ✅ completed | Terminé + tracé dans JOURNAL + commit Git |
 | ⚠️ blocked | Bloqué (voir BLOCKERS.md) |
 | ⏸️ deferred | Reporté à une vague ultérieure |
+
+## Règle d'abstraction — applicable à toutes les tâches depuis T28
+
+Depuis la clôture de T28 (session 34), toute tâche touchant aux données passe par
+`src/lib/services/`. Aucun composant, aucune page, aucun hook n'importe le client
+Supabase. Si le service nécessaire n'existe pas, on l'ajoute — on ne contourne pas.
+
+Avant de déclarer une tâche terminée :
+
+```
+npm run verify
+```
+
+Cette commande enchaîne les quatre contrôles : garde-fou d'abstraction, types,
+tests, build. Elle échoue si l'un d'eux échoue — c'est le point.
+
+Voir `ADR-025` et `ADR-035` dans `.claude/memory/DECISIONS.md`, et
+`docs/deferred-capabilities.md` pour les capacités déclarées mais non implémentées.
 
 ## Ordre d'exécution recommandé
 

@@ -62,3 +62,23 @@ Sans ce fichier, on retape deux fois les mêmes corrections. Avec, chaque probl�
 - Date : 2026-07-25
 - Contexte : rédaction du `llms.txt` de TUC. Sa section « ce que nous ne faisons pas » énonce explicitement l'absence de vente sous pression et de prospection sans consentement.
 - Leçon : sans définition contrôlée, un modèle décrit une organisation à partir de fragments trouvés ailleurs. Le `llms.txt` est le seul endroit où l'on peut poser sa propre définition et ses propres limites. La section « ce que nous ne faisons pas » y a autant de valeur que la section « ce que nous faisons ».
+
+## LEARNING-085 — Une couche d'abstraction sans test n'est pas une abstraction, c'est une convention
+- Date : 2026-08-08
+- Contexte : clôture de T28. Les 13 services et 13 adapters existaient déjà et étaient de bonne facture, mais aucun test ne les couvrait. Les interfaces TypeScript disparaissent à la compilation : rien ne vérifiait à l'exécution qu'un adapter honorait son contrat.
+- Leçon : le livrable qui prouve une abstraction n'est pas le fichier d'interface, c'est le test qui remplace l'adapter par un double et constate que le service fonctionne quand même. Tant que ce test n'existe pas, l'abstraction est une intention de l'auteur, pas une propriété du code. Corollaire : la ligne « 0 import orphelin » d'un rapport ne prouve rien seule — c'est le garde-fou automatisé qui la maintient vraie demain.
+
+## LEARNING-086 — Une méthode différée doit échouer bruyamment et nommer sa tâche
+- Date : 2026-08-08
+- Contexte : dix méthodes de la couche services sont déclarées sans implémentation (matching → T08, secrets → T01, messaging → Domain 2, ai → phase ANK). Elles lèvent une erreur explicite plutôt que de renvoyer `undefined`.
+- Leçon : le danger d'une capacité différée n'est pas l'oubli, c'est la découverte tardive. Un `undefined` silencieux se manifeste en écran blanc chez un closer en pleine conversation. Une erreur qui cite la tâche qui la débloquera transforme un incident de production en information de backlog. Le test qui garantit cet échec (`deferred.test.ts`) devient rouge le jour où la capacité est livrée — c'est le mécanisme de rappel qui met à jour le registre de dette tout seul.
+
+## LEARNING-087 — Une leçon capitalisée dans une entité sœur ne se propage pas toute seule
+- Date : 2026-08-08
+- Contexte : BLOCKER-009 (262 fichiers marqués modifiés sans changement de contenu, faute de `.gitattributes`) avait déjà été rencontré ET résolu dans LULG tech, capitalisé en LEARNING-004 de ce dépôt. TUC a vécu le même problème pendant des semaines sans bénéficier de la réponse.
+- Leçon : le squelette Silicate reproduit la *méthode* de capitalisation dans chaque entité, mais ne fait circuler aucun *contenu* entre elles. Deux dépôts gouvernés par le même squelette peuvent se croiser sur le même mur. Il manque un mécanisme de transfert — registre partagé au niveau SILICATE, ou revue croisée périodique des LEARNINGS entre entités sœurs. À remonter comme suggestion de squelette v0.7.
+
+## LEARNING-088 — Un environnement de développement ne se répare pas depuis un montage réseau
+- Date : 2026-08-08
+- Contexte : `npm install` échoue structurellement sur le montage FUSE du dépôt (`ENOTEMPTY` sur le renommage de répertoires non vides, opération que npm utilise systématiquement). Une tentative interrompue a laissé `node_modules` amputé de ses binaires.
+- Leçon : les opérations qui reposent sur le renommage atomique de répertoires (npm, git gc, certains bundlers) ne sont pas fiables sur un système de fichiers monté à distance. Elles doivent être exécutées côté machine native. Corollaire de vérification : quand une porte de la règle d'or ne peut pas être franchie depuis l'environnement courant, on l'annonce comme non franchie — on ne la déclare pas passée par équivalence.

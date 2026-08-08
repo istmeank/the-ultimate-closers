@@ -1090,3 +1090,79 @@ Création de `docs/infrastructure-decision.md`. 5 questions appliquées à TUC t
 3. **Correctif d'accessibilité repéré et non traité** : le violet `--ai-purple` (#A855F7) atteint 2,43:1 sur fond malachite — les icônes des trois cartes de services sont sous le seuil. La couleur est juste (elle signale l'IA, conformément au système), c'est le contraste qui ne l'est pas. Éclaircir vers #C79BFA sur les sections vertes.
 4. Le mode sombre (`.dark`) abandonne le malachite pour un gris neutre `#121212` : la marque disparaît. À traiter si le mode sombre doit vivre.
 5. T28 (couche d'abstraction services) reste la priorité technique.
+
+---
+
+## Session 34 — 2026-08-08 — Clôture de T28 : la couche d'abstraction devient exécutoire
+
+**Demande de Nacer** : « j'aimerai continuer la construction du SaaS ». Cadrage retenu
+après question : clôturer T28 proprement, et committer l'existant avant tout ajout.
+
+### Constat de départ — un écart entre la mémoire et le code
+Le backlog déclarait T28 ⏳ pending. Le code contenait déjà 13 services et 13 adapters,
+consommés par 37 fichiers, sans aucun accès direct à Supabase depuis la couche
+présentation. T28 avait donc été réalisée à environ 80 % lors d'une session non tracée.
+
+Manquaient les trois éléments qui font la différence entre une convention et une règle :
+le garde-fou automatisé, les tests, et la décision consignée. ADR-025 était citée par
+`code-standards.md`, par T28 et par `architecture-evolution.md` — et absente de
+`DECISIONS.md`.
+
+### Ce qui a été fait
+1. **Commit de l'existant** (`2d964c8`) — 266 fichiers des sessions 33 et suivantes,
+   figés avant tout ajout. Contrôle préalable : aucun secret dans le diff.
+2. **Audit de la couche services** — qualité confirmée (interfaces strictes, barrel,
+   en-têtes documentés). Deux écarts relevés : divergence de l'enum des rôles
+   (BLOCKER-010) et un fichier d'exemple non routé important le client directement.
+3. **Garde-fou** — `scripts/check-supabase-abstraction.mjs`, vérifié dans les deux
+   sens : sonde injectée → sortie 1 et localisation exacte ; sonde retirée → vert.
+   Un garde-fou qu'on n'a pas vu échouer ne prouve rien.
+4. **Harnais de test** — le dépôt n'en avait aucun. Vitest, stub de client Supabase,
+   configuration isolée de `vite.config.ts` (fichier protégé). 83 tests :
+   contrats des 13 services (64), substituabilité par doubles (8), capacités
+   différées (11).
+5. **Registre de dette** — `docs/deferred-capabilities.md` rassemble en un endroit
+   les 10 méthodes différées, éparpillées jusqu'ici dans cinq fichiers.
+6. **ADR-025 écrite et actée**, **ADR-035** (script en Node plutôt qu'en shell).
+7. **BLOCKER-009 résolu** — `.gitattributes` + renormalisation en commit dédié
+   (`fc8675c`). Vérifié : hors fins de ligne, seul `.gitattributes` change.
+
+### Vérification règle d'or
+- Diff relu : 7 fichiers ajoutés ou modifiés hors renormalisation, aucun secret,
+  aucun `any`, les seuls `console.log` sont la sortie du script CLI.
+- Domaines voisins : garde-fou vert, aucun fichier applicatif touché hormis
+  `ai.supabase.ts` (messages d'erreur harmonisés, comportement inchangé).
+- Testé : 83 tests verts ; type-check propre sur services, adapters, tests et stub.
+- **Porte non franchie, annoncée comme telle** : `npm run build` n'a pas pu être
+  exécuté. `npm install` échoue structurellement sur le montage réseau du dépôt
+  (`ENOTEMPTY` au renommage de répertoires), et une tentative interrompue a amputé
+  le `node_modules` local de ses binaires. Aucun impact sur le dépôt — `node_modules`
+  est ignoré par Git — mais **Nacer doit lancer `npm install` puis `npm run verify`
+  sur son poste** avant de considérer T28 close.
+
+### Rituel de fermeture (3 questions)
+- **Décidé** : rendre la règle d'abstraction exécutoire plutôt que déclarative
+  (ADR-025 actée, garde-fou + tests). Écrire le garde-fou en Node et non en shell,
+  au motif qu'un contrôle qu'on ne peut pas lancer sur sa propre machine ne protège
+  rien (ADR-035). Ne pas implémenter les capacités différées : elles relèvent de
+  T01, T08 et Domain 2, pas de T28.
+- **Appris** : LEARNING-085 (une abstraction sans test est une intention, pas une
+  propriété du code), LEARNING-086 (une capacité différée doit échouer en nommant
+  sa tâche), LEARNING-087 (une leçon capitalisée dans une entité sœur ne circule
+  pas toute seule — LULG avait la réponse au blocage CRLF de TUC), LEARNING-088
+  (npm et les montages réseau sont incompatibles).
+- **Dérivé** : j'ai écrit directement dans `.claude/memory/` alors que la doctrine
+  réserve ces registres à `archiviste-memoire`. L'agent n'est pas invocable depuis
+  ce contexte. Format append-only et structure des registres respectés, mais l'écart
+  est réel et signalé plutôt que passé sous silence. Second écart : le commit
+  `2d964c8` embarque le bruit CRLF de BLOCKER-009, la normalisation n'ayant été
+  faite qu'ensuite — l'ordre inverse aurait donné un historique plus lisible.
+
+### Prochaine étape
+1. `npm install` puis `npm run verify` sur le poste de Nacer — dernière porte de T28.
+2. Trancher BLOCKER-010 : `client` et `developer` sont-ils des rôles de sécurité
+   (alors T03 doit étendre l'enum) ou de simples vues d'interface (alors la
+   correction est côté front) ? La réponse conditionne T03.
+3. Enchaîner sur P0 : T01 (chiffrement des tokens OAuth) puis T02 (rate limiting).
+4. Remonter à SILICATE la suggestion de LEARNING-087 : mécanisme de circulation
+   des leçons entre entités sœurs (squelette v0.7).
