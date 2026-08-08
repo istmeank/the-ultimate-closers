@@ -289,3 +289,31 @@ Aucun renommage : renommer un blocage historique réécrirait la mémoire.
 nouveau blocage prend un numéro de la série générale, à partir de `BLOCKER-011`.
 Les numéros 006 et 007 n'ont jamais été attribués — le trou est historique, on ne le
 comble pas rétroactivement.
+
+---
+
+## BLOCKER-010 — mise à jour de statut (2026-08-08, session 34)
+
+**Statut : partiellement traité — en attente d'application sur la base.**
+
+Décidé par Nacer (ADR-036) : sept rôles cumulables
+`owner · admin · manager · closer · developer · client · user`.
+
+**Fait** :
+- Front aligné — `AppRole` étendu et documenté dans `auth.service.ts`, devenu
+  source de vérité unique. Les trois redéclarations locales du type
+  (`ProtectedRoute`, `RoleSwitcher`, `UnifiedSidebar`) sont supprimées au profit
+  d'un import : une correction de l'enum se propage désormais partout.
+- Migrations écrites : extension de l'enum, puis attribution des rôles fondateur.
+
+**Reste à faire pour clore** :
+1. Nacer crée le compte `abdenacer.maredj@theultimateclosers.com` — la création
+   d'un compte suppose un mot de passe, elle ne se délègue pas à un agent.
+2. Application des deux migrations sur TUC-v2 (session disposant du MCP Supabase,
+   ou tableau de bord). Aucun accès Supabase depuis la session Cowork.
+3. Vérification : `SELECT unnest(enum_range(NULL::public.app_role));` → 7 valeurs,
+   et `user_roles` contenant `owner` + `admin` pour le compte fondateur.
+
+**Ne pas clore avant** : l'écriture des politiques RLS pour `manager`, `developer`
+et `client` (tâche T03, `auth-security-rls`). En l'état, ces trois rôles existent
+sans aucun droit — inoffensif, mais inutilisable.

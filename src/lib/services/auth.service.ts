@@ -7,12 +7,33 @@
  * (e.g. Supabase -> NestJS), only the adapter import changes.
  */
 
+/**
+ * Rôles TUC — source de vérité unique côté front.
+ *
+ * Miroir exact de l'enum PostgreSQL `public.app_role`
+ * (migration `20260808160000_tuc_v2_extend_app_role_enum.sql`).
+ * Toute divergence provoque une erreur 22P02 à l'écriture : c'était
+ * BLOCKER-010, où le front connaissait des rôles que la base ignorait.
+ *
+ * Les rôles sont CUMULABLES — aucune hiérarchie implicite. `owner` ne confère
+ * pas `admin` : les deux se posent explicitement (ADR-036).
+ *
+ * Ce type ne doit jamais être redéclaré ailleurs : il s'importe d'ici.
+ */
 export type AppRole =
+  /** Fondateur — propriété de l'organisation. */
   | 'owner'
+  /** Administration complète de l'application. */
   | 'admin'
-  | 'developer'
+  /** Supervise une équipe de closers. */
+  | 'manager'
+  /** Conduit les rendez-vous et gère son propre pipeline. */
   | 'closer'
+  /** Accès technique — jamais aux données prospects (véto n°3, RGPD). */
+  | 'developer'
+  /** Prospect converti disposant d'un espace personnel. */
   | 'client'
+  /** Socle attribué à toute inscription par `handle_new_user()`. */
   | 'user';
 
 export interface AuthUser {

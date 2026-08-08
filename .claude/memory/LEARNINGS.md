@@ -82,3 +82,13 @@ Sans ce fichier, on retape deux fois les mêmes corrections. Avec, chaque probl�
 - Date : 2026-08-08
 - Contexte : `npm install` échoue structurellement sur le montage FUSE du dépôt (`ENOTEMPTY` sur le renommage de répertoires non vides, opération que npm utilise systématiquement). Une tentative interrompue a laissé `node_modules` amputé de ses binaires.
 - Leçon : les opérations qui reposent sur le renommage atomique de répertoires (npm, git gc, certains bundlers) ne sont pas fiables sur un système de fichiers monté à distance. Elles doivent être exécutées côté machine native. Corollaire de vérification : quand une porte de la règle d'or ne peut pas être franchie depuis l'environnement courant, on l'annonce comme non franchie — on ne la déclare pas passée par équivalence.
+
+## LEARNING-089 — Une valeur d'enum PostgreSQL s'ajoute, ne se retire pas
+- Date : 2026-08-08
+- Contexte : extension de `app_role` de quatre à sept valeurs (ADR-036).
+- Leçon : `ALTER TYPE ... ADD VALUE` est trivial ; l'opération inverse n'existe pas. Retirer une valeur exige de recréer le type, de réécrire chaque colonne qui l'utilise et chaque politique qui s'y réfère — ici 93 occurrences de `has_role`. Conséquence pratique : on n'ajoute jamais un rôle « au cas où ». Le coût d'attendre est nul, celui de se tromper est une migration lourde. Corollaire : une valeur ajoutée dans une transaction ne peut pas être utilisée dans cette même transaction — l'extension de l'enum et son usage sont toujours deux migrations.
+
+## LEARNING-090 — Un type dupliqué annule toute correction à la source
+- Date : 2026-08-08
+- Contexte : `AppRole` était redéclaré à l'identique dans trois composants en plus du service. Corriger le service n'aurait rien changé aux écrans.
+- Leçon : la duplication d'un type n'est pas seulement une redondance, c'est une rupture silencieuse de la propagation. Le compilateur ne signale rien : les deux définitions coïncident au moment de la copie, et divergent ensuite sans avertissement. Un type partagé s'importe. Règle applicable au-delà des rôles : toute énumération qui reflète une contrainte de base de données doit avoir exactement une déclaration côté front, dans le service qui l'expose.

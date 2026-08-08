@@ -17,7 +17,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { LucideIcon } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
-type AppRole = 'admin' | 'closer' | 'owner' | 'client' | 'user' | 'developer';
+import type { AppRole } from '@/lib/services/auth.service';
 
 interface SidebarItem {
   icon: LucideIcon;

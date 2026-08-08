@@ -227,3 +227,77 @@ abstraction, types, tests, build.
 Écart assumé avec la lettre du ticket T28, au bénéfice de son intention.
 Les hooks existants de `.claude/hooks/` restent en shell : ils s'exécutent
 côté agent, pas côté poste de travail.
+
+---
+
+## ADR-036 — Modèle de rôles TUC : sept rôles cumulables, sans hiérarchie implicite
+
+**Date** : 2026-08-08
+**Session** : 34
+**Statut** : Actif
+**Décideur** : Nacer (arbitrage explicite sur quatre questions)
+
+### Contexte
+Le front utilisait `developer` et `client`, absents de l'enum `app_role` qui n'en
+comptait que quatre — toute écriture de ces rôles échouait en 22P02 (BLOCKER-010).
+Nacer a par ailleurs confirmé un rôle `manager`, absent des deux côtés.
+
+`docs/REFERENCE.md` ne spécifiait aucun modèle de rôles : il n'existait pas de
+source de vérité produit sur ce point. Les quatre questions ont donc été posées
+plutôt que tranchées par déduction.
+
+Point relevé au cadrage : `user` n'était pas dans la liste des quatre rôles
+énoncés par Nacer, alors que `handle_new_user()` l'attribue à chaque inscription.
+Le retirer aurait fait échouer toute création de compte.
+
+### Décision
+Sept rôles : `owner` · `admin` · `manager` · `closer` · `developer` · `client` · `user`.
+
+1. **Cumulables, sans hiérarchie implicite.** Une personne porte plusieurs rôles
+   (`user_roles`, UNIQUE (user_id, role)). `owner` ne confère pas `admin` : les
+   deux se posent explicitement. C'est ce que la base et le front faisaient déjà.
+2. **`user` conservé comme socle technique.** Attribué à toute inscription, il ne
+   donne accès à rien de sensible. Les rôles métier se posent par-dessus.
+3. **`developer` sans accès aux données prospects.** Diagnostic, configuration,
+   contenu — jamais `leads`, `appointments`, `deals`, `lead_interactions`.
+4. **`client` retenu** — prospect converti disposant d'un espace personnel.
+5. **Rôle apprenant écarté pour l'instant** — TUC Academy aura son propre site.
+   Critère de réouverture consigné ci-dessous.
+
+### Conséquences
+**Refus par défaut** : cette extension n'accorde aucun droit. Les 93 politiques RLS
+existantes ne mentionnent aucun des trois nouveaux rôles — un `manager` n'a donc
+accès à rien de plus qu'un `user` tant que les politiques ne sont pas écrites.
+C'est délibéré : un rôle qui existe sans droits est inoffensif, l'inverse ne l'est pas.
+Les droits relèvent d'une migration distincte, sous `auth-security-rls`.
+
+**Irréversibilité** : PostgreSQL ne sait pas retirer une valeur d'un enum. Défaire
+exigerait de recréer le type et de réécrire chaque colonne et chaque politique qui
+s'y réfèrent. D'où la retenue sur l'ajout d'un rôle « au cas où ».
+
+**Sur `developer`** : restreindre l'accès aux données prospects a un coût réel —
+déboguer un problème qu'on ne peut pas observer sur les données concernées est plus
+difficile. Le coût est accepté : il découle du véto n°3 des valeurs TUC et de la
+minimisation RGPD. Un prestataire technique n'a pas à devenir détenteur de données
+personnelles pour faire son travail. Si le besoin se présente, la réponse sera une
+procédure d'accès tracée et temporaire, pas un rôle permanent.
+
+### Critère de réouverture — rôle apprenant
+TUC Academy disposant de son propre site, le rôle n'est pas créé. Il le deviendra
+si l'Academy **partage l'authentification du CRM** — compte unique, un apprenant
+devenant closer sans se réinscrire. Si l'Academy a son propre système de comptes,
+le rôle n'a pas lieu d'être ici, et l'ajouter alourdirait chaque politique de
+sécurité sans contrepartie.
+
+### Alternatives écartées
+- **Rôles hiérarchiques** (`owner` > `admin` > `manager` > `closer`) — écarté :
+  interdirait d'être manager sans être closer, et contredirait le schéma existant.
+- **Suppression de `user`** — écarté : casse `handle_new_user()` et toute inscription.
+- **`developer` avec accès complet** — écarté pour les motifs éthiques ci-dessus.
+
+### Migrations
+`20260808160000_tuc_v2_extend_app_role_enum.sql` — ajout des trois valeurs.
+`20260808160100_tuc_v2_grant_founder_roles.sql` — `owner` + `admin` au fondateur.
+
+### Lien
+BLOCKER-010 · ADR-001 (RBAC initial, complétée et non contredite) · T03

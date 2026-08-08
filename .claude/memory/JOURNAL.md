@@ -1193,3 +1193,65 @@ montage réseau a laissé un `node_modules` amputé, puis un fichier de types tr
 que `npm install` seul ne réparait pas — npm considère un paquet présent comme
 valide et ne revérifie pas son contenu. Seule la suppression complète du dossier a
 résolu le problème (LEARNING-088).
+
+---
+
+## Session 34 (suite) — 2026-08-08 — Modèle de rôles arbitré (ADR-036)
+
+**Demande de Nacer** : « utilise toujours l'orchestrateur TUC pour commencer et
+déléguer », puis définition des rôles et attribution de son adresse professionnelle
+en Administrateur et Owner.
+
+**Rappel méthodologique accepté** : la session avait enchaîné en exécution directe
+sans passer par l'orchestrateur. Reprise en MODE 1 — reformulation, cartographie
+des domaines, identification des risques, escalade des décisions structurantes.
+Le manquement est réel et vaut d'être noté : l'orchestrateur n'est pas une
+formalité, c'est lui qui aurait relevé plus tôt que `docs/REFERENCE.md` ne
+spécifie aucun modèle de rôles.
+
+### Ce qui a été relevé au cadrage
+Nacer énonçait quatre rôles — Administrateur, Closer, Manager, Owner — sans `user`.
+Or `handle_new_user()` attribue `user` à chaque inscription : appliquer la liste
+telle quelle aurait fait échouer toute création de compte, à commencer par la sienne.
+Quatre questions posées plutôt que des déductions, en l'absence de source de vérité
+produit sur ce point.
+
+### Décisions de Nacer (ADR-036)
+Sept rôles cumulables, sans hiérarchie implicite. `user` conservé comme socle.
+`developer` sans accès aux données prospects. `client` retenu. Rôle apprenant
+écarté — TUC Academy aura son propre site ; critère de réouverture consigné dans
+l'ADR (partage de l'authentification).
+
+### Ce qui a été produit
+- `20260808160000_tuc_v2_extend_app_role_enum.sql` — trois valeurs ajoutées,
+  positionnées dans l'ordre des responsabilités.
+- `20260808160100_tuc_v2_grant_founder_roles.sql` — idempotente, sans effet et
+  sans échec si le compte n'existe pas encore.
+- Front aligné : `AppRole` documenté dans `auth.service.ts` et devenu source
+  unique ; trois redéclarations locales supprimées.
+
+### Vérification règle d'or
+- Diff relu : 5 fichiers, 2 migrations. Aucune politique RLS touchée.
+- Domaines voisins : `grep "^type AppRole" src/` ne retourne plus rien ;
+  `useAuth.tsx` importait déjà du service.
+- Type-check des fichiers modifiés : propre.
+- **Non exécuté, annoncé comme tel** : les migrations ne sont PAS appliquées.
+  Aucun MCP Supabase dans cette session, et créer un compte utilisateur suppose
+  un mot de passe — hors de ce qu'un agent doit faire.
+
+### Rituel de fermeture (3 questions)
+- **Décidé** : ADR-036. Séparer strictement l'existence d'un rôle de ses droits —
+  l'enum s'étend, aucune politique ne bouge. Un rôle sans droits est inoffensif ;
+  l'inverse ne l'est pas.
+- **Appris** : LEARNING-089 (irréversibilité des enums PostgreSQL), LEARNING-090
+  (un type dupliqué dans plusieurs composants annule la correction à la source).
+- **Dérivé** : j'ai conduit toute la première moitié de la session sans invoquer
+  l'orchestrateur, alors que la constitution le prescrit pour toute tâche de plus
+  de trente minutes. Nacer l'a signalé. Corrigé pour cette seconde moitié.
+
+### Prochaine étape
+1. Créer le compte fondateur, appliquer les deux migrations, vérifier l'enum.
+2. T03 — politiques RLS pour `manager`, `developer`, `client` (`auth-security-rls`).
+   Le périmètre de `manager` reste à définir : voit-il les leads de son équipe
+   seulement, ou tous ?
+3. Puis P0 : T01 (chiffrement des tokens OAuth), T02 (rate limiting).

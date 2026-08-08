@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { UserCog, Check } from 'lucide-react';
 
-type AppRole = 'admin' | 'closer' | 'owner' | 'client' | 'user' | 'developer';
+import type { AppRole } from '@/lib/services/auth.service';
 
 export const RoleSwitcher = () => {
   const { userRoles } = useAuth();
