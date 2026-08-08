@@ -1,28 +1,44 @@
-# T24 — WhatsApp Bot local Node.js whatsapp-web.js (différé V3)
+# T24 — WhatsApp Bot local Node.js whatsapp-web.js (interne/test uniquement — voir mise à jour)
 
-**Priorité** : ⏸️ deferred V3
+**Priorité** : ⏸️ interne/test seulement, réel = bloqué sur API officielle
 **Agent responsable** : `integrations`
 **Skills bootstrap** : `whatsapp-business-cloud-api`, `valeurs-coran-bienveillance`
-**Modèle Claude** : `sonnet-4-6` — Différé V3, modèle indicatif
+**Modèle Claude** : `sonnet-4-6` — modèle indicatif
 **Skills Cowork (Claude PC)** : operations:compliance-tracking
 **Effort estimé** : 8-10h
-**Statut** : différé
+**Statut** : amendé (voir ADR-038)
 
 ---
 
-## Note
+## Mise à jour — 2026-08-08 (session 35, Cowork)
 
-Cette tâche est **différée** pour deux raisons :
+Nacer a nuancé la note ci-dessous en explorant le repo `OpenWA` (gateway WhatsApp
+NestJS + Baileys/whatsapp-web.js, MIT, self-hosted) : **Baileys/whatsapp-web.js est
+autorisé pour prototyper en interne** (jamais avec un vrai prospect), l'API Business
+Cloud officielle reste obligatoire avant tout envoi réel. Le cœur de la note initiale
+(pas d'envoi réel sans API officielle + opt-in tracé) ne change pas. Détail complet :
+`.claude/memory/DECISIONS.md` → ADR-038.
+
+**Action immédiate** : un prototype interne via OpenWA/Baileys peut démarrer
+(ex. tester le flux qualification → message, sur des numéros de test uniquement).
+Aucun envoi à un prospect réel tant que la Business Cloud API + `whatsapp_optins`
++ validation `gardien-valeurs` ne sont pas en place.
+
+---
+
+## Note initiale (2026-06-23)
+
+Cette tâche était **différée** pour deux raisons :
 
 1. **Stratégie officielle TUC = WhatsApp Business Cloud API** (skill `whatsapp-business-cloud-api` officiel Meta), pas `whatsapp-web.js` (non-officiel, risque de ban Meta).
 2. **Compliance Meta** : tout envoi sans opt-in tracé = ban du jour au lendemain. Le bot local sans pipeline opt-in propre est dangereux.
 
-**Stratégie révisée** :
+**Stratégie révisée (V2 — inchangée pour les envois réels)** :
 - V2 (après MVP) : WhatsApp Business Cloud API officielle + templates approuvés + opt-in tracé en DB (`whatsapp_optins` table)
 - Compliance check par `gardien-valeurs` AVANT 1er envoi réel
 - Bouton opt-out 1 clic dans chaque message
 
-**Action immédiate** : aucune. Ouvrir nouveau ticket T24-bis quand prêt pour Business API officielle.
+**Action immédiate** : prototype interne autorisé (voir mise à jour ci-dessus). Ouvrir nouveau ticket T24-bis quand prêt pour Business API officielle en production.
 
 ---
 

@@ -429,3 +429,33 @@ créera un second compte sur le CRM. Aucun lien automatique entre les deux
 identités. Si ce lien devient nécessaire — reprendre l'historique de formation
 dans le profil du closer — il se fera par une correspondance explicite (adresse
 courriel ou identifiant de certification), pas par un rôle partagé.
+
+### ADR-036 — complément du 2026-08-08 : périmètre du rôle `manager`
+
+Décidé par Nacer : **une seule équipe de closers pour l'instant**, manager en
+**lecture globale + réassignation de leads**.
+
+Fait déterminant relevé au cadrage : il n'existe aucune notion d'équipe en base —
+ni table `teams`, ni colonne `manager_id` sur `profiles`. « Les leads de son
+équipe » était donc inexprimable en RLS. Avec une équipe unique, « son équipe »
+et « tout le monde » se confondent : la lecture globale n'est pas un raccourci,
+c'est la traduction exacte du besoin.
+
+**Périmètre** : lecture de `leads`, `interactions`, `appointments`, `deals`,
+`profiles` ; modification de `leads` limitée à la réassignation (un lead
+supprimé ne peut être ni restauré ni créé par ce biais). Aucun accès à
+`user_roles` — un manager ne se promeut pas lui-même. Aucun accès aux jetons
+d'intégration.
+
+**Déclencheur de révision, écrit pour ne pas être oublié** : à la **seconde
+équipe**, cette lecture globale expose des données personnelles au-delà du
+nécessaire et contredit le principe de minimisation (véto n°3). Le remède est
+identifié : ajouter `manager_id` sur `profiles` et filtrer les politiques dessus.
+Le report est assumé, pas ignoré.
+
+**Méthode** : les politiques existantes ne sont pas modifiées. De nouvelles
+politiques sont ajoutées — PostgreSQL les combine par OU logique, les droits des
+closers, admins et owners restent intacts. Une migration qui n'altère rien se
+relit et s'annule plus facilement qu'une migration qui réécrit.
+
+Migration : `20260808170000_tuc_v2_manager_read_and_reassign.sql`.

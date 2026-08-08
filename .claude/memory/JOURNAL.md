@@ -1255,3 +1255,79 @@ l'ADR (partage de l'authentification).
    Le périmètre de `manager` reste à définir : voit-il les leads de son équipe
    seulement, ou tous ?
 3. Puis P0 : T01 (chiffrement des tokens OAuth), T02 (rate limiting).
+
+## Session 35 — 2026-08-08 — Inventaire du dossier REPO Github + deux décisions d'architecture (meet-coaching, WhatsApp)
+
+**Contexte** : session en Cowork (pas Claude Code CLI — `archiviste-memoire` non
+invocable ici, écriture directe dans `.claude/memory/` en écart assumé, comme en
+session 34). Nacer demande d'extraire les ressources utiles de
+`D:\Hp\Telechargement\REPO Github\` (34 repos/archives) pour ses projets, en
+expliquant chaque ressource avant toute intégration.
+
+### Ce qui a été fait
+1. Inventaire complet des 34 repos du dossier REPO Github, classés par pertinence
+   pour TUC (directement exploitables / skills Claude Code / design / périphérique).
+   Rapporté à Nacer sans rien intégrer.
+2. Sur validation de Nacer (« vasy »), inspection approfondie de deux repos jugés
+   les plus proches des domaines actifs de TUC :
+   - **OpenWA** (NestJS + TypeORM/Postgres, moteurs Baileys/whatsapp-web.js, MIT) —
+     candidat pour `messagerie-multicanaux/`.
+   - **meetily** (Zackriya Solutions, Tauri/Rust + Whisper local, MIT) — candidat
+     pour `meet-coaching/`.
+3. Nacer tranche sur les deux : Baileys pour le MVP puis migration API officielle
+   (WhatsApp), et « on prend ce qui est bon et on laisse ce qui ne l'est pas »
+   (meetily).
+4. **Écart détecté avant d'agir** : la consigne de Nacer sur WhatsApp contredisait
+   T24 (`taches-a-faire/T24-whatsapp-bot-local.md`), qui différait tout usage de
+   lib non-officielle à V3 et imposait l'API Business Cloud dès le premier envoi.
+   Signalé à Nacer avant toute écriture d'ADR, avec le contenu exact de T24 et
+   trois options. Nacer choisit la nuance : Baileys autorisé en interne/test
+   uniquement, API officielle obligatoire pour tout envoi réel.
+5. **ADR-037** écrit (meetily : garder le pipeline chunking + sortie structurée
+   Pydantic, laisser l'app desktop Tauri/Rust, whisper.cpp local et le schéma
+   SQLite — aucun conflit avec l'existant, aligné sur l'agent `meet-coaching` déjà
+   prévu en Vague 3-4).
+6. **ADR-038** écrit (WhatsApp : amende T24 sans le remplacer — prototype interne
+   autorisé, envoi réel toujours bloqué sur l'API officielle + opt-in +
+   `gardien-valeurs`).
+7. `taches-a-faire/T24-whatsapp-bot-local.md` et `taches-a-faire/README.md` mis à
+   jour pour refléter la nuance (statut « amendé », note de mise à jour datée,
+   ligne du tableau récapitulatif corrigée).
+
+Aucun code copié depuis les deux repos externes à ce stade — uniquement des
+décisions d'architecture consignées, comme convenu avec Nacer.
+
+### Vérification règle d'or
+- Diff relu : deux ADR ajoutés en fin de fichier (append-only respecté, pas de
+  réécriture d'entrée existante), une tâche amendée (pas supprimée), une ligne de
+  tableau corrigée.
+- Domaines voisins : aucun code applicatif touché ; `gardien-valeurs` et
+  `integrations` cités comme responsables de la mise en œuvre future, pas
+  sollicités ici (aucun envoi réel, aucune donnée prospect en jeu).
+- Testé : lecture croisée de `taches-a-faire/README.md`, `T24-...md` et
+  `DECISIONS.md` après écriture pour vérifier la cohérence des trois documents
+  entre eux.
+
+### Rituel de fermeture (3 questions)
+- **Décidé** : meetily se réutilise pour son pipeline (chunking + résumé
+  structuré), pas pour son application ; WhatsApp non-officiel se limite au
+  prototypage interne, jamais à un envoi réel.
+- **Appris** : un repo externe qui semble répondre à un besoin peut contredire une
+  décision déjà actée (T24) sans que ça saute aux yeux — le réflexe de vérifier
+  `taches-a-faire/` et `DECISIONS.md` avant d'écrire une nouvelle décision a évité
+  d'enregistrer une stratégie WhatsApp qui aurait mis en danger un canal réel de
+  closer.
+- **Dérivé** : même écart qu'en session 34 — écriture directe dans
+  `.claude/memory/` faute d'accès à `archiviste-memoire` en Cowork. Rien d'autre à
+  signaler.
+
+### Prochaine étape
+1. Si Nacer veut avancer sur T24 : configurer un prototype OpenWA/Baileys en mode
+   test explicite (`WHATSAPP_ENGINE=test` ou équivalent), jamais connecté à un
+   numéro utilisé par un prospect réel.
+2. Ouvrir T24-bis quand l'onboarding Meta Business Cloud API démarre.
+3. Quand l'agent `meet-coaching` et le skill `whisper-transcription` seront
+   priorisés, relire ADR-037 pour le détail du pipeline chunking/schéma structuré.
+4. Reste en attente : les 30+ autres repos du dossier REPO Github n'ont pas été
+   creusés au-delà du premier inventaire (cf. réponse en chat) — à reprendre si
+   Nacer veut aller plus loin sur l'un d'eux (ex. better-auth, impeccable/taste-skill).

@@ -86,7 +86,7 @@ Chaque fichier `Txx-nom.md` contient un **prompt complet copier-coller** à util
 | T21 | Page /policies (RGPD + mentions légales + cookies) | produit-spec + redacteur-voix + frontend-react | ⏳ pending | |
 | T22 | Traductions i18n complètes FR/EN/Darija | redacteur-voix + frontend-react | ⏳ pending | |
 | T23 | Architecture MCP providers (futur) | integrations | **sonnet** | ⏳ pending | Différé V3 |
-| T24 | WhatsApp Bot local Node.js whatsapp-web.js | integrations | **sonnet** | ⏳ pending | Différé V3 |
+| T24 | WhatsApp Bot local Node.js whatsapp-web.js | integrations | **sonnet** | ⏳ pending | Interne/test OK (ADR-038), réel = API officielle |
 | T25 | Stubs HubSpot/Stripe (avec MCP HubSpot natif) | integrations | ⏳ pending | |
 
 ### P8 — DevOps & Validation
