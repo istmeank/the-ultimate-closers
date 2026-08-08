@@ -32,7 +32,8 @@ migrations déjà appliquées sous un autre numéro.
 
 | Fichier | Version en production | Note |
 |---|---|---|
-| `00000000000001_baseline.sql` | `20260607194643` + `20260607194749` | Voir ci-dessous |
+| `20260607194643_tuc_v2_baseline.sql` | `20260607194643` | ✓ |
+| `20260607194749_tuc_v2_rls_policies_and_storage.sql` | `20260607194749` | ✓ |
 | `20260607194841_tuc_v2_security_hardening.sql` | `20260607194841` | ✓ |
 | `20260608163636_tuc_v2_enforce_lead_owner.sql` | `20260608163636` | ✓ |
 | `20260609175708_tuc_v2_vault_token_schema.sql` | `20260609175708` | ✓ |
@@ -44,21 +45,36 @@ migrations déjà appliquées sous un autre numéro.
 | `20260808162849_tuc_v2_manager_read_and_reassign.sql` | `20260808162849` | ✓ |
 | `20260808163211_tuc_v2_grant_founder_roles.sql` | `20260808163211` | ✓ |
 
-### La seule divergence restante : la baseline
+### La baseline, désormais découpée comme en production
 
-Le fichier `00000000000001_baseline.sql` est **monolithique**. En production, il
-correspond à deux migrations, parce que la première tentative d'application avait
-échoué : `has_role` y était créée avant la table `user_roles`, et PostgreSQL
-valide le corps d'une fonction `LANGUAGE SQL` dès sa création (LEARNING-011). Elle
-avait donc été découpée en trois.
+Le fichier monolithique `00000000000001_baseline.sql` a été remplacé par les deux
+migrations réellement exécutées. Il ne correspondait pas à la production et aurait
+échoué sur une base vierge : `has_role` y était créée avant la table `user_roles`,
+et PostgreSQL valide le corps d'une fonction `LANGUAGE SQL` dès sa création
+(LEARNING-011). C'est cet échec, en session 9, qui avait imposé le découpage.
 
-Le contenu SQL est équivalent, l'ordre d'exécution diffère. Sur une base neuve, le
-fichier monolithique **échouerait** pour la raison exacte qui avait imposé le
-découpage.
+**Contrôle de non-perte** effectué à la transposition : 17 tables, 41 politiques,
+41 index, 10 déclencheurs, 3 buckets — identiques de part et d'autre.
 
-**Conséquence pratique** : ce dossier ne reconstruit pas encore une base vierge en
-une passe. Découper la baseline en trois fichiers portant les versions de
-production reste à faire — c'est la dernière étape de BLOCKER-012.
+**Un écart révélé** : l'ancien fichier déclarait une fonction `soft_delete()` de
+plus. Elle **n'a jamais été déployée** — la production ne la connaît pas. Le
+fichier documentait donc une intention, pas l'état réel. Conséquence à garder en
+tête : les colonnes `deleted_at` existent et les politiques les filtrent, mais
+aucun déclencheur ne transforme un `DELETE` en suppression logique. Un `DELETE`
+supprime réellement la ligne. Si la suppression logique doit être garantie par la
+base plutôt que par l'application, cela reste à écrire.
+
+### Pourquoi `supabase migration squash` n'a pas été utilisé
+
+La commande existe pour ce cas, mais sa limitation est rédhibitoire ici : la
+documentation officielle précise que la consolidation **omet les instructions de
+manipulation de données — y compris les buckets de stockage et les secrets Vault**.
+Un squash aurait produit un fichier d'apparence propre reconstruisant une base
+sans les trois buckets et sans le compte fondateur. Une régression plus difficile
+à détecter que le problème qu'elle prétend résoudre.
+
+`supabase db pull` a le même angle mort : il capture le schéma, pas les données.
+Or les buckets *sont* des données, dans `storage.buckets`.
 
 ## Règle pour la suite
 
