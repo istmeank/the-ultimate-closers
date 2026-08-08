@@ -246,3 +246,46 @@ migration correspondante.
 ### Détection
 Écart relevé lors de l'audit T28 en croisant les types du front avec la baseline SQL.
 Aucun test ne le couvrait — aucun test n'existait.
+
+---
+
+## NOTE DE REGISTRE — 2026-08-08 (session 34) — Deux séries de numérotation, et un statut trompeur
+
+Signalé par Nacer : « il y a deux blocker h10 ».
+
+### 1. `BLOCKER-H10` apparaît deux fois — le blocage est CLOS
+- L'entrée d'ouverture (2026-06-09) porte encore `[ouvert]` **dans son titre**.
+- Sa résolution est l'entrée immédiatement suivante : session 19,
+  `REVOKE EXECUTE ON FUNCTION public.rls_auto_enable() FROM PUBLIC` (migration M4),
+  résultat : 0 advisor de sécurité sur le projet.
+
+**Statut faisant foi : CLOS depuis le 2026-06-09.** Aucune action requise.
+
+Le titre d'ouverture n'est pas corrigé en place : ce registre est append-only, et la
+protection l'a d'ailleurs refusé. C'est cette note qui fait foi. `BLOCKER-H10` est le
+seul blocage du fichier dont le titre d'ouverture affiche un statut — c'est ce qui le
+fait ressortir comme actif à toute relecture ou recherche, alors que les autres
+(001 à 005, 009) laissent leur clôture parler seule.
+
+**Leçon de forme** : ne pas inscrire de statut dans un titre au sein d'un registre
+append-only. Le statut vit dans le corps de l'entrée, ou dans une entrée de clôture.
+Un titre est immuable ; un statut ne l'est pas.
+
+### 2. `BLOCKER-H10` et `BLOCKER-010` sont deux blocages sans aucun rapport
+Deux séries cohabitent dans ce fichier :
+
+| Série | Origine | Membres | Sens |
+|---|---|---|---|
+| `H` + numéro | Audit sécurité de la baseline (sessions 7 à 19) | H8, H9, H10 | `H` = gravité **haute** dans le rapport `docs/security-audit-baseline.md` |
+| Numérique | Série générale du projet | 001 à 005, 008, 009, 010 | Ordre chronologique d'apparition |
+
+- `BLOCKER-H10` → fonction `rls_auto_enable` exécutable publiquement. **Clos.**
+- `BLOCKER-010` → le front utilise les rôles `developer` et `client`, absents de
+  l'enum `app_role`. **Ouvert**, conditionne T03.
+
+Aucun renommage : renommer un blocage historique réécrirait la mémoire.
+
+**Convention pour la suite** : la série `H` est close et ne sera pas rouverte. Tout
+nouveau blocage prend un numéro de la série générale, à partir de `BLOCKER-011`.
+Les numéros 006 et 007 n'ont jamais été attribués — le trou est historique, on ne le
+comble pas rétroactivement.
