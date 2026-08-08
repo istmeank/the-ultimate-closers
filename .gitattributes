@@ -1,0 +1,39 @@
+# Normalisation des fins de ligne — résout le BLOCKER "diff massif fantôme".
+#
+# Sans arbitrage, un dépôt écrit depuis Windows et depuis des outils Unix
+# produit des diffs de plusieurs centaines de fichiers dont le contenu visible
+# est identique. La première porte de la règle d'or — « relis ton diff » —
+# devient alors impraticable.
+#
+# Règle : LF dans le dépôt, conversion automatique à la sortie selon la plateforme.
+# Leçon empruntée à LULG tech (LEARNING-004), propagée ici en session 34.
+
+* text=auto eol=lf
+
+# Fichiers Windows qui doivent conserver CRLF sur le disque
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Scripts shell : LF strict, sinon ils ne s'exécutent pas
+*.sh text eol=lf
+
+# Binaires : aucune conversion
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.svg text eol=lf
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.docx binary
+*.xlsx binary
+*.pptx binary
+*.lockb binary
