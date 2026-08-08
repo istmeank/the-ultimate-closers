@@ -1166,3 +1166,30 @@ le garde-fou automatisé, les tests, et la décision consignée. ADR-025 était 
 3. Enchaîner sur P0 : T01 (chiffrement des tokens OAuth) puis T02 (rate limiting).
 4. Remonter à SILICATE la suggestion de LEARNING-087 : mécanisme de circulation
    des leçons entre entités sœurs (squelette v0.7).
+
+### Session 34 — levée de réserve (2026-08-08, même jour)
+
+La quatrième porte de la règle d'or, annoncée comme non franchie ci-dessus, l'a été
+sur le poste de Nacer après réinstallation complète de `node_modules` :
+
+```
+npm run verify
+  1/4 abstraction ......... vert (dette tolérée : 1 fichier d'exemple non routé)
+  2/4 tsc --noEmit ........ vert (aucune erreur)
+  3/4 vitest run .......... 83 tests / 3 fichiers — vert
+  4/4 vite build .......... vert — built in 1m 22s
+```
+
+**T28 est close.** Les tâches T01 à T27 peuvent s'exécuter en respectant la règle
+d'abstraction, désormais tenue par un garde-fou et non par une convention.
+
+Deux observations relevées à cette occasion, sans lien avec T28, consignées en
+SUGGESTIONS :
+- le bundle JavaScript pèse 1,47 Mo (415 Ko compressés) en un seul morceau ;
+- `logo.png` pèse 1,48 Mo, soit davantage que tout le code de l'application.
+
+Incident d'environnement à retenir : ma tentative d'installer vitest depuis le
+montage réseau a laissé un `node_modules` amputé, puis un fichier de types tronqué
+que `npm install` seul ne réparait pas — npm considère un paquet présent comme
+valide et ne revérifie pas son contenu. Seule la suppression complète du dossier a
+résolu le problème (LEARNING-088).

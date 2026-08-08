@@ -31,3 +31,40 @@
 **Suggestion** : ajouter au squelette Silicate un registre partagé au niveau de l'incubateur — par exemple `SILICATE INCUBATEUR/docs/LEARNINGS-RESEAU.md` — où remontent les leçons transverses, celles qui ne dépendent ni du langage ni du domaine (outillage Git, conventions de fins de ligne, pièges de gabarit shadcn, pratiques AEO). Chaque entité y puiserait à son bootstrap.
 
 **Non appliquée** — relève d'une décision de Nacer sur le squelette Silicate, hors périmètre d'un dépôt.
+
+---
+
+## SUGGESTION — 2026-08-08 — Poids du bundle et de l'image de logo
+
+**Émetteur** : session 34 (clôture T28), à partir de la sortie de `vite build`.
+
+**Constat** :
+- `dist/assets/index-*.js` — **1 466 Ko** (415 Ko compressés) en un seul fragment.
+  Vite émet l'avertissement au-delà de 500 Ko.
+- `dist/assets/logo-*.png` — **1 476 Ko**. Le logo pèse plus lourd que la totalité
+  du code de l'application.
+
+**Pourquoi cela compte ici plus qu'ailleurs** : le marché visé est l'Algérie et la
+diaspora, souvent sur réseau mobile. Trois mégaoctets avant le premier affichage,
+c'est plusieurs secondes d'écran blanc. Cela pèse aussi sur les Core Web Vitals,
+donc sur le référencement — y compris sur le travail AEO de la session 33.
+
+**Suggestion** :
+1. Convertir le logo en WebP ou SVG, et le redimensionner à son usage réel. Un
+   logo d'en-tête n'a aucune raison d'être servi en 1,5 Mo — gain attendu de plus
+   de 95 % pour un rendu identique.
+2. Découper le bundle : `manualChunks` pour isoler les dépendances lourdes
+   (`recharts`, `@supabase/supabase-js`, Radix), et importer dynamiquement les
+   routes d'administration et de tableau de bord, que les visiteurs publics ne
+   chargent jamais.
+3. Mesurer avant/après au Lighthouse pour disposer d'un point de comparaison.
+
+**Le point 1 seul justifie déjà le déplacement** : c'est une compression d'image,
+sans risque de régression.
+
+**Urgence** : normale — aucune panne, mais dégradation directe de l'expérience et
+du référencement.
+
+**Non appliquée** — relève d'une tâche de backlog dédiée (candidate P7 Polish),
+avec `frontend-react` en responsable.
+**Statut** : en attente
