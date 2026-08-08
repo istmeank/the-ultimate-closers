@@ -301,3 +301,131 @@ sécurité sans contrepartie.
 
 ### Lien
 BLOCKER-010 · ADR-001 (RBAC initial, complétée et non contredite) · T03
+
+---
+
+## ADR-037 — meet-coaching : réutilisation sélective du pipeline meetily (Zackriya Solutions)
+
+**Date** : 2026-08-08
+**Session** : 35 (Cowork)
+**Statut** : Actif
+**Décideur** : Nacer (« on prend ce qui est bon et on laisse ce qui ne l'est pas »)
+
+### Contexte
+Repo externe `meetily` (github.com/Zackriya-Solutions/meeting-minutes, MIT) inspecté
+dans `D:\Hp\Telechargement\REPO Github\`. C'est une app desktop (Tauri/Rust, macOS/
+Windows) qui capture et résume des réunions en local via Whisper. `JOURNAL.md`
+(session Vague 3, ligne ~293) prévoyait déjà l'agent `meet-coaching` avec un skill
+`whisper-transcription` à créer — meetily ne contredit rien, il documente une
+implémentation concrète de la même idée.
+
+### Décision
+On retient de meetily **le pipeline de traitement**, pas l'application :
+
+**À garder (référence pour le futur skill `whisper-transcription` /
+agent `meet-coaching`)** :
+- Découpage d'un long transcript en chunks avec chevauchement
+  (`backend/app/transcript_processor.py` : chunk_size ~5000 car., overlap ~1000)
+  pour tenir dans le contexte du modèle sans perdre la continuité aux frontières.
+- Sortie structurée validée par schéma (Pydantic `SummaryResponse`) plutôt que du
+  texte libre — directement transposable en schéma Zod côté TUC pour la critique
+  post-meet (3 forts + 2 axes + 1 réf éthique, format déjà fixé en Vague 3-4).
+- Le principe *privacy-first* : transcription qui peut tourner sans envoyer les
+  conversations prospect à un tiers non maîtrisé — aligné avec le véto n°3 des
+  valeurs TUC (pas de stockage sensible non maîtrisé).
+
+**À laisser** :
+- L'app desktop Tauri/Rust et toute son UI — TUC est une SPA web (React/Vite/
+  Supabase/Vercel), un client desktop séparé ajouterait une stack entière à
+  maintenir pour rien.
+- La compilation locale de whisper.cpp (scripts GPU/CPU par OS) — hors sujet pour
+  un backend hébergé ; si le besoin de coût/latence se pose, arbitrage futur entre
+  Whisper API (cloud, simple) et un service Whisper self-hosted (économique à
+  volume, plus de maintenance).
+- Le schéma SQLite et la couche offre commerciale « PRO » — non pertinentes.
+
+### Conséquences
+Aucun code copié à ce stade. Cette entrée sert de référence quand le skill
+`whisper-transcription` et l'agent `meet-coaching` seront réellement implémentés
+(toujours en attente, cf. LEARNING-036). Le choix concret Whisper API vs self-hosted
+reste ouvert et devra faire l'objet de son propre arbitrage le moment venu.
+
+### Alternatives écartées
+- Faire tourner meetily tel quel en service séparé appelé par TUC — écarté : stack
+  Rust/Tauri hors du périmètre technique de TUC, coût de maintenance disproportionné
+  pour un besoin qui se résume à « transcrire + résumer en JSON structuré ».
+
+### Lien
+JOURNAL.md (Vague 3, agent meet-coaching + LEARNING-036) · agent `meet-coaching`
+(à activer) · skill `whisper-transcription` (à créer)
+
+---
+
+## ADR-038 — WhatsApp : Baileys/whatsapp-web.js autorisé en interne/test, API Business officielle obligatoire pour tout envoi réel
+
+**Date** : 2026-08-08
+**Session** : 35 (Cowork)
+**Statut** : Actif — amende T24 (ne le supersede pas entièrement)
+**Décideur** : Nacer (arbitrage sur conflit signalé avec T24)
+
+### Contexte
+Repo externe `OpenWA` (github.com/rmyndharis/OpenWA, MIT) inspecté dans
+`D:\Hp\Telechargement\REPO Github\` : gateway WhatsApp self-hosted en NestJS +
+TypeORM/Postgres, moteurs Baileys et whatsapp-web.js (non officiels, simulent un
+client WhatsApp Web — risque de ban Meta à volume commercial).
+
+Nacer a d'abord proposé d'utiliser cette voie pour le MVP puis de migrer vers l'API
+officielle. Ceci contredisait T24 (`taches-a-faire/T24-whatsapp-bot-local.md`), qui
+différait tout bot WhatsApp non-officiel à V3 et imposait l'API Business Cloud dès
+le premier envoi, précisément pour éviter ce risque de ban. Le conflit a été signalé
+avant toute action ; Nacer a tranché entre trois options (garder T24 tel quel,
+réviser T24 pour le MVP, ou nuancer) via question à choix.
+
+### Décision
+**Nuance retenue** : Baileys/whatsapp-web.js (via OpenWA ou équivalent) est
+**autorisé pour prototyper en interne uniquement** — flux de test, numéros internes,
+jamais un prospect réel. **L'API WhatsApp Business Cloud officielle reste
+obligatoire avant tout envoi à un vrai prospect**, avec opt-in tracé
+(`whatsapp_optins`) et validation `gardien-valeurs`. T24 n'est donc pas remplacé :
+son exigence centrale (pas d'envoi réel sans API officielle) est confirmée, seule
+la possibilité de prototyper en amont avec une lib non-officielle est ajoutée.
+
+### Conséquences
+- Le prototype interne peut démarrer sans attendre l'onboarding Meta Business
+  (souvent lent : vérification d'entreprise, templates à faire approuver).
+- Aucun numéro de prospect réel ne doit transiter par le moteur Baileys/
+  whatsapp-web.js — à faire respecter par `gardien-valeurs` et par une variable de
+  configuration explicite (ex. `WHATSAPP_ENGINE=test` vs `official`) plutôt qu'une
+  simple convention non vérifiable.
+- T24 passe de « différé V3 » à « prototype interne possible dès maintenant, envoi
+  réel toujours bloqué sur l'API officielle ». Mise à jour reflétée dans
+  `taches-a-faire/T24-whatsapp-bot-local.md` et `taches-a-faire/README.md`.
+- Le ticket T24-bis (migration API Business officielle pour la prod) reste à ouvrir
+  quand on s'en approche.
+
+### Alternatives écartées
+- Utiliser Baileys/whatsapp-web.js pour le MVP en production (proposition initiale
+  de Nacer) — écarté : risque de ban du canal WhatsApp d'un closer en pleine
+  activité commerciale, contradiction directe avec T24 et avec le véto compliance
+  déjà posé.
+- Garder T24 strictement inchangé, sans possibilité de prototyper — écarté : bloque
+  tout travail d'intégration avant l'onboarding Meta, qui peut prendre des semaines.
+
+### Lien
+T24 (`taches-a-faire/T24-whatsapp-bot-local.md`) · skill `whatsapp-business-cloud-api`
+· agent `gardien-valeurs` · agent `integrations`
+
+### ADR-036 — complément du 2026-08-08 : rôle apprenant définitivement écarté
+
+Le critère de réouverture posé plus haut est tranché. Nacer : « pour le CRM et
+l'Académie ça sera deux sites différents avec chacune son auth ».
+
+Authentifications séparées ⇒ un apprenant de l'Academy n'existe pas dans
+`auth.users` du CRM. Un rôle `student` y serait inutilisable par construction.
+**Décision : pas de rôle apprenant dans `app_role`.** L'enum reste à sept valeurs.
+
+Conséquence à anticiper : le jour où un apprenant certifié devient closer, il
+créera un second compte sur le CRM. Aucun lien automatique entre les deux
+identités. Si ce lien devient nécessaire — reprendre l'historique de formation
+dans le profil du closer — il se fera par une correspondance explicite (adresse
+courriel ou identifiant de certification), pas par un rôle partagé.
