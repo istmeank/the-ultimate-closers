@@ -364,3 +364,100 @@ Documentation : https://supabase.com/docs/guides/auth/password-security
 Le premier compte protégé est celui qui détient tous les droits. Et une plateforme
 qui manipule des données de prospects ne peut pas laisser à ses propres utilisateurs
 le soin de deviner ce qu'est un mot de passe sûr.
+
+## BLOCKER-012 — `supabase/migrations/` du repo Git désynchronisé de la base Supabase live
+- Date : 2026-08-08
+- Domaine : transverse (sécurité / intégrité du repo)
+- Session : 36 (réconciliation des 28 tâches `taches-a-faire/`, orchestrateur-silicate)
+- Symptôme : `mcp__supabase__list_migrations` sur le projet live (`llxgyomevketvypusafl`) liste 12 migrations,
+  dont 4 absentes du dossier `supabase/migrations/` du repo Git :
+  - `20260609175708_tuc_v2_vault_token_schema`
+  - `20260609180402_tuc_v2_vault_rbac_hardening`
+  - `20260609185416_tuc_v2_drop_permissive_insert_policies`
+  - `20260609185757_tuc_v2_revoke_rls_auto_enable_public`
+  Conséquence directe : le fichier local `00000000000001_baseline.sql` contient encore des colonnes
+  `access_token`/`refresh_token TEXT` avec des commentaires `-- TODO BLOCKER-001 : chiffrer` (lignes 262-263,
+  378-379), et les policies RLS permissives `call_bookings_insert_public` / `site_analytics_insert_anyone`
+  (lignes 488, 649) — alors que **la base live est correctement sécurisée** : vérifié par requête directe
+  (`information_schema.columns` sur `closer_integrations`/`google_calendar_tokens` → colonnes
+  `access_token_secret_id`/`refresh_token_secret_id UUID`, pas de TEXT en clair).
+- **Important — ce n'est PAS une régression de sécurité en production.** BLOCKER-001, H8 et H9 sont bien résolus
+  sur la base réellement utilisée par l'application. Le risque est différent : quiconque reconstruit un
+  environnement (dev, staging, disaster recovery) à partir du seul repo Git obtiendrait le schéma non sécurisé
+  d'avant session 18-19, sans avertissement.
+- Cause probable : les migrations M1-M4 de la session 18-19 ont été appliquées via `apply_migration` (MCP Supabase)
+  directement sur le projet live, sans export/commit correspondant dans le repo Git.
+- Statut : ouvert — à traiter par `database-postgres` : soit `supabase db pull` pour rapatrier les 4 migrations
+  manquantes telles qu'appliquées live, soit une migration de rattrapage explicite si le pull n'est pas fiable.
+  Ne pas éditer `00000000000001_baseline.sql` déjà appliqué (méthodology-guard) — créer les migrations manquantes
+  ou une migration de rattrapage à la place.
+
+---
+
+## BLOCKER-012 — statut : RÉSOLU (2026-08-08, session 34)
+
+Dépôt et production réconciliés : **12 fichiers, 12 migrations, correspondance exacte**.
+
+**Ce qui a été fait**, sur autorisation explicite de Nacer à chaque étape :
+1. Six migrations de sécurité restaurées mot pour mot depuis
+   `supabase_migrations.schema_migrations` (`security_hardening`,
+   `enforce_lead_owner`, `vault_token_schema`, `vault_rbac_hardening`,
+   `drop_permissive_insert_policies`, `revoke_rls_auto_enable_public`).
+2. Trente migrations Lovable de 2025 supprimées — jamais appliquées sur TUC-v2, et
+   leurs horodatages les plaçaient **avant** la baseline censée les remplacer.
+   Récupérables dans l'historique Git.
+3. Quatre fichiers renommés pour porter la version exacte de la production.
+4. Baseline monolithique remplacée par les deux migrations réellement exécutées.
+   Non-perte vérifiée : 17 tables, 41 politiques, 41 index, 10 déclencheurs,
+   3 buckets de part et d'autre.
+
+`supabase migration squash` écarté : il omet les instructions de données, buckets
+et secrets Vault compris (LEARNING-093).
+
+Commits : `28a726d`, `9af667c`, `fba6196`. Correspondance documentée dans
+`supabase/migrations/README.md`.
+
+---
+
+## BLOCKER-013 — La suppression logique n'est garantie par rien
+**Ouvert** — 2026-08-08 (session 34)
+**Gravité** : moyenne — aucune donnée en production aujourd'hui, mais l'écart
+entre l'architecture documentée et le comportement réel est total
+
+### Constat
+ADR-001 annonce la suppression logique (`deleted_at`) sur `leads`, `appointments`
+et `deals`. Les colonnes existent, les politiques les filtrent, les index partiels
+sont en place.
+
+Mais la fonction `soft_delete()` déclarée dans l'ancienne baseline du dépôt
+**n'a jamais été déployée** — absente de `pg_proc`. Aucun déclencheur ne
+transforme un `DELETE` en `UPDATE deleted_at`.
+
+En conséquence, `leads_delete_admin_owner` permet à un administrateur ou à un
+owner de supprimer réellement un lead. Idem pour les rendez-vous et les affaires
+par cascade.
+
+### Ce que ça coûte
+La suppression logique existe dans les colonnes et dans le discours, pas dans le
+moteur. Elle repose entièrement sur la discipline de l'application : si un jour un
+service appelle `.delete()` au lieu d'écrire `deleted_at`, la donnée disparaît
+sans trace ni possibilité de restauration. C'est aussi un point de fragilité pour
+une éventuelle obligation de conservation.
+
+### Décision attendue de Nacer
+Deux voies, à trancher :
+1. **Garantir par la base** — déclencheur `BEFORE DELETE` sur les trois tables
+   convertissant la suppression en `UPDATE deleted_at`. La donnée devient
+   indestructible par l'API, ce qui suppose une procédure d'effacement définitif
+   distincte (nécessaire pour le droit à l'effacement RGPD).
+2. **Assumer la discipline applicative** — la couche services (ADR-025) n'expose
+   aucune méthode `delete` physique, et un test le garantit. Plus léger, mais la
+   protection dépend du code, pas du moteur.
+
+Tant que ce n'est pas tranché, l'ADR-001 décrit une propriété que la base n'a pas.
+
+### Détection
+Relevé lors de la transposition de la baseline (BLOCKER-012), en comparant le
+nombre de fonctions déclarées dans le fichier et présentes dans `pg_proc`.
+Aucun test ne le couvrait — l'audit portait sur les fichiers, pas sur la base
+(LEARNING-094).
