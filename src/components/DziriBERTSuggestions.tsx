@@ -66,7 +66,7 @@ export const DziriBERTSuggestions = ({
 
   if (isAvailable === false) {
     return (
-      <Card className="tuc-ai-surface relative overflow-hidden rounded-[var(--radius)] bg-surface-1">
+      <Card className="tuc-tech-panel relative overflow-hidden">
         {/* Gradient background */}
         
         
@@ -74,7 +74,7 @@ export const DziriBERTSuggestions = ({
         
 
         <CardHeader className="relative z-10">
-          <CardTitle className="flex items-center gap-2 text-accent">
+          <CardTitle className="flex items-center gap-2 text-tech-strong">
             <Sparkles className="h-5 w-5" />
             DziriBERT - Suggestions Darija
           </CardTitle>
@@ -90,7 +90,7 @@ export const DziriBERTSuggestions = ({
   }
 
   return (
-    <Card className="tuc-ai-surface relative overflow-hidden rounded-[var(--radius)] bg-surface-1">
+    <Card className="tuc-tech-panel relative overflow-hidden">
       {/* Gradient background */}
       
       
@@ -98,7 +98,7 @@ export const DziriBERTSuggestions = ({
       
 
       <CardHeader className="relative z-10">
-        <CardTitle className="flex items-center gap-2 text-accent">
+        <CardTitle className="flex items-center gap-2 text-tech-strong">
           <Sparkles className="h-5 w-5" />
           DziriBERT - Suggestions Darija
         </CardTitle>
@@ -134,7 +134,7 @@ export const DziriBERTSuggestions = ({
                 return (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-3 border rounded-lg border-hairline hover:bg-accent/[0.06] transition-colors"
+                    className="flex items-center justify-between p-3 border rounded-lg border-hairline hover:bg-tech-soft/60 transition-colors"
                   >
                     <div className="flex-1">
                       <p className="font-medium text-foreground">{completed}</p>

@@ -17,9 +17,15 @@
              malachite.
    MALACHITE = l'institution. Encre en thème clair, matière du fond en thème
              sombre. C'est la couleur qui porte la marque.
-   VIOLET  = l'IA, et rien d'autre. Chatbot, scoring, ANK, DziriBERT. Il ne
-             décore jamais. Sur fond malachite il doit être éclairci à #C79BFA
-             ou plus clair — #A855F7 y tombe à 2,43.
+   VIOLET  = le volet technologique. C'est le troisième accent structurel de la
+             marque, au même rang que l'or et le malachite — pas une exception
+             rare. TUC est un cabinet de closing *augmenté par l'IA* : partout
+             où la machine agit, le violet le dit. Scoring, chatbot darija,
+             automatisation, moteur ANK, DziriBERT, suggestions, audit de
+             tunnel. Ce qu'il ne fait jamais, c'est décorer : il ne se pose pas
+             sur une personne, une valeur humaine ou un ornement.
+             Sur fond malachite il doit être éclairci à #C79BFA ou plus clair —
+             #A855F7 y tombe à 2,43:1.
 
    ── ÉCHELLE VERTE ───────────────────────────────────────────────────────────
    Le thème sombre n'est pas un gris : c'est du malachite profond, saturé.
@@ -82,14 +88,24 @@
     --bordeaux: 5 53% 32%;           /* #7B2D26 */
     --bordeaux-soft: 8 43% 90%;      /* #F0DCD9 */
 
-    /* --- IA : violet assombri pour rester lisible sur le crème ---------- */
+    /* --- VOLET TECHNOLOGIQUE : échelle violette complète ------------------
+     * Traitée comme le malachite et l'or : un fond, un filet, un texte, un
+     * remplissage. Une couleur structurelle a besoin d'une échelle, pas d'une
+     * seule valeur. */
+    --tech: 271 70% 42%;             /* Texte et icônes sur clair — 8,3:1 */
+    --tech-strong: 271 60% 30%;      /* Titres, remplissages appuyés */
+    --tech-soft: 263 48% 95%;        /* Violet ANK clair #F0EBF8 — fond de bloc */
+    --tech-line: 271 45% 66%;        /* Filet violet — 3,1:1 sur blanc (WCAG 1.4.11) */
+    --tech-foreground: 44 30% 95%;   /* Ce qu'on écrit sur un aplat violet */
+
+    /* `accent` reste l'alias shadcn du volet technologique. */
     --accent: 271 70% 42%;
     --accent-foreground: 44 30% 95%;
-    /* Violet IA posé sur une surface sombre (sections à photo) — identique dans
-       les deux thèmes, car ces sections ne suivent pas le thème. #C79BFA. */
-    --accent-ondark: 268 88% 80%;
+    /* Violet posé sur une surface sombre (sections à photo, voile malachite) —
+       identique dans les deux thèmes, ces surfaces ne suivent pas le thème. */
+    --accent-ondark: 268 88% 80%;    /* #C79BFA */
     --ank: 271 70% 42%;
-    --ank-soft: 263 48% 95%;         /* Violet ANK clair #F0EBF8 */
+    --ank-soft: 263 48% 95%;
 
     /* --- Neutres --------------------------------------------------------- */
     --muted: 42 33% 94%;
@@ -191,8 +207,16 @@
      * 2,43 sur le malachite, il devient illisible. Ici il vit, il se lit, et il
      * désigne toujours la même chose : la machine.
      */
-    --accent: 268 88% 80%;           /* ≈ #C79BFA */
-    --accent-foreground: 271 60% 14%;
+    /* Sur le malachite profond, le violet respire : c'est là qu'il porte le
+     * mieux le volet technologique de la marque. */
+    --tech: 268 88% 80%;             /* ≈ #C79BFA — 7,7:1 sur --card */
+    --tech-strong: 268 92% 87%;
+    --tech-soft: 268 45% 20%;        /* Fond de bloc technologique */
+    --tech-line: 268 55% 55%;        /* Filet violet — 3,1:1 sur --card (WCAG 1.4.11) */
+    --tech-foreground: 271 60% 12%;
+
+    --accent: 268 88% 80%;
+    --accent-foreground: 271 60% 12%;
     --accent-ondark: 268 88% 80%;
     --ank: 268 88% 80%;
     --ank-soft: 268 45% 20%;
@@ -348,13 +372,25 @@
   }
 
   /*
-   * Surface IA — le violet ne décore pas, il désigne la machine.
-   * À réserver aux blocs ANK, DziriBERT, chatbot et scoring.
+   * VOLET TECHNOLOGIQUE — brique de premier rang, au même niveau que .tuc-panel.
+   * Tout ce que la machine produit ou pilote se pose là-dessus : scoring,
+   * chatbot darija, automatisation, ANK, DziriBERT, audit de tunnel.
    */
-  .tuc-ai-surface {
-    @apply border border-accent/35 bg-accent/[0.06];
+  .tuc-tech-panel {
+    @apply rounded-[var(--radius)] border border-tech-line bg-tech-soft/50;
   }
-  .tuc-ai-label {
-    @apply inline-flex items-center gap-1.5 text-[0.6875rem] font-medium uppercase tracking-[0.12em] text-accent;
+
+  /* Variante légère, pour un bloc technologique posé dans un flux ordinaire. */
+  .tuc-tech-surface {
+    @apply border border-tech-line/70 bg-tech-soft/35;
   }
+
+  /* Étiquette « c'est la machine qui parle ». Toujours doublée d'un mot. */
+  .tuc-tech-label {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-tech-line/60 bg-tech-soft/60 px-2 py-0.5 text-[0.6875rem] font-medium uppercase tracking-[0.12em] text-tech;
+  }
+
+  /* Alias historiques. */
+  .tuc-ai-surface { @apply tuc-tech-surface; }
+  .tuc-ai-label { @apply tuc-tech-label; }
 }

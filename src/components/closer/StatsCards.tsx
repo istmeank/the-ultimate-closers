@@ -52,8 +52,9 @@ export const StatsCards = () => {
       title: 'Prospects chauds',
       value: stats?.hotLeads ?? 0,
       icon: Flame,
+      // Sortie du moteur de scoring : le violet le dit.
       description: 'Score ≥ 75',
-      tone: 'text-gold-ink',
+      tone: 'text-tech',
     },
     {
       title: 'RDV à venir',

@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { RefreshCw, CheckCircle2, Flame, Thermometer, Snowflake } from 'lucide-react';
+import { RefreshCw, CheckCircle2, Flame, Thermometer, Snowflake, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { integrationsService } from '@/lib/services/integrations.service';
 import { useToast } from '@/hooks/use-toast';
@@ -61,6 +61,13 @@ export const LeadCard = ({ deal, hubspotSynced = false, onSyncSuccess }: LeadCar
   const temperature = resolveTemperature(lead.score, lead.temperature_override);
   const TemperatureIcon = TEMPERATURE_ICON[temperature];
   const isQualified = lead.qualification === 'qualifie';
+  /*
+   * Sans arbitrage humain, la température est déduite du score par le moteur de
+   * scoring. Le violet le signale — le closer doit savoir à tout instant si ce
+   * qu'il lit vient de lui ou de la machine. C'est le volet technologique de
+   * TUC rendu visible là où il compte : dans la décision.
+   */
+  const isMachineDerived = lead.temperature_override == null;
 
   const handleSyncToHubSpot = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -108,9 +115,20 @@ export const LeadCard = ({ deal, hubspotSynced = false, onSyncSuccess }: LeadCar
         </h4>
         <span
           className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-1.5 py-0.5 text-2xs font-medium ${TEMPERATURE_CHIP_CLASS[temperature]}`}
+          title={
+            isMachineDerived
+              ? `Température déduite du score (${lead.score}/100) par le moteur de scoring`
+              : 'Température fixée par le closer'
+          }
         >
           <TemperatureIcon className="h-3 w-3" aria-hidden="true" />
           {LEAD_TEMPERATURE_LABELS[temperature]}
+          {isMachineDerived && (
+            <>
+              <Sparkles className="h-2.5 w-2.5 text-tech" aria-hidden="true" />
+              <span className="sr-only">déduite par le moteur de scoring</span>
+            </>
+          )}
         </span>
       </div>
 

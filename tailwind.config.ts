@@ -51,6 +51,17 @@ export default {
           DEFAULT: "hsl(var(--bordeaux))",
           soft: "hsl(var(--bordeaux-soft))",
         },
+        /*
+         * Volet technologique — troisième accent structurel de TUC, au même
+         * rang que le malachite et l'or. Il marque tout ce que la machine fait.
+         */
+        tech: {
+          DEFAULT: "hsl(var(--tech))",
+          strong: "hsl(var(--tech-strong))",
+          soft: "hsl(var(--tech-soft))",
+          line: "hsl(var(--tech-line))",
+          foreground: "hsl(var(--tech-foreground))",
+        },
         ank: {
           DEFAULT: "hsl(var(--ank))",
           soft: "hsl(var(--ank-soft))",

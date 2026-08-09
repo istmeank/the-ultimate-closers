@@ -70,7 +70,7 @@ prestige.
 | Or pâle (fond) | `#F5EBD0` |
 | Crème (fond principal clair) | `#FAF6E9` |
 | Bordeaux (alerte douce) | `#7B2D26` |
-| Violet ANK (IA) | `#2C1654` profond · `#C79BFA` clair |
+| Violet — volet technologique | `#2C1654` profond · `#7C3AAD` texte sur clair · `#C79BFA` sur sombre |
 | Noir profond | `#1A1A1A` |
 | Gris texte | `#3B3838` |
 
@@ -80,8 +80,12 @@ prestige.
   tombe à 1,5:1. Le texte posé sur l'or est malachite.
 - **Le malachite est l'institution.** Encre du texte en thème clair, matière du fond en thème
   sombre. C'est lui qui porte la marque.
-- **Le violet est l'IA, et rien d'autre.** Chatbot, scoring, moteur ANK. Il ne décore jamais. S'il
-  apparaît ailleurs que sur une fonctionnalité d'intelligence artificielle, c'est une faute.
+- **Le violet est le volet technologique**, et c'est un pilier de la marque, pas une exception
+  rare. TUC est un cabinet de closing *augmenté par l'IA* : partout où la machine agit, le violet
+  le dit — scoring, chatbot darija, automatisation, moteur ANK, audit de tunnel. Traite-le comme
+  un troisième accent structurel, au même rang que l'or et le malachite, avec sa propre échelle
+  (fond, filet, texte, aplat). Ce qu'il ne fait jamais, c'est décorer : il ne se pose ni sur une
+  personne, ni sur une valeur humaine, ni sur un ornement.
 
 Typographie : **Playfair Display** sur les titres — marqueur d'identité, non négociable —
 **Inter** sur le corps et l'interface.
@@ -95,7 +99,7 @@ Typographie : **Playfair Display** sur les titres — marqueur d'identité, non 
 - Compte à rebours, « dernières places », toute urgence fabriquée.
 - Promesses chiffrées sans source.
 - Emojis.
-- Le violet employé comme atmosphère.
+- Le violet employé comme atmosphère ou comme décor — il désigne la machine, il ne décore rien.
 
 ## Ce que je te demande de produire
 
@@ -116,7 +120,10 @@ pipeline en colonnes (7 stades), cartes prospect, bandeau de 4 indicateurs, jour
 Densité d'information, largeur de colonne, ce qu'une carte doit dire en un coup d'œil, dans quel
 ordre. Où placer l'unique veine kintsugi.
 
-**4. Le thème sombre.** Il n'est pas une inversion du clair. Décris l'échelle de surfaces — fond,
+**4. Le thème sombre.** C'est là que le volet technologique respire le mieux : dis comment le
+violet y devient structurel sans écraser le malachite.
+
+**4 bis.** Il n'est pas une inversion du clair. Décris l'échelle de surfaces — fond,
 panneau, panneau élevé, filet — en malachite profond, et dis comment l'or et le violet s'y
 comportent.
 

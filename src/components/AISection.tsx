@@ -49,7 +49,7 @@ const AISection = () => {
               
               <div className="relative z-10 flex flex-col items-center text-center gap-4">
                 <div className="p-4 rounded-full bg-accent-ondark/15 border-2 border-accent-ondark/70 group-hover:border-gold group-hover:rotate-12 transition-all">
-                  <Icon className="w-10 h-10 text-accent-ondark group-hover:text-gold transition-colors" />
+                  <Icon className="w-10 h-10 text-accent-ondark group-hover:text-accent-ondark transition-colors" />
                 </div>
                 <h3 className="font-inter font-bold text-lg text-white">
                   {t(key)}
