@@ -31,6 +31,9 @@ const DashboardCloser = () => {
         </div>
       </div>
       
+      {/* Veine kintsugi — ornement unique de TUC, une seule visible par écran. */}
+      <hr className="tuc-kintsugi" aria-hidden="true" />
+
       <StatsCards />
       <KanbanBoard />
     </div>

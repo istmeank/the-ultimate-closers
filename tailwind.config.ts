@@ -34,10 +34,13 @@ export default {
           foreground: "hsl(var(--secondary-foreground))",
         },
         gold: {
+          /* Remplissage. Ne porte jamais de texte sur le crème (1,50:1). */
           DEFAULT: "hsl(var(--gold))",
           strong: "hsl(var(--gold-strong))",
           soft: "hsl(var(--gold-soft))",
           glow: "hsl(var(--gold-glow))",
+          /* Le seul or lisible en texte : sombre sur clair, vif sur sombre. */
+          ink: "hsl(var(--gold-ink))",
         },
         malachite: {
           DEFAULT: "hsl(var(--malachite))",
@@ -71,6 +74,8 @@ export default {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
+          /* Violet IA lisible sur une surface sombre (#C79BFA). */
+          ondark: "hsl(var(--accent-ondark))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -98,15 +103,13 @@ export default {
       },
       fontFamily: {
         /*
-         * Charte TUC §4 : Cambria, police unique de la marque. Elle est livrée
-         * avec Office et présente sur les postes Windows/macOS de l'écosystème
-         * TUC. Source Serif 4 prend le relais ailleurs — même famille de serif
-         * de lecture, même intention « journal / institution académique ».
-         * Playfair Display est écarté (serif de mode, contraste décoratif).
+         * Playfair Display sur les titres — marqueur d'identité TUC, imposé par
+         * le référentiel d'interface, pas une préférence. Cambria reste la
+         * police des documents (BP, deck), elle n'a pas cours ici.
          */
-        display: ['Cambria', 'Source Serif 4', 'Georgia', 'Times New Roman', 'serif'],
-        /* Alias historique : `font-playfair` reste valide et rend la police de la charte. */
-        playfair: ['Cambria', 'Source Serif 4', 'Georgia', 'Times New Roman', 'serif'],
+        display: ['Playfair Display', 'Georgia', 'serif'],
+        /* Alias historique conservé pour ne pas casser d'anciennes classes. */
+        playfair: ['Playfair Display', 'Georgia', 'serif'],
         inter: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
       },
       fontSize: {

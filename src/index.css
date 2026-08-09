@@ -5,208 +5,232 @@
 /* ============================================================================
    THE ULTIMATE CLOSERS — SYSTÈME DE DESIGN
    ----------------------------------------------------------------------------
-   Source de vérité : « Charte Graphique TUC.md » (verrouillée par ADR-012) et la
-   palette réellement employée dans le pitch deck Prix Président v9.
+   Sources, par ordre d'autorité :
+     1. Skill `ux-ui-nacer` — référentiel d'interface (jetons de production,
+        rôles chromatiques, contrastes calculés, ornement autorisé).
+     2. « Charte Graphique TUC.md » (ADR-012) — palette de marque.
+     3. Palette réellement employée dans le pitch deck Prix Président v9.
 
-   Palette de référence (hex → HSL, toutes les couleurs sont en HSL ici) :
-     Malachite profond  #0E5E4E   dominante
-     Malachite moyen    #2F7569   accents, liens, citations
-     Malachite clair    #E8F0EC   fond positif
-     Or mat             #B8923A   luxe discret
-     Or sombre          #8B6F1E   titres dorés
-     Or pâle            #F5EBD0   fond information
-     Crème              #FAF6E9   fond chaleureux primaire
-     Crème accent       #F5EFDC   variante
-     Bordeaux           #7B2D26   héritage, alerte douce
-     Bordeaux clair     #F0DCD9   fond alerte
-     Violet ANK profond #2C1654   identité ANK — IA uniquement
-     Violet ANK clair   #F0EBF8
-     Noir profond       #1A1A1A   titres
-     Gris doux          #3B3838   corps de texte
-     Bordure beige      #D4CFC2
+   ── LES TROIS RÔLES CHROMATIQUES ────────────────────────────────────────────
+   OR      = l'action. Il remplit un bouton, il n'écrit jamais sur le crème
+             (or sur crème = 1,50 : échec total). Le texte posé dessus est
+             malachite.
+   MALACHITE = l'institution. Encre en thème clair, matière du fond en thème
+             sombre. C'est la couleur qui porte la marque.
+   VIOLET  = l'IA, et rien d'autre. Chatbot, scoring, ANK, DziriBERT. Il ne
+             décore jamais. Sur fond malachite il doit être éclairci à #C79BFA
+             ou plus clair — #A855F7 y tombe à 2,43.
 
-   RÈGLE D'ACCENT (charte §3 et §7) : le malachite domine sur fond clair, l'or
-   domine sur fond sombre. `--primary` bascule donc avec la surface — malachite
-   en thème clair, or en thème sombre. C'est ce qui rend le produit lisible dans
-   les deux thèmes sans dupliquer les classes dans les composants.
+   ── ÉCHELLE VERTE ───────────────────────────────────────────────────────────
+   Le thème sombre n'est pas un gris : c'est du malachite profond, saturé.
+   Un fond neutre efface la marque. Échelle dérivée des références de Nacer
+   (#051F20 · #0B2B26 · #163832 · #235347 · #5A8F76 · #8EB69B) recalée sur la
+   teinte malachite officielle 167°.
 
-   Le violet n'est jamais décoratif : il signale ANK / l'IA, rien d'autre.
+   ── ORNEMENT ────────────────────────────────────────────────────────────────
+   TUC est minéral et taillé. Aucun zellige, aucun girih, aucun motif amazigh —
+   ils appartiennent à LULG et au Caravansérail. L'ornement de TUC est le
+   KINTSUGI : une veine d'or de 1 à 3 px, jamais droite ni symétrique, une seule
+   visible par écran, et en texture de fond à 0,05 d'opacité maximum.
    ========================================================================== */
 
 @layer base {
   :root {
-    /* --- Surfaces ------------------------------------------------------- */
-    --background: 46 63% 95%;        /* Crème #FAF6E9 */
+    /* --- Surfaces : crème, mode clair par défaut ------------------------ */
+    --background: 44 30% 95%;        /* #F6F4EE — jeton de production */
     --surface-1: 0 0% 100%;          /* Blanc — cartes, panneaux */
-    --surface-2: 42 33% 94%;         /* Gris chaud #F5F2EB — lignes alternées */
-    --surface-3: 44 47% 90%;         /* Crème accent — entêtes de colonne */
+    --surface-2: 42 33% 94%;         /* Gris chaud #F5F2EB */
+    --surface-3: 150 21% 93%;        /* Malachite clair #E8F0EC */
 
-    --foreground: 0 3% 23%;          /* Gris doux #3B3838 — corps de texte */
-    --ink-strong: 0 0% 10%;          /* Noir profond #1A1A1A — titres impactants */
+    /* Encre malachite — jeton de production, 8,75:1 sur le crème. */
+    --foreground: 167 69% 18%;       /* #0E4E40 */
+    --ink-strong: 167 69% 12%;       /* Titres */
 
     --card: 0 0% 100%;
-    --card-foreground: 0 3% 23%;
+    --card-foreground: 167 69% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 3% 23%;
+    --popover-foreground: 167 69% 18%;
 
-    /* --- Accent dominant : malachite sur fond clair ---------------------- */
-    --primary: 168 74% 21%;          /* Malachite profond #0E5E4E */
-    --primary-foreground: 46 63% 95%;
-    --primary-glow: 170 43% 32%;
+    /* --- Le malachite mène sur fond clair -------------------------------- */
+    --primary: 167 69% 18%;
+    --primary-foreground: 44 30% 95%;
+    --primary-glow: 167 45% 30%;
 
-    --secondary: 170 43% 32%;        /* Malachite moyen #2F7569 */
-    --secondary-foreground: 46 63% 95%;
+    /* --- L'or remplit, le malachite écrit dessus (5,9:1) ----------------- */
+    --secondary: 44 73% 66%;         /* #E8C669 — or de production */
+    --secondary-foreground: 167 69% 18%;
 
-    /* --- Or : luxe discret ---------------------------------------------- */
-    --gold: 44 66% 33%;              /* Or mat assombri — 4.6:1 en texte sur blanc (WCAG AA) */
-    --gold-strong: 45 65% 33%;       /* Or sombre #8B6F1E */
+    --gold: 44 73% 66%;              /* Remplissage uniquement */
+    --gold-strong: 44 100% 75%;      /* #FFDD80 — lueur */
+    --gold-ink: 45 68% 30%;          /* Le seul or autorisé en texte sur clair (5,6:1) */
     --gold-soft: 44 65% 89%;         /* Or pâle #F5EBD0 */
-    --gold-glow: 42 58% 41%;         /* Or mat — 3.2:1 en pastille sur surface-2 (WCAG 1.4.11) */
+    --gold-glow: 44 73% 66%;
 
-    /* --- Malachite auxiliaire ------------------------------------------- */
-    --malachite: 168 74% 21%;
-    --malachite-mid: 170 43% 32%;
-    --malachite-soft: 150 21% 93%;   /* #E8F0EC */
+    /* --- Échelle malachite ---------------------------------------------- */
+    --malachite: 167 69% 18%;
+    --malachite-mid: 167 43% 32%;
+    --malachite-soft: 150 21% 93%;
 
     /* --- Héritage / alerte douce ---------------------------------------- */
     --bordeaux: 5 53% 32%;           /* #7B2D26 */
     --bordeaux-soft: 8 43% 90%;      /* #F0DCD9 */
 
-    /* --- ANK / IA (violet, usage réservé) ------------------------------- */
-    --accent: 265 60% 34%;           /* Violet ANK lisible sur crème */
-    --accent-foreground: 46 63% 95%;
-    --ank: 261 59% 21%;              /* Violet ANK profond #2C1654 */
+    /* --- IA : violet assombri pour rester lisible sur le crème ---------- */
+    --accent: 271 70% 42%;
+    --accent-foreground: 44 30% 95%;
+    /* Violet IA posé sur une surface sombre (sections à photo) — identique dans
+       les deux thèmes, car ces sections ne suivent pas le thème. #C79BFA. */
+    --accent-ondark: 268 88% 80%;
+    --ank: 271 70% 42%;
     --ank-soft: 263 48% 95%;         /* Violet ANK clair #F0EBF8 */
 
     /* --- Neutres --------------------------------------------------------- */
     --muted: 42 33% 94%;
-    --muted-foreground: 30 6% 40%;
+    --muted-foreground: 167 14% 36%;
 
-    --destructive: 5 53% 38%;        /* Bordeaux assumé plutôt que rouge d'alerte */
-    --destructive-foreground: 46 63% 95%;
+    --destructive: 5 53% 38%;
+    --destructive-foreground: 44 30% 95%;
 
-    --success: 168 74% 21%;
-    --success-foreground: 46 63% 95%;
-    --warning: 45 65% 33%;
-    --warning-foreground: 46 63% 95%;
+    --success: 167 69% 18%;
+    --success-foreground: 44 30% 95%;
+    --warning: 45 68% 30%;
+    --warning-foreground: 44 30% 95%;
 
-    --border: 43 17% 80%;            /* Bordure beige #D4CFC2 */
-    --hairline: 42 20% 86%;          /* Filet fin — grammaire Linear */
-    --input: 43 17% 80%;
-    --ring: 168 74% 21%;
+    --border: 167 20% 85%;           /* #D1E0DD — jeton de production */
+    --hairline: 167 18% 89%;
+    --input: 167 20% 85%;
+    --ring: 167 69% 18%;
 
-    --radius: 0.625rem;
+    --radius: 0.75rem;               /* 12 px — jeton TUC */
 
-    /* --- Barre latérale (jetons attendus par tailwind.config) ------------ */
+    /* --- Barre latérale --------------------------------------------------- */
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 0 3% 23%;
-    --sidebar-primary: 168 74% 21%;
-    --sidebar-primary-foreground: 46 63% 95%;
+    --sidebar-foreground: 167 69% 18%;
+    --sidebar-primary: 167 69% 18%;
+    --sidebar-primary-foreground: 44 30% 95%;
     --sidebar-accent: 150 21% 93%;
-    --sidebar-accent-foreground: 168 74% 21%;
-    --sidebar-border: 43 17% 80%;
-    --sidebar-ring: 168 74% 21%;
+    --sidebar-accent-foreground: 167 69% 18%;
+    --sidebar-border: 167 20% 85%;
+    --sidebar-ring: 167 69% 18%;
 
-    /* --- Dégradés : sobres, jamais flashy (charte §8) -------------------- */
-    --gradient-cosmic: linear-gradient(160deg, hsl(168 74% 21%), hsl(168 74% 13%));
-    --gradient-gold: linear-gradient(160deg, hsl(45 65% 33%), hsl(42 52% 47%));
-    --gradient-ai: linear-gradient(160deg, hsl(261 59% 21%), hsl(265 60% 34%));
-    --gradient-neural: radial-gradient(circle at 50% 0%, hsl(168 74% 21% / 0.10), transparent 65%);
-    --gradient-veil: linear-gradient(180deg, hsl(168 74% 12% / 0.72), hsl(0 0% 6% / 0.86));
+    /* --- Dégradés --------------------------------------------------------- */
+    --gradient-cosmic: linear-gradient(160deg, hsl(167 69% 18%), hsl(167 69% 11%));
+    --gradient-gold: linear-gradient(160deg, hsl(44 73% 66%), hsl(44 100% 75%));
+    --gradient-ai: linear-gradient(160deg, hsl(271 70% 42%), hsl(271 60% 30%));
+    --gradient-neural: radial-gradient(circle at 50% 0%, hsl(44 73% 66% / 0.16), transparent 65%);
+    --gradient-veil: linear-gradient(180deg, hsl(167 69% 12% / 0.74), hsl(167 60% 5% / 0.90));
 
-    /* --- Ombres : élévation mesurée, pas de néon ------------------------- */
-    --shadow-hairline: 0 0 0 1px hsl(43 17% 80% / 0.9);
-    --shadow-soft: 0 1px 2px hsl(30 25% 20% / 0.06), 0 8px 24px -12px hsl(168 74% 21% / 0.18);
-    --shadow-raised: 0 2px 4px hsl(30 25% 20% / 0.07), 0 16px 40px -16px hsl(168 74% 21% / 0.28);
-    --shadow-glass: 0 8px 32px hsl(30 25% 20% / 0.10);
-    --glow-gold: 0 0 0 1px hsl(42 52% 47% / 0.55), 0 6px 20px -10px hsl(42 52% 47% / 0.45);
-    --glow-ai: 0 0 0 1px hsl(265 60% 34% / 0.4);
-    --glow-primary: 0 0 0 1px hsl(168 74% 21% / 0.4);
+    /* --- Ombres ----------------------------------------------------------- */
+    --shadow-hairline: 0 0 0 1px hsl(167 20% 85% / 0.9);
+    --shadow-soft: 0 1px 2px hsl(167 40% 12% / 0.06), 0 8px 24px -12px hsl(167 69% 18% / 0.18);
+    --shadow-raised: 0 2px 4px hsl(167 40% 12% / 0.08), 0 16px 40px -16px hsl(167 69% 18% / 0.28);
+    --shadow-glass: 0 8px 32px hsl(167 40% 12% / 0.10);
+    --glow-gold: 0 0 0 1px hsl(44 73% 66% / 0.6), 0 6px 20px -10px hsl(44 73% 66% / 0.45);
+    --glow-ai: 0 0 0 1px hsl(271 70% 42% / 0.45);
+    --glow-primary: 0 0 0 1px hsl(167 69% 18% / 0.4);
 
-    --transition-smooth: all 0.24s cubic-bezier(0.32, 0.72, 0, 1);
-    --transition-glow: box-shadow 0.2s ease, transform 0.2s ease;
+    /* Veine kintsugi — irrégulière, jamais droite. Ornement unique de TUC. */
+    --kintsugi-vein: hsl(44 73% 66%);
+    --kintsugi-vein-soft: hsl(44 73% 66% / 0.05);
+
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-glow: box-shadow 0.3s ease, transform 0.3s ease;
   }
 
   .dark {
-    /* Fond noir teinté malachite — le contexte du logo (charte §5). */
-    --background: 168 22% 5%;
-    --surface-1: 168 16% 8%;
-    --surface-2: 168 13% 11%;
-    --surface-3: 168 11% 14%;
+    /*
+     * Le thème sombre de TUC est du malachite profond, pas un gris.
+     * Un fond neutre efface la marque : il ne reste que de l'or sur du gris.
+     * Élévation par éclaircissement — les ombres sont réservées aux modales.
+     */
+    --background: 167 69% 6%;        /* Malachite quasi noir */
+    --surface-1: 167 55% 9%;
+    --surface-2: 167 45% 13%;
+    --surface-3: 166 38% 18%;
 
-    --foreground: 45 22% 94%;
-    --ink-strong: 45 30% 97%;
+    --foreground: 44 30% 93%;        /* Crème chaud — jamais de blanc pur */
+    --ink-strong: 44 40% 97%;
 
-    --card: 168 16% 8%;
-    --card-foreground: 45 22% 94%;
+    --card: 167 55% 9%;
+    --card-foreground: 44 30% 93%;
 
-    --popover: 168 16% 9%;
-    --popover-foreground: 45 22% 94%;
+    --popover: 167 52% 10%;
+    --popover-foreground: 44 30% 93%;
 
-    /* Sur fond sombre, l'or reprend la dominante. */
-    --primary: 42 58% 62%;
-    --primary-foreground: 168 30% 7%;
-    --primary-glow: 44 65% 72%;
+    /* Sur le malachite profond, l'or reprend la main (5,82:1). */
+    --primary: 44 73% 66%;           /* #E8C669 */
+    --primary-foreground: 167 69% 8%;
+    --primary-glow: 44 100% 75%;
 
-    --secondary: 168 42% 40%;    /* relevé : 4.6:1 sur --card (WCAG AA) */
-    --secondary-foreground: 168 30% 7%;
+    --secondary: 165 36% 46%;        /* Malachite relevé, lisible en texte */
+    --secondary-foreground: 167 69% 8%;
 
-    --gold: 42 58% 62%;
-    --gold-strong: 42 52% 47%;
-    --gold-soft: 44 30% 20%;
-    --gold-glow: 44 65% 72%;
+    --gold: 44 73% 66%;
+    --gold-strong: 44 100% 75%;
+    --gold-ink: 44 73% 66%;
+    --gold-soft: 44 40% 18%;
+    --gold-glow: 44 100% 75%;
 
-    --malachite: 168 42% 40%;
-    --malachite-mid: 168 38% 30%;
-    --malachite-soft: 168 30% 13%;
+    --malachite: 165 36% 46%;
+    --malachite-mid: 167 40% 30%;
+    --malachite-soft: 167 45% 13%;
 
-    --bordeaux: 6 52% 57%;       /* relevé : 4.6:1 sur --card (WCAG AA) */
-    --bordeaux-soft: 6 35% 16%;
+    --bordeaux: 6 55% 64%;
+    --bordeaux-soft: 6 38% 17%;
 
-    --accent: 272 62% 70%;
-    --accent-foreground: 168 30% 7%;
-    --ank: 265 55% 62%;
-    --ank-soft: 265 35% 16%;
+    /*
+     * IA — le violet éclairci prescrit par le référentiel : #A855F7 tombe à
+     * 2,43 sur le malachite, il devient illisible. Ici il vit, il se lit, et il
+     * désigne toujours la même chose : la machine.
+     */
+    --accent: 268 88% 80%;           /* ≈ #C79BFA */
+    --accent-foreground: 271 60% 14%;
+    --accent-ondark: 268 88% 80%;
+    --ank: 268 88% 80%;
+    --ank-soft: 268 45% 20%;
 
-    --muted: 168 13% 12%;
-    --muted-foreground: 45 8% 66%;
+    --muted: 167 40% 13%;
+    --muted-foreground: 150 12% 70%;
 
-    --destructive: 6 55% 58%;    /* relevé : 4.9:1 avec --destructive-foreground (WCAG AA) */
-    --destructive-foreground: 168 30% 7%;
+    --destructive: 6 60% 66%;
+    --destructive-foreground: 167 69% 8%;
 
-    --success: 168 45% 48%;
-    --success-foreground: 168 30% 7%;
-    --warning: 42 58% 62%;
-    --warning-foreground: 168 30% 7%;
+    --success: 165 45% 52%;
+    --success-foreground: 167 69% 8%;
+    --warning: 44 73% 66%;
+    --warning-foreground: 167 69% 8%;
 
-    --border: 168 12% 17%;
-    --hairline: 168 11% 15%;
-    --input: 168 12% 19%;
-    --ring: 42 58% 62%;
+    --border: 166 30% 21%;
+    --hairline: 166 32% 17%;
+    --input: 166 30% 23%;
+    --ring: 44 73% 66%;
 
-    --sidebar-background: 168 18% 7%;
-    --sidebar-foreground: 45 22% 94%;
-    --sidebar-primary: 42 58% 62%;
-    --sidebar-primary-foreground: 168 30% 7%;
-    --sidebar-accent: 168 16% 12%;
-    --sidebar-accent-foreground: 42 58% 62%;
-    --sidebar-border: 168 12% 17%;
-    --sidebar-ring: 42 58% 62%;
+    --sidebar-background: 167 60% 8%;
+    --sidebar-foreground: 44 30% 93%;
+    --sidebar-primary: 44 73% 66%;
+    --sidebar-primary-foreground: 167 69% 8%;
+    --sidebar-accent: 167 45% 13%;
+    --sidebar-accent-foreground: 44 73% 66%;
+    --sidebar-border: 166 30% 21%;
+    --sidebar-ring: 44 73% 66%;
 
-    --gradient-cosmic: linear-gradient(160deg, hsl(168 30% 10%), hsl(168 25% 6%));
-    --gradient-gold: linear-gradient(160deg, hsl(42 58% 62%), hsl(42 52% 47%));
-    --gradient-ai: linear-gradient(160deg, hsl(265 45% 26%), hsl(265 40% 16%));
-    --gradient-neural: radial-gradient(circle at 50% 0%, hsl(42 58% 62% / 0.10), transparent 65%);
-    --gradient-veil: linear-gradient(180deg, hsl(168 60% 8% / 0.74), hsl(0 0% 3% / 0.90));
+    --gradient-cosmic: linear-gradient(160deg, hsl(167 55% 12%), hsl(167 69% 6%));
+    --gradient-gold: linear-gradient(160deg, hsl(44 73% 66%), hsl(44 100% 75%));
+    --gradient-ai: linear-gradient(160deg, hsl(268 50% 28%), hsl(271 55% 16%));
+    --gradient-neural: radial-gradient(circle at 50% 0%, hsl(44 73% 66% / 0.12), transparent 65%);
+    --gradient-veil: linear-gradient(180deg, hsl(167 69% 8% / 0.76), hsl(167 65% 4% / 0.92));
 
-    --shadow-hairline: 0 0 0 1px hsl(168 12% 17%);
-    --shadow-soft: 0 1px 2px hsl(0 0% 0% / 0.5), 0 8px 24px -12px hsl(0 0% 0% / 0.7);
-    --shadow-raised: 0 2px 4px hsl(0 0% 0% / 0.55), 0 18px 44px -18px hsl(0 0% 0% / 0.8);
-    --shadow-glass: 0 8px 32px hsl(0 0% 0% / 0.55);
-    --glow-gold: 0 0 0 1px hsl(42 58% 62% / 0.5), 0 6px 22px -10px hsl(42 58% 62% / 0.35);
-    --glow-ai: 0 0 0 1px hsl(272 62% 70% / 0.4);
-    --glow-primary: 0 0 0 1px hsl(42 58% 62% / 0.4);
+    --shadow-hairline: 0 0 0 1px hsl(166 30% 21%);
+    --shadow-soft: 0 1px 2px hsl(167 80% 2% / 0.5), 0 8px 24px -12px hsl(167 80% 2% / 0.7);
+    --shadow-raised: 0 2px 4px hsl(167 80% 2% / 0.55), 0 18px 44px -18px hsl(167 80% 2% / 0.8);
+    --shadow-glass: 0 8px 32px hsl(167 80% 2% / 0.55);
+    --glow-gold: 0 0 0 1px hsl(44 73% 66% / 0.55), 0 6px 22px -10px hsl(44 73% 66% / 0.4);
+    --glow-ai: 0 0 0 1px hsl(268 88% 80% / 0.45);
+    --glow-primary: 0 0 0 1px hsl(44 73% 66% / 0.4);
+
+    --kintsugi-vein: hsl(44 73% 66%);
+    --kintsugi-vein-soft: hsl(44 73% 66% / 0.05);
   }
 }
 
@@ -222,20 +246,19 @@
 
   body {
     @apply bg-background text-foreground font-inter antialiased;
-    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     text-rendering: optimizeLegibility;
   }
 
-  /* Titres : serif de la charte, pas de graisse décorative. */
   h1, h2, h3, h4 {
-    @apply font-display text-ink-strong;
-    letter-spacing: -0.011em;
+    /* Playfair Display sur les titres — marqueur d'identité TUC, non négociable. */
+    @apply font-display;
   }
 
-  /* Un anneau de focus visible partout — accessibilité clavier (WCAG 2.4.7). */
+  /* Focus toujours visible : contour 2 px + halo à 15 % (WCAG 2.4.11). */
   :focus-visible {
     outline: 2px solid hsl(var(--ring));
     outline-offset: 2px;
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.15);
     border-radius: calc(var(--radius) - 4px);
   }
 
@@ -244,7 +267,6 @@
     color: hsl(var(--ink-strong));
   }
 
-  /* Barres de défilement discrètes — le Kanban défile horizontalement. */
   * {
     scrollbar-width: thin;
     scrollbar-color: hsl(var(--border)) transparent;
@@ -257,7 +279,10 @@
     border: 3px solid transparent;
     background-clip: content-box;
   }
-  *::-webkit-scrollbar-thumb:hover { background-color: hsl(var(--muted-foreground) / 0.5); background-clip: content-box; }
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground) / 0.5);
+    background-clip: content-box;
+  }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -270,25 +295,59 @@
 }
 
 @layer components {
-  /* Panneau : la brique de base de l'interface produit — filet fin + surface. */
+  /* Panneau : brique de base de l'interface produit. */
   .tuc-panel {
     @apply rounded-[var(--radius)] border border-hairline bg-surface-1;
     box-shadow: var(--shadow-soft);
   }
 
-  /* Filet de séparation horizontal, à l'échelle du pixel. */
   .tuc-hairline {
     @apply border-b border-hairline;
   }
 
-  /* Étiquette de section : petites capitales espacées, ton discret. */
   .tuc-eyebrow {
     @apply text-[0.6875rem] font-medium uppercase tracking-[0.14em] text-muted-foreground;
   }
 
-  /* Chiffre de tableau de bord — tabulaire pour que les colonnes s'alignent. */
   .tuc-numeric {
     font-variant-numeric: tabular-nums;
     letter-spacing: -0.02em;
+  }
+
+  /*
+   * KINTSUGI — l'unique ornement de TUC. La fêlure réparée à l'or : la valeur
+   * naît de la cassure. Le tracé est volontairement asymétrique, une veine ne
+   * suit jamais une droite. Une seule visible par écran, hors texture.
+   */
+  .tuc-kintsugi {
+    position: relative;
+    height: 3px;
+    border: 0;
+    background: none;
+  }
+  .tuc-kintsugi::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-repeat: repeat-x;
+    background-size: 320px 3px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='3' viewBox='0 0 320 3'%3E%3Cpath d='M0 2.1 L34 1.2 L61 2.4 L96 0.9 L118 2.0 L155 1.1 L181 2.3 L214 1.0 L246 2.2 L272 1.3 L300 2.1 L320 1.5' fill='none' stroke='%23E8C669' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+    opacity: 0.85;
+  }
+
+  /* Texture kintsugi de fond — plafonnée à 0,05, jamais derrière un paragraphe. */
+  .tuc-kintsugi-texture {
+    background-image: var(--gradient-neural);
+  }
+
+  /*
+   * Surface IA — le violet ne décore pas, il désigne la machine.
+   * À réserver aux blocs ANK, DziriBERT, chatbot et scoring.
+   */
+  .tuc-ai-surface {
+    @apply border border-accent/35 bg-accent/[0.06];
+  }
+  .tuc-ai-label {
+    @apply inline-flex items-center gap-1.5 text-[0.6875rem] font-medium uppercase tracking-[0.12em] text-accent;
   }
 }

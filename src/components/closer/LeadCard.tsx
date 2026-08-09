@@ -27,14 +27,14 @@ interface LeadCardProps {
  * (« Chaud », « Tiède », « Froid ») accompagnent systématiquement la teinte.
  */
 const TEMPERATURE_CARD_CLASS = {
-  chaud: 'border-gold/70 bg-gold-soft/40',
-  tiede: 'border-gold/40',
+  chaud: 'border-gold bg-gold-soft/50',
+  tiede: 'border-gold-ink/45',
   froid: 'border-hairline',
 } as const;
 
 const TEMPERATURE_CHIP_CLASS = {
-  chaud: 'border-gold/60 bg-gold-soft/70 text-gold',
-  tiede: 'border-gold/40 text-gold',
+  chaud: 'border-gold-ink/50 bg-gold-soft/80 text-gold-ink',
+  tiede: 'border-gold-ink/45 text-gold-ink',
   froid: 'border-hairline text-muted-foreground',
 } as const;
 

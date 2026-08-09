@@ -20,7 +20,7 @@ const CTA = () => {
             {t('cta.title')}
           </h2>
 
-          <Button size="lg" onClick={() => window.location.href = '/reserver-appel'} className="bg-gold hover:bg-gold-glow font-bold px-10 py-7 rounded-full shadow-2xl hover:shadow-[0_0_40px_rgba(233,196,106,0.6)] hover:scale-105 transition-all group text-lg text-[#016946] font-sans">
+          <Button size="lg" onClick={() => window.location.href = '/reserver-appel'} className="bg-gold hover:bg-gold-strong text-secondary-foreground font-bold px-10 py-7 rounded-full shadow-soft transition-colors group text-lg font-inter">
             <Calendar className="mr-3 w-6 h-6" />
             {t('cta.button')}
             <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-2 transition-transform" />

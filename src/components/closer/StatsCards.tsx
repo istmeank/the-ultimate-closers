@@ -53,7 +53,7 @@ export const StatsCards = () => {
       value: stats?.hotLeads ?? 0,
       icon: Flame,
       description: 'Score ≥ 75',
-      tone: 'text-gold',
+      tone: 'text-gold-ink',
     },
     {
       title: 'RDV à venir',
@@ -74,7 +74,7 @@ export const StatsCards = () => {
       value: `${stats?.conversionRate ?? 0} %`,
       icon: Target,
       description: 'Conversion',
-      tone: 'text-gold',
+      tone: 'text-gold-ink',
     },
   ];
 
