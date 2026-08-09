@@ -525,3 +525,56 @@ Git** ? Les deux options se défendent :
   développeur. Mais elle perd son historique Git et sa portabilité.
 
 Onze commits locaux ne sont pas poussés, dans l'attente de cette décision.
+
+## BLOCKER-014 — mise à jour de statut (2026-08-09, session 37)
+
+**Statut : OUVERT (confirmation, pas régression)**
+
+**Vérification effectuée le 2026-08-09** : consultation directe de `https://github.com/istmeank/the-ultimate-closers` sans authentification.
+- Page HTML retourne `meta-octolytics-dimension-repository_public: true`
+- Badge de visibilité : « Public »
+- Accès autorisé au contenu sans login
+- **Conclusion** : le dépôt est **toujours public**
+
+**Chronologie** : 
+- Nacer affirme en session 34 (BLOCKER-014 ouverture) que le dépôt a été rendu privé
+- Session 34 note elle-même : « Impossible d'arbitrer depuis la session (pas de git fetch avec identifiants) »
+- Session 37 confirme par consultation de la page publique : dépôt est resté public
+
+**Cause probable** : passage en privé non exécuté, ou exécuté puis la modification a été annulée, ou référence locale déphasée par rapport à la distante (Lovable pousse directement : 198 commits, 14 PR ouvertes).
+
+**Exposition analyse** (complément session 34, session 37) :
+- `.env` bien retiré (commit `24ef56e`). Clés à l'intérieur étaient publiques par conception.
+- Aucune clé `service_role` dans l'historique Git.
+- **Exposure réelle** : 53 fichiers `.claude/`, dont 9 registres mémoire décrivant publiquement l'état de sécurité (BLOCKER-011 protection mots de passe off, BLOCKER-013 suppression logique non garantie, etc.) et la chronologie des failles passées.
+- Squelette Silicate classé « asset propriétaire brevetable » (session 30) — divulgation public antérieure invalide la nouveauté requise pour brevet.
+
+**Action requise immédiate de Nacer** :
+1. Vérifier sur github.com/istmeank/the-ultimate-closers/settings/general si le statut affiche vraiment « Public »
+2. Si oui : Change visibility → Private (une fois)
+3. Vérifier si la page GitHub liste un fichier `.env` à la racine : si oui et que l'historique local ne le montre pas, les clés ne se sont peut-être pas correctement retirées côté distant — à vérifier et potentiellement rotation clés Supabase
+
+**Ne pas fermer ce BLOCKER** sans confirmation manuelle que le dépôt est passé en privé.
+
+---
+
+## BLOCKER-014 — RÉSOLU (2026-08-09, session 37 — correction de conclusion)
+
+**Statut : ✅ RÉSOLU**
+**Session** : 37 (correction apportée par Nacer via navigation Chrome authentifiée)
+
+### Ce qui a été découvert
+La vérification effectuée en session 37 par consultation HTTP non authentifiée de `github.com/istmeank/the-ultimate-closers` avait retourné un cache CDN périmé :
+- Cache CDN affichait `meta-octolytics-dimension-repository_public: true` et le badge « Public »
+- Nacer a demandé vérification directe via son navigateur Chrome authentifié
+- **Vue authentifiée** : dépôt affiche « Private ». `.env` absent de la branche `main`.
+
+### Conclusion
+**Le dépôt était privé tout du long.** L'affirmation de Nacer (session 34, « le dépôt a été rendu privé ») était exacte.
+L'instrument de vérification (HTTP GET non authentifiée) servait une version obsolète cachée par le CDN.
+
+### Exposition résiduelle toujours valable
+Même si le dépôt est maintenant privé, les 53 fichiers `.claude/` et leurs registres mémoire ont pu être clonés par un tiers avant le changement de visibilité (les CDN gardent en cache avant le changement). La mitigation réelle reste la fermeture des blocages toujours ouverts (BLOCKER-011, BLOCKER-013, BLOCKER-H10) — cf. session 34 note « ce que le passage en privé ne règle pas ».
+
+### Leçon capitale
+Capitalisée en LEARNING-097.

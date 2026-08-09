@@ -459,3 +459,80 @@ closers, admins et owners restent intacts. Une migration qui n'altère rien se
 relit et s'annule plus facilement qu'une migration qui réécrit.
 
 Migration : `20260808170000_tuc_v2_manager_read_and_reassign.sql`.
+
+## ADR-039 — Relais du squelette Silicate v0.6 → v1.5 sur TUC tech
+
+**Date** : 2026-08-08
+**Session** : 36 (Cowork, orchestrateur-silicate)
+**Statut** : Actif
+**Décideur** : Nacer (validation explicite du périmètre « relais complet maintenant »)
+
+### Contexte
+TUC tech avait reçu le squelette Silicate v0.6 (23/23 pierres applicables, sessions 31-32,
+ADR-031/032/033). Le squelette source a évolué vers **v1.5** : restructuré en 8 modules
+thématiques (`docs/skeleton-modules/`, ex-fichier unique `skeleton-gouvernance-v0.md`,
+qui n'existe plus à ce chemin), passé de 23 à 28 pierres. La Pierre 16-B (relay SILICATE →
+entité incubée) prévoit explicitement cette situation à son étape 7 : *« Si évolution du
+squelette → orchestrateur-silicate notifie tous les orchestrateurs-entité »*.
+
+### Décision
+Application du delta v0.6 → v1.5 sur TUC tech, à l'exclusion des pierres non pertinentes
+pour un repo technique (P16-B protocole d'incubation initiale déjà exécuté, P18-bis
+triptyque BP réservé à TUC business) :
+
+1. **ΔP3-bis** — création de `PLANIFICATION.md` à la racine : tableau de bord mutable,
+   structuré par pôle, lu au bootstrap en dernier (après CLAUDE → JOURNAL → DECISIONS →
+   LEARNINGS). Renvoie vers `taches-a-faire/README.md` et `docs/domains/*/PLAN.md` pour le
+   détail — pas de troisième registre de tâches (interdiction explicite P27).
+2. **P27** — section "État d'avancement par pôle" ajoutée à `CLAUDE.md` : une ligne de
+   maturité par domaine + gouvernance/squelette + sécurité-infra, séparée des tâches
+   (qui vivent dans `PLANIFICATION.md`).
+3. **P0** — la référence au squelette dans `CLAUDE.md` portait une affirmation d'état
+   absolu non datée (« ce repo honore... Silicate v0 » sans date ni moyen de vérifier).
+   Corrigée : version + date de relay + rappel que le squelette évolue, à vérifier à la
+   source avant de s'y fier.
+4. **Frontmatter des 16 agents** (`silicate_skeleton_version`, `silicate_relay_date`) —
+   mis à jour v0.6 → v1.5, 2026-06-23 → 2026-08-08.
+5. **P25** — premier audit des 3 dettes invisibles réalisé (EVAL-002) : score 8/30
+   (entité gouvernée), dette dominante cognitive (absence de glossaire TUC tech).
+6. **P24, P26, P22-bis** — doctrine reconnue mais **non invoquée** à ce stade : P24 (rite
+   d'archivage annuel) n'a pas lieu d'être avant un an d'existence du repo ; P26
+   (arbitrage du harnais) n'a de valeur que si le runtime Claude Code est remis en
+   question, ce qui n'est pas le cas ; P22-bis (5 types de handlers de hooks) reste un
+   backlog technique, pas un relais immédiat — implémenter des hooks supplémentaires est
+   une brique technique qui suit la règle « cadrage dev partenaire avant implémentation »
+   (`CLAUDE.md`).
+7. **¶P1** — vérifié après ajouts : `CLAUDE.md` passe de 89 à 105 lignes, sous le seuil
+   de 200.
+8. **¶P3** (format à 7 champs des Learning Records) — non rétrofité sur les 91 entrées
+   existantes (LEARNINGS.md est append-only, on ne réécrit pas l'historique) ; à appliquer
+   aux **nouvelles** entrées à partir de cette session.
+
+### Conséquences
+**Positives** : TUC tech aligné sur la version courante de la doctrine de gouvernance
+réseau ; point de reprise de session net (`PLANIFICATION.md`) ; première mesure
+quantifiée de la dette de l'entité.
+**Négatives** : deux dettes restent ouvertes et assumées — glossaire TUC tech à créer
+(pas inventé dans cette session, matière insuffisante pour l'écrire sans risque
+d'invention) ; incohérence apparente entre `taches-a-faire/T01-T02` et les BLOCKERS déjà
+résolus, à trancher en session dédiée plutôt que devinée ici.
+
+### Alternatives écartées
+- **Tout relayer y compris P24/P26/P22-bis en un seul geste** — écarté : P24 est
+  prématuré (rite annuel sur un repo de 2 mois), P26 n'a pas d'objet sans remise en
+  question du harnais, P22-bis est une brique technique qui doit suivre la règle de
+  cadrage dev partenaire, pas être improvisée dans une session de relais doctrinal.
+- **Réécrire les 91 LEARNINGS au format ¶P3** — écarté : violerait l'append-only (P3).
+- **Créer un glossaire de mémoire** — écarté : discipline anti-invention (P7) ; un
+  glossaire inventé plutôt qu'extrait fidèlement du corpus existant serait pire que son
+  absence.
+
+### Vérification d'application (P0 — preuve d'application)
+- `wc -l CLAUDE.md` → 105 lignes (< 200, ¶P1 respecté), vérifié 2026-08-08.
+- `grep -c silicate_skeleton_version .claude/agents/*.md` → 16/16 fichiers à `v1.5`,
+  vérifié 2026-08-08.
+- `PLANIFICATION.md` présent à la racine, vérifié 2026-08-08.
+
+### Lien
+`docs/skeleton-modules/00-INDEX.md` (SILICATE) · P16-B étape 7 · ADR-031/032/033
+(relay initial v0.6) · EVAL-002 (audit P25) · `PLANIFICATION.md`

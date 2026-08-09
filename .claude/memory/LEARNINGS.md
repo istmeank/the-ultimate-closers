@@ -139,3 +139,23 @@ Sans ce fichier, on retape deux fois les mêmes corrections. Avec, chaque probl�
 - Date : 2026-08-08
 - Contexte : la baseline du dépôt déclarait une fonction `soft_delete()`. La production ne l'a jamais connue — vérifié dans `pg_proc`. Le fichier documentait une intention de conception, pas l'état réel.
 - Leçon : conséquence concrète, les colonnes `deleted_at` existent et les politiques les filtrent, mais aucun déclencheur ne transforme un `DELETE` en suppression logique. La suppression réelle est donc possible alors que l'architecture documentée (ADR-001) annonce le contraire. Lire un fichier de migration ne dit pas ce que la base contient ; seule la base le dit. Auditer un comportement de sécurité se fait contre `pg_proc`, `pg_policies` et `pg_trigger` — jamais contre les fichiers.
+
+## LEARNING-095 — Une fiche de tâche peut prescrire une valeur d'enum ou de CHECK qui n'existe pas encore en base
+- Date : 2026-08-09
+- Contexte : T05 (session 37). La fiche prescrivait l'insertion de type `'note'` dans `interactions.type` (polymorphe appointment + deal). Le schéma live avait le CHECK `interactions_type_check : type IN ('call', 'email', 'sms', 'whatsapp', 'telegram', 'instagram', 'meeting')` — `'note'` absent. Sans l'élargissement, tout INSERT sur la table `deals` aurait échoué en cascade (erreur 23514) même si la logique métier était correcte.
+- Leçon : vérifier le schéma réel de la base, pas seulement la documentation de la tâche, avant d'écrire une migration. Les valeurs d'enum et les CHECK déclarés dans les fichiers de tâche ne reflètent pas toujours l'état actuel — prise de photo du schéma via `list_tables` + `pg_class` ou inspection du DDL avant de planifier. Une tâche peut bien décrire ce qui « devrait » exister sans décrire ce qui existe.
+- Corollaire : la base est la source de vérité, pas la fiche. La fiche est une intention, la base est l'état.
+
+## LEARNING-096 — L'état déclaré par l'humain se vérifie comme le reste
+- Date : 2026-08-09
+- Contexte : Nacer a affirmé (session 34) que le dépôt avait été rendu privé. Cette affirmation était de bonne foi. Vérification le 2026-08-09 en consultant la page GitHub publique sans authentification : le dépôt est toujours public.
+- Leçon : extension directe de session 34 « un fichier ne dit pas ce que le système fait ». C'est vrai aussi pour une affirmation orale : Nacer peut avoir lancé le changement, l'interface peut avoir buggé, Lovable peut avoir fait un push qui a réinitialisé, ou la référence locale est en retard. L'arbitrage ultime n'est jamais le souvenir — c'est la consultation directe du système (ici, page GitHub publique ou dashboard Supabase).
+- Application : chaque affirmation de statut (« c'est privé », « la migration est appliquée », « le type est synchronisé ») mérite une vérification indépendante avant de la tenir pour acquis en tâche subséquente. « C'est Nacer qui l'a dit » n'est pas une preuve, juste un signal de haute probabilité.
+
+## LEARNING-097 — Une récupération HTTP non authentifiée d'une page GitHub peut servir un cache CDN périmé
+- Date : 2026-08-09
+- Domaine : transverse (vérification d'état)
+- Issu de : BLOCKER-014 (session 37 correction)
+- **Observation** : Une requête HTTP GET sans authentification sur `github.com/istmeank/the-ultimate-closers` a retourné `meta-octolytics-dimension-repository_public: true`, badge « Public » visible, conclusion hâtive : dépôt est public. Nacer a demandé vérification directe via le navigateur Chrome authentifié. Résultat : dépôt affiche « Private », `.env` absent. Cache CDN avait servi une version antérieure au changement de visibilité.
+- **Règle à appliquer** : Pour un état de visibilité ou tout état immuable exposé par une page GitHub, la vérification authentifiée fait foi, pas la version en cache HTTP. Préférer le tableau de bord du dépôt (vue authentifiée) plutôt qu'une requête curl ou HTTP directe. Corollaire : une affirmation sans source (« c'est Nacer qui l'a dit ») a une probabilité bien plus haute d'être exacte qu'une vérification avec le mauvais instrument.
+- **Exemple** : BLOCKER-014 ouvert session 34, « le dépôt est public ». Session 37 tente de clore par vérification HTTP → cache CDN. Nacer vérifie côté authentifiée → dépôt privé, affirmation initiale exacte. Leçon : vérifier plutôt que croire — mais choisir l'instrument juste de vérification.

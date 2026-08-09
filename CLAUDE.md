@@ -41,7 +41,7 @@ Ce repo est positionné comme **extension du pôle tech TUC business** = **Branc
 
 **Architecture évolution** : ce repo applique l'architecture Supabase MVP → Backend custom Twenty-like (ADR-025, cf. `docs/architecture-evolution.md`). T28 du backlog `taches-a-faire/` pose la couche d'abstraction services AVANT toute autre tâche, pour préparer la transition future sans douleur.
 
-**Squelette commun** : ce repo honore les 8 pierres angulaires du squelette de gouvernance reproductible Silicate v0 → `D:\Startup LABEL\SILICATE INCUBATEUR\docs\skeleton-gouvernance-v0.md` (constitution / `.claude/` standardisée / mémoire append-only / règle d'or 4 portes / rituel fermeture 3 questions / filtre éthique 5 vétos / anti-invention / protection méthodologique).
+**Squelette commun** : ce repo applique le squelette de gouvernance reproductible Silicate — **v1.5, relayé le 2026-08-08 (ADR-039)** → `D:\Startup LABEL\SILICATE INCUBATEUR\docs\skeleton-modules\00-INDEX.md` (8 modules thématiques, 28 pierres). *Vérifier la version courante à cette même adresse avant de s'y fier — le squelette évolue (P0).* Historique : v0.6 relayé le 2026-06-23 (ADR-031/032/033, 23/23 pierres applicables, P17 = N/A pour un repo technique).
 
 **Lien stratégique** : TUC construit le **système d'acquisition complet de LULG**. Ce CRM est l'un des outils de cette mission. Plus tard, ANK sera intégré dans ce CRM pour devenir l'intelligence vivante du closing.
 
@@ -55,6 +55,7 @@ Ce repo est positionné comme **extension du pôle tech TUC business** = **Branc
 2. **`.claude/memory/JOURNAL.md`** — dernière session, état courant, prochaine étape
 3. **`.claude/memory/DECISIONS.md`** — ADR actifs (décisions architecturales en vigueur)
 4. **`.claude/memory/LEARNINGS.md`** — leçons capitalisées (garde-fou anti-invention)
+5. **`PLANIFICATION.md`** — tableau de bord courant : tâche en cours, priorités par pôle, point de reprise exact (seul fichier mutable de la mémoire, ΔP3-bis)
 
 **Signal de confirmation** : après relecture, Claude confirme en début de réponse :
 > *"Bootstrap effectué — dernière session : [date et titre] — dernier ADR : [numéro] — prêt."*
@@ -76,9 +77,25 @@ Avant de dire "fait" : (1) relis ton diff, (2) vérifie les domaines impactés, 
 - **Langue** : français pour la doc produit, anglais pour le code et les commits.
 - **PRD à jour** : `docs/REFERENCE.md` est la source de vérité fonctionnelle. Toute évolution majeure y est répercutée.
 
+## État d'avancement par pôle (Pierre 27 — au 2026-08-08)
+
+> Maturité seulement — les tâches ouvertes vivent dans `PLANIFICATION.md`, pas ici.
+
+| Pôle | Maturité | Prochain jalon |
+|---|---|---|
+| Gouvernance / squelette | 🟢 Relayé v1.5 | Premier audit P25 complet (seuil déjà atteint, à planifier) |
+| Sécurité / infra (RBAC, RLS, abstraction services) | 🟢 Stable | Réconcilier `taches-a-faire/` T01-T02 vs BLOCKERS résolus |
+| 1. Acquisition & Qualification | 🟡 Partiel | Refonte parcours lead (T03→T06) |
+| 2. Messagerie multi-canaux | 🔴 Non implémenté | Cadrage API WhatsApp officielle (ADR-038) |
+| 3. Matching IA | 🔴 Non implémenté | Modélisation CloserProfile/ProspectProfile |
+| 4. Meet & Coaching | 🟡 Partiel | Intégration Google Calendar + skill whisper (ADR-037) |
+| 5. Onboarding closer | 🟡 Partiel | Cadrage parcours 30/60/90j |
+
 ## Ressources
 - PRD produit : `docs/REFERENCE.md`
 - Architecture : `docs/ARCHITECTURE.md`
+- Glossaire des termes propres à l'entité : `docs/GLOSSAIRE.md` (Pierre 25)
+- Tableau de bord courant : `PLANIFICATION.md`
 - Orchestrateur : `.claude/agents/orchestrateur.md`
 - Registres mémoire : `.claude/memory/`
 

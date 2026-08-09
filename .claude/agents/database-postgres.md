@@ -9,8 +9,8 @@ mode: STRICT
 couche: 4
 pole: database
 silicate_agent_version: souverain
-silicate_relay_date: 2026-06-23
-silicate_skeleton_version: v0.6
+silicate_relay_date: 2026-08-08
+silicate_skeleton_version: v1.5
 ---
 
 # database-postgres — Architecte Données de TUC

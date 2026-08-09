@@ -28,73 +28,73 @@ Chaque fichier `Txx-nom.md` contient un **prompt complet copier-coller** à util
 
 | # | Tâche | Agent | Modèle | Statut | Notes |
 |---|---|---|---|---|---|
-| T01 | Chiffrer tokens OAuth via Vault + pgsodium (BLOCKER-001) | backend-supabase | **opus** | ⏳ pending | Critique sécurité |
-| T02 | Rate limiting Upstash sur 4 endpoints (BLOCKER H8/H9) | backend-supabase | **sonnet** | ⏳ pending | Critique coûts IA |
+| T01 | Chiffrer tokens OAuth via Vault + pgsodium (BLOCKER-001) | backend-supabase | **opus** | ✅ résolu en DB live / ⚠️ repo désync | Vérifié 2026-08-08 (session 36) : Vault appliqué en prod (session 18), mais 4 migrations manquantes du repo Git — voir BLOCKER-012 |
+| T02 | Rate limiting Upstash sur 4 endpoints (BLOCKER H8/H9) | backend-supabase | **sonnet** | ✅ résolu en DB live / ⚠️ repo désync | Vérifié 2026-08-08 : Upstash actif en prod sur call_bookings + site_analytics (session 19) ; policies permissives encore dans le repo Git — BLOCKER-012 |
 
 ### P1 — Fondations DB & Auth
 
 | # | Tâche | Agent | Modèle | Statut | Notes |
 |---|---|---|---|---|---|
-| T03 | Migration extension rôles closer/owner/client + profiles fields | database-postgres | ⏳ pending | **BLOCKER-010** : le front utilise `developer` et `client`, absents de l'enum `app_role`. Trancher d'abord : rôles de sécurité ou vues d'interface ? |
-| T04 | Trigger auto_assign_closer_to_lead | database-postgres | **sonnet** | ⏳ pending | Dépend T03 |
-| T05 | Triggers log_appointment + log_deal_interaction | database-postgres | **haiku** | ⏳ pending | Dépend T03 |
-| T06 | Hook useAuth multi-rôles + ProtectedRoute requireRole | frontend-react | ⏳ pending | |
+| T03 | Migration extension rôles closer/owner/client + profiles fields | database-postgres | ⏳ pending | **BLOCKER-010** : le front utilise `developer` et `client`, absents de l'enum `app_role`. Trancher d'abord : rôles de sécurité ou vues d'interface ? — **✅ completed (session 34)** : enum étendu à 7 valeurs, ADR-036. Statut ⏳ ci-dessus obsolète. |
+| T04 | Trigger auto_assign_closer_to_lead | database-postgres | **sonnet** | ✅ completed | Vérifié 2026-08-08 : `auto_assign_closer_to_lead()` + triggers présents (migration 20251029123034) |
+| T05 | Triggers log_appointment + log_deal_interaction | database-postgres | **haiku** | 🔄 migration écrite, non appliquée (2026-08-09) | Fichier `20260809000001_tuc_v2_triggers_log_interactions.sql` créé et vérifié. Élargissement CHECK `interactions.type` (ajout `'note'`), triggers `log_appointment_as_interaction` / `log_deal_as_interaction`. En attente de relecture et d'application prod par Nacer. |
+| T06 | Hook useAuth multi-rôles + ProtectedRoute requireRole | frontend-react | ✅ completed | Vérifié 2026-08-08 : `src/hooks/useAuth.tsx` + `src/components/ProtectedRoute.tsx` présents |
 
 ### P2 — Score Lead IA (cœur métier différenciant)
 
 | # | Tâche | Agent | Modèle | Statut | Notes |
 |---|---|---|---|---|---|
-| T07 | Edge Function score-lead avec Claude (remplace Gemini Lovable) | backend-supabase + ia-orchestration | **opus** | ⏳ pending | Dépend T01 |
-| T08 | Auto-assignation closers (charge + Big Five + round-robin) | matching-engine + backend-supabase | **opus** | ⏳ pending | Dépend T03, T07 |
+| T07 | Edge Function score-lead avec Claude (remplace Gemini Lovable) | backend-supabase + ia-orchestration | **opus** | 🔄 partiel | Vérifié 2026-08-08 : `score-lead` existe mais scoring 100% déterministe par barème, aucun appel Claude/Anthropic |
+| T08 | Auto-assignation closers (charge + Big Five + round-robin) | matching-engine + backend-supabase | **opus** | ⏳ pending | Confirmé différé (Vague 3) : `matching.supabase.ts` lève explicitement "not implemented yet" |
 
 ### P3 — Dashboard Closer (UI core)
 
 | # | Tâche | Agent | Modèle | Statut | Notes |
 |---|---|---|---|---|---|
-| T09 | CloserLayout + sidebar navigation | frontend-react | ⏳ pending | |
-| T10 | KanbanBoard + KanbanColumn + LeadCard (drag & drop) | frontend-react | **sonnet** | ⏳ pending | Dépend T09 |
-| T11 | StatsCards KPIs (leads chauds, RDV, deals, taux closing) | frontend-react | **sonnet** | ⏳ pending | Dépend T09 |
-| T12 | LeadDetail + InteractionsTimeline | frontend-react | **sonnet** | ⏳ pending | Dépend T09 |
+| T09 | CloserLayout + sidebar navigation | frontend-react | ✅ completed | Vérifié 2026-08-08 : `CloserLayout.tsx`, routé dans `App.tsx` |
+| T10 | KanbanBoard + KanbanColumn + LeadCard (drag & drop) | frontend-react | **sonnet** | ✅ completed | Vérifié 2026-08-08 : drag & drop réel via `@hello-pangea/dnd` |
+| T11 | StatsCards KPIs (leads chauds, RDV, deals, taux closing) | frontend-react | **sonnet** | ✅ completed | Vérifié 2026-08-08 : `StatsCards.tsx` présent |
+| T12 | LeadDetail + InteractionsTimeline | frontend-react | **sonnet** | ✅ completed | Vérifié 2026-08-08 : `LeadDetail.tsx` + `InteractionsTimeline.tsx` présents |
 
 ### P4 — Intégrations OAuth tierces
 
 | # | Tâche | Agent | Modèle | Statut | Notes |
 |---|---|---|---|---|---|
-| T13 | OAuth Google Calendar (callback + flow PKCE) | integrations | **sonnet** | ⏳ pending | Dépend T01 |
-| T14 | OAuth Slack (callback + flow PKCE) | integrations | **sonnet** | ⏳ pending | Dépend T01 |
-| T15 | Edge Function create-google-event (avec Meet link) | integrations | **sonnet** | ⏳ pending | Dépend T13 |
+| T13 | OAuth Google Calendar (callback + flow PKCE) | integrations | **sonnet** | ✅ completed | Vérifié 2026-08-08 : flow OAuth + Edge Function `google-calendar-auth` + tokens Vault (BLOCKER-001) |
+| T14 | OAuth Slack (callback + flow PKCE) | integrations | **sonnet** | 🔄 partiel | Vérifié 2026-08-08 : UI `SlackSettings.tsx` présente, bouton connexion = TODO explicite, aucune Edge Function Slack |
+| T15 | Edge Function create-google-event (avec Meet link) | integrations | **sonnet** | ⏳ pending | Confirmé absent du repo (2026-08-08) |
 
 ### P5 — Chatbot qualification homepage
 
 | # | Tâche | Agent | Modèle | Statut | Notes |
 |---|---|---|---|---|---|
-| T16 | ChatbotQualif widget + ChatbotConversation 5 questions | frontend-react | ⏳ pending | |
-| T17 | Intégration chatbot sur homepage Index.tsx | frontend-react | **haiku** | ⏳ pending | Dépend T16 |
+| T16 | ChatbotQualif widget + ChatbotConversation 5 questions | frontend-react | ✅ completed | Vérifié 2026-08-08 : `ChatbotQualif.tsx` + `ChatbotConversation.tsx` présents |
+| T17 | Intégration chatbot sur homepage Index.tsx | frontend-react | **haiku** | ✅ completed | Vérifié 2026-08-08 : `Index.tsx` importe et rend `ChatbotQualif` |
 
 ### P6 — Admin gestion closers
 
 | # | Tâche | Agent | Modèle | Statut | Notes |
 |---|---|---|---|---|---|
-| T18 | ClosersManager admin (liste, charge, réassign) | frontend-react | **sonnet** | ⏳ pending | Dépend T03 |
-| T19 | Onglet Closers dans Admin.tsx | frontend-react | **haiku** | ⏳ pending | Dépend T18 |
-| T20 | Dashboard admin stats CRM globales | frontend-react | ⏳ pending | |
+| T18 | ClosersManager admin (liste, charge, réassign) | frontend-react | **sonnet** | ✅ completed | Vérifié 2026-08-08 : `ClosersManager.tsx` présent |
+| T19 | Onglet Closers dans Admin.tsx | frontend-react | **haiku** | ✅ completed | Vérifié 2026-08-08 : livré via route `/admin/closers` + sidebar, pas dans `Admin.tsx` littéral |
+| T20 | Dashboard admin stats CRM globales | frontend-react | ✅ completed | Vérifié 2026-08-08 : `Dashboard.tsx` avec KPIs (leads, deals, CA, formations) |
 
 ### P7 — Polish & Compliance
 
 | # | Tâche | Agent | Modèle | Statut | Notes |
 |---|---|---|---|---|---|
-| T21 | Page /policies (RGPD + mentions légales + cookies) | produit-spec + redacteur-voix + frontend-react | ⏳ pending | |
-| T22 | Traductions i18n complètes FR/EN/Darija | redacteur-voix + frontend-react | ⏳ pending | |
-| T23 | Architecture MCP providers (futur) | integrations | **sonnet** | ⏳ pending | Différé V3 |
-| T24 | WhatsApp Bot local Node.js whatsapp-web.js | integrations | **sonnet** | ⏳ pending | Interne/test OK (ADR-038), réel = API officielle |
-| T25 | Stubs HubSpot/Stripe (avec MCP HubSpot natif) | integrations | ⏳ pending | |
+| T21 | Page /policies (RGPD + mentions légales + cookies) | produit-spec + redacteur-voix + frontend-react | 🔄 partiel | Vérifié 2026-08-08 : contenu RGPD substantiel existe sous `/legal` (`Legal.tsx`, Loi 18-07), pas à l'URL `/policies` attendue |
+| T22 | Traductions i18n complètes FR/EN/Darija | redacteur-voix + frontend-react | ✅ completed | Vérifié 2026-08-08 : système maison `LanguageContext.tsx` (fr/en/dar), pas react-i18next mais fonctionnellement complet |
+| T23 | Architecture MCP providers (futur) | integrations | **sonnet** | ⏸️ deferred | Confirmé absent, conforme à la note "Différé V3" |
+| T24 | WhatsApp Bot local Node.js whatsapp-web.js | integrations | **sonnet** | ⏳ pending | Confirmé absent (2026-08-08) ; interne/test OK (ADR-038), réel = API officielle |
+| T25 | Stubs HubSpot/Stripe (avec MCP HubSpot natif) | integrations | 🔄 partiel | Vérifié 2026-08-08 : HubSpot réellement implémenté (`hubspot-sync`), Stripe reste un stub explicite (TODO) |
 
 ### P8 — DevOps & Validation
 
 | # | Tâche | Agent | Modèle | Statut | Notes |
 |---|---|---|---|---|---|
-| T26 | Variables d'environnement (.env.example + Vercel secrets) | devops-vercel | ⏳ pending | |
-| T27 | Tests E2E manuels + checklist validation | auditeur-qualite | **opus** | ⏳ pending | Dépend tout le reste |
+| T26 | Variables d'environnement (.env.example + Vercel secrets) | devops-vercel | ⏳ pending | Confirmé absent (2026-08-08) : `.env` réel présent (secrets en clair localement), pas de `.env.example` |
+| T27 | Tests E2E manuels + checklist validation | auditeur-qualite | **opus** | ⏳ pending | Confirmé absent (2026-08-08) : seul `vitest.config.ts` (tests unitaires), pas de Playwright/Cypress |
 
 ---
 

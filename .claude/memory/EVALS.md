@@ -37,3 +37,22 @@ Sans évaluation, on ne sait pas si une nouvelle version est meilleure que l'anc
   - [ ] Re-évaluer après les 3 premières invocations RÉELLES d'agents Vague 2 (frontend-react, redacteur-voix, gardien-valeurs)
   - [ ] EVAL-002 prévue : audit du comportement runtime des agents lors d'une vraie tâche produit
 - Learning associé : LEARNING-024 déjà existant (rituel fermeture critique pour intégrité niveau 3).
+
+## EVAL-002 — Audit P25 (3 dettes invisibles) à l'occasion du relais squelette v1.5
+- Date : 2026-08-08
+- Composant testé : l'entité TUC tech dans son ensemble (35 sessions JOURNAL, 39 ADR, 16 agents, 30+ skills, 91 LEARNINGS, 22 BLOCKERS dont 18 résolus).
+- Question posée : quelle est la dette dominante avant de considérer le relais du squelette v1.5 comme complet (P25 se déclenche explicitement "avant tout déploiement du squelette chez un tiers" — ce relais qualifie).
+- Méthode : scoring 0-10 par dette (0-3 sain, 4-6 attention, 7-10 critique) selon la grille du module `03-gouvernance.md`, comptage mécanique où possible plutôt que jugement de mémoire (LEARNING-048).
+- Résultat :
+  - **Documentaire : 1/10 (sain)**. Constitution à jour, ADR tracés, registres actifs, conventions écrites, leçons capitalisées. Seul point : le rituel de fermeture à 3 questions n'est pas vérifié systématiquement sur les 35 sessions (introduit session 14 seulement).
+  - **Structurelle : 3/10 (sain, à la limite)**. Arborescence lisible, fichiers protégés respectés. Deux manques : hooks P22 basiques seulement (3 handlers `command`), P22-bis (5 types) non exploité ; aucun script ne vérifie mécaniquement l'intégrité de `MEMORY.md` comme sommaire (P15) — sa fraîcheur repose sur la vigilance humaine.
+  - **Cognitive : 4/10 (attention — dette dominante)**. Absence de glossaire propre à TUC tech (termes du domaine : closer, matching, meet-coaching, dispersés dans les PLAN.md sans index central). Une zone d'hésitation identifiée cette session : incohérence apparente entre `taches-a-faire/T01-T02` (statut ⏳ pending) et BLOCKER-001/H8/H9 déjà marqués résolus (LEARNING-036) — non tranchée, consignée dans `PLANIFICATION.md`.
+  - **Total : 8/30 — entité gouvernée** (seuil sain : 0-9).
+- Zones d'ombre nominatives :
+  1. Glossaire TUC tech absent (à créer, pas inventé ici — matière à extraire des PLAN.md et skills existants).
+  2. Incohérence T01/T02 vs BLOCKERS résolus — à trancher en session dédiée (inscrite dans `PLANIFICATION.md`).
+  3. Hooks P22-bis non exploités (5 types de handlers documentés, 1 seul type utilisé).
+  4. `MEMORY.md` sans vérification mécanique de son intégrité de sommaire.
+- Points « à valider Nacer » ouverts (< 2 sessions, sous le seuil d'alerte) : arbitrage sur `src/lib/database.types.ts` (fichier de types mort, SUGGESTION session 34).
+- Décision : Keep — dette dominante identifiée (cognitive, absence de glossaire) sans urgence bloquante. Prochain audit P25 complet au prochain seuil (10 sessions significatives ou 20 ADR — déjà franchi, donc dès la prochaine session dédiée gouvernance, cf. `PLANIFICATION.md`).
+- Lien vers ADR : ADR-039.

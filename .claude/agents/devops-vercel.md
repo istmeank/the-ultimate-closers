@@ -10,8 +10,8 @@ mode: AUDIT
 couche: 4
 pole: devops
 silicate_agent_version: souverain
-silicate_relay_date: 2026-06-23
-silicate_skeleton_version: v0.6
+silicate_relay_date: 2026-08-08
+silicate_skeleton_version: v1.5
 ---
 
 # devops-vercel — Pilote CI/CD TUC
