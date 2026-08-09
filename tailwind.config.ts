@@ -15,13 +15,19 @@ export default {
     extend: {
       colors: {
         border: "hsl(var(--border))",
+        hairline: "hsl(var(--hairline))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        "ink-strong": "hsl(var(--ink-strong))",
+        "surface-1": "hsl(var(--surface-1))",
+        "surface-2": "hsl(var(--surface-2))",
+        "surface-3": "hsl(var(--surface-3))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          glow: "hsl(var(--primary-glow))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -29,7 +35,30 @@ export default {
         },
         gold: {
           DEFAULT: "hsl(var(--gold))",
+          strong: "hsl(var(--gold-strong))",
+          soft: "hsl(var(--gold-soft))",
           glow: "hsl(var(--gold-glow))",
+        },
+        malachite: {
+          DEFAULT: "hsl(var(--malachite))",
+          mid: "hsl(var(--malachite-mid))",
+          soft: "hsl(var(--malachite-soft))",
+        },
+        bordeaux: {
+          DEFAULT: "hsl(var(--bordeaux))",
+          soft: "hsl(var(--bordeaux-soft))",
+        },
+        ank: {
+          DEFAULT: "hsl(var(--ank))",
+          soft: "hsl(var(--ank-soft))",
+        },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -68,8 +97,26 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        playfair: ['Playfair Display', 'serif'],
-        inter: ['Inter', 'sans-serif'],
+        /*
+         * Charte TUC §4 : Cambria, police unique de la marque. Elle est livrée
+         * avec Office et présente sur les postes Windows/macOS de l'écosystème
+         * TUC. Source Serif 4 prend le relais ailleurs — même famille de serif
+         * de lecture, même intention « journal / institution académique ».
+         * Playfair Display est écarté (serif de mode, contraste décoratif).
+         */
+        display: ['Cambria', 'Source Serif 4', 'Georgia', 'Times New Roman', 'serif'],
+        /* Alias historique : `font-playfair` reste valide et rend la police de la charte. */
+        playfair: ['Cambria', 'Source Serif 4', 'Georgia', 'Times New Roman', 'serif'],
+        inter: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+      },
+      fontSize: {
+        "2xs": ["0.6875rem", { lineHeight: "1rem" }],
+      },
+      boxShadow: {
+        hairline: "var(--shadow-hairline)",
+        soft: "var(--shadow-soft)",
+        raised: "var(--shadow-raised)",
+        glass: "var(--shadow-glass)",
       },
       keyframes: {
         "accordion-down": {

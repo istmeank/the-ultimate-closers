@@ -21,7 +21,7 @@ export default function SlackSettings() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="font-playfair text-3xl text-primary mb-2">Paramètres Slack</h1>
+        <h1 className="font-display text-3xl text-primary mb-2">Paramètres Slack</h1>
         <p className="text-muted-foreground">
           Recevez des notifications en temps réel sur vos leads qualifiés
         </p>

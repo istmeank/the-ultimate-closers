@@ -20,11 +20,11 @@ const NotFound = () => {
       </div>
 
       <div className="text-center space-y-6">
-        <h1 className="text-9xl font-playfair font-bold text-secondary">{t('notfound.title')}</h1>
+        <h1 className="text-9xl font-display font-bold text-secondary">{t('notfound.title')}</h1>
         <p className="text-2xl text-background/90">{t('notfound.subtitle')}</p>
         <Button
           onClick={() => window.location.href = '/'}
-          className="bg-secondary hover:bg-secondary/90 text-primary font-bold"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
         >
           {t('notfound.home')}
         </Button>

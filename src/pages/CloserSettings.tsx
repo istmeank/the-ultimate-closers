@@ -4,7 +4,7 @@ const CloserSettings = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-playfair text-3xl text-primary dark:text-gold">Paramètres</h1>
+        <h1 className="font-display text-3xl text-primary dark:text-gold">Paramètres</h1>
         <p className="text-muted-foreground dark:text-white/70 mt-2">
           Gérez vos préférences et paramètres
         </p>

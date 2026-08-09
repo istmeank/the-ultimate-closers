@@ -30,3 +30,8 @@ dist-ssr
 *.pem
 *.key
 
+
+# Mémoire de gouvernance — retirée de GitHub le 2026-08-09 (décision Nacer,
+# commit 8e3a8fe). Conservée sur le poste. Sauvegarde hors dépôt :
+# D:\Startup LABEL\sauvegardes\tuc-tech-claude-memoire-*.tar.gz
+.claude/

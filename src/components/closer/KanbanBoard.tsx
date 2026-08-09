@@ -12,8 +12,6 @@ import {
   type DealWithLead,
 } from '@/lib/services/meet.service';
 import { KanbanColumn } from './KanbanColumn';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { AlertTriangle } from 'lucide-react';
 
 type DealsByStage = Record<DealStage, DealWithLead[]>;
@@ -112,55 +110,69 @@ export const KanbanBoard = () => {
 
   if (isLoading) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Pipeline d'affaires</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-          </div>
-        </CardContent>
-      </Card>
+      <section className="tuc-panel p-4" aria-busy="true">
+        <div className="tuc-eyebrow mb-4">Pipeline d'affaires</div>
+        <div className="flex gap-3 overflow-hidden">
+          {DEAL_STAGE_ORDER.map((stage) => (
+            <div
+              key={stage}
+              className="h-56 w-[286px] shrink-0 animate-pulse rounded-[var(--radius)] border border-hairline bg-surface-2/60"
+            />
+          ))}
+        </div>
+        <span className="sr-only">Chargement du pipeline…</span>
+      </section>
     );
   }
 
   const totalDeals = deals?.length ?? 0;
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="font-playfair text-xl">Pipeline d'affaires</CardTitle>
-          <Badge variant="secondary" className="text-sm">
-            {totalDeals} affaire{totalDeals > 1 ? 's' : ''} au total
-          </Badge>
+    <section className="tuc-panel overflow-hidden">
+      <header className="tuc-hairline flex flex-wrap items-baseline justify-between gap-2 px-4 py-3">
+        <div>
+          <h2 className="font-display text-lg leading-tight text-ink-strong">Pipeline d'affaires</h2>
+          <p className="tuc-eyebrow mt-0.5">
+            {totalDeals} affaire{totalDeals > 1 ? 's' : ''} · {DEAL_STAGE_ORDER.length} stades
+          </p>
         </div>
-        {unmatchedDeals.length > 0 && (
-          <div className="mt-2 flex items-center gap-2 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-            <AlertTriangle className="h-4 w-4 shrink-0" aria-hidden="true" />
-            <span>
-              {unmatchedDeals.length} affaire{unmatchedDeals.length > 1 ? 's' : ''} avec un stade
-              inconnu — masquée{unmatchedDeals.length > 1 ? 's' : ''} du pipeline, voir la console.
-            </span>
-          </div>
-        )}
-      </CardHeader>
-      <CardContent>
-        <DragDropContext onDragEnd={onDragEnd}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4">
-            {DEAL_STAGE_ORDER.map((stage) => (
-              <KanbanColumn
-                key={stage}
-                stage={stage}
-                title={DEAL_STAGE_LABELS[stage]}
-                deals={dealsByStage[stage]}
-                isUpdating={updateDealStage.isPending}
-              />
-            ))}
-          </div>
-        </DragDropContext>
-      </CardContent>
-    </Card>
+        <p className="text-2xs text-muted-foreground">
+          Glissez une carte pour changer son stade
+        </p>
+      </header>
+
+      {unmatchedDeals.length > 0 && (
+        <div
+          role="status"
+          className="flex items-start gap-2 border-b border-hairline bg-bordeaux-soft px-4 py-2.5 text-sm text-bordeaux"
+        >
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+          <span>
+            {unmatchedDeals.length} affaire{unmatchedDeals.length > 1 ? 's' : ''} avec un stade
+            inconnu — masquée{unmatchedDeals.length > 1 ? 's' : ''} du pipeline, voir la console.
+          </span>
+        </div>
+      )}
+
+      <DragDropContext onDragEnd={onDragEnd}>
+        {/*
+          Défilement horizontal plutôt qu'une grille de 7 colonnes écrasées :
+          en dessous de 1 900 px, sept colonnes en grille rendent chaque carte
+          illisible. Le rail garde une largeur de colonne constante à toutes les
+          tailles d'écran, y compris sur mobile.
+        */}
+        <div className="flex gap-3 overflow-x-auto px-4 py-4">
+          {DEAL_STAGE_ORDER.map((stage) => (
+            <KanbanColumn
+              key={stage}
+              stage={stage}
+              title={DEAL_STAGE_LABELS[stage]}
+              deals={dealsByStage[stage]}
+              isUpdating={updateDealStage.isPending}
+            />
+          ))}
+        </div>
+      </DragDropContext>
+    </section>
   );
 };

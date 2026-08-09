@@ -53,18 +53,18 @@ const Footer = () => {
         
         {/* Constellation lines */}
         <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <line x1="15%" y1="10%" x2="25%" y2="25%" stroke="rgba(233,196,106,0.2)" strokeWidth="1" />
-          <line x1="25%" y1="25%" x2="35%" y2="15%" stroke="rgba(233,196,106,0.2)" strokeWidth="1" />
-          <line x1="25%" y1="25%" x2="20%" y2="40%" stroke="rgba(233,196,106,0.2)" strokeWidth="1" />
-          <line x1="20%" y1="40%" x2="10%" y2="50%" stroke="rgba(233,196,106,0.2)" strokeWidth="1" />
+          <line x1="15%" y1="10%" x2="25%" y2="25%" stroke="hsl(var(--gold-glow)/0.18)" strokeWidth="1" />
+          <line x1="25%" y1="25%" x2="35%" y2="15%" stroke="hsl(var(--gold-glow)/0.18)" strokeWidth="1" />
+          <line x1="25%" y1="25%" x2="20%" y2="40%" stroke="hsl(var(--gold-glow)/0.18)" strokeWidth="1" />
+          <line x1="20%" y1="40%" x2="10%" y2="50%" stroke="hsl(var(--gold-glow)/0.18)" strokeWidth="1" />
           
-          <line x1="80%" y1="20%" x2="85%" y2="35%" stroke="rgba(233,196,106,0.2)" strokeWidth="1" />
-          <line x1="85%" y1="35%" x2="75%" y2="45%" stroke="rgba(233,196,106,0.2)" strokeWidth="1" />
-          <line x1="75%" y1="45%" x2="70%" y2="60%" stroke="rgba(233,196,106,0.2)" strokeWidth="1" />
-          <line x1="70%" y1="60%" x2="82%" y2="70%" stroke="rgba(233,196,106,0.2)" strokeWidth="1" />
+          <line x1="80%" y1="20%" x2="85%" y2="35%" stroke="hsl(var(--gold-glow)/0.18)" strokeWidth="1" />
+          <line x1="85%" y1="35%" x2="75%" y2="45%" stroke="hsl(var(--gold-glow)/0.18)" strokeWidth="1" />
+          <line x1="75%" y1="45%" x2="70%" y2="60%" stroke="hsl(var(--gold-glow)/0.18)" strokeWidth="1" />
+          <line x1="70%" y1="60%" x2="82%" y2="70%" stroke="hsl(var(--gold-glow)/0.18)" strokeWidth="1" />
           
-          <line x1="40%" y1="80%" x2="50%" y2="70%" stroke="rgba(233,196,106,0.2)" strokeWidth="1" />
-          <line x1="50%" y1="70%" x2="55%" y2="85%" stroke="rgba(233,196,106,0.2)" strokeWidth="1" />
+          <line x1="40%" y1="80%" x2="50%" y2="70%" stroke="hsl(var(--gold-glow)/0.18)" strokeWidth="1" />
+          <line x1="50%" y1="70%" x2="55%" y2="85%" stroke="hsl(var(--gold-glow)/0.18)" strokeWidth="1" />
         </svg>
       </div>
       
@@ -73,14 +73,14 @@ const Footer = () => {
           {/* Logo */}
           <div className="flex items-center gap-3 group">
             <img src={logo} alt="The Ultimate Closers Logo" className="w-12 h-12 object-contain" />
-            <span className="font-playfair font-bold text-2xl text-white">
+            <span className="font-display font-bold text-2xl text-white">
               The Ultimate Closers
             </span>
           </div>
 
           {/* Quote */}
           <blockquote className="max-w-2xl">
-            <p className="font-playfair text-xl md:text-2xl italic text-[#e8d759]/[0.88]">
+            <p className="font-display text-xl md:text-2xl italic text-[#e8d759]/[0.88]">
               "{t('footer.quote')}"
             </p>
           </blockquote>
@@ -97,7 +97,7 @@ const Footer = () => {
             icon: Icon,
             href,
             label
-          }) => <a key={label} href={href} aria-label={label} className="p-3 rounded-full bg-white/10 hover:bg-secondary hover:text-primary text-white transition-all hover:scale-110">
+          }) => <a key={label} href={href} aria-label={label} className="p-3 rounded-full bg-white/10 hover:bg-primary hover:text-primary-foreground text-white transition-all hover:scale-110">
                 <Icon className="w-5 h-5" />
               </a>)}
             <ThemeToggle />

@@ -38,7 +38,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
             <div className="flex items-center gap-3">
               <img src={logo} alt="Logo" className="w-10 h-10 object-contain" />
               <div>
-                <h1 className="font-playfair font-bold text-xl text-primary dark:text-background">
+                <h1 className="font-display font-bold text-xl text-primary dark:text-background">
                   Admin Dashboard
                 </h1>
                 <p className="text-sm text-muted-foreground dark:text-background/80 font-inter">

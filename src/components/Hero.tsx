@@ -1,65 +1,88 @@
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import heroImage from '@/assets/hero-handshake.jpg';
+
+/**
+ * Hero de la page publique.
+ *
+ * La photographie de la poignée de main est conservée telle quelle — c'est le
+ * symbole du logo (charte §5 : « l'accord humain au cœur du système »). Le voile
+ * malachite → noir la laisse lisible tout en garantissant le contraste du texte.
+ *
+ * Ce qui a été retiré : les vingt particules animées (charte §8 — « pas
+ * d'éléments digitaux flashy », et elles se repositionnaient à chaque rendu) et
+ * `background-attachment: fixed`, qui ne tient pas sur iOS et saccade au
+ * défilement. La photo est désormais posée dans une couche dédiée, ce qui permet
+ * de la précharger et d'éviter le rendu progressif en fond CSS.
+ */
 const Hero = () => {
-  const {
-    t
-  } = useLanguage();
-  return <section id="hero" className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden" style={{
-    backgroundImage: `linear-gradient(rgba(13, 77, 68, 0.6), rgba(18, 18, 18, 0.7)), url(${heroImage})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundAttachment: 'fixed'
-  }}>
-      {/* Animated particles overlay */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(20)].map((_, i) => <div key={i} className="absolute w-1 h-1 bg-secondary rounded-full animate-particle-float opacity-60" style={{
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-        animationDelay: `${Math.random() * 8}s`,
-        animationDuration: `${8 + Math.random() * 4}s`
-      }} />)}
-      </div>
+  const { t } = useLanguage();
 
-      <div className="container mx-auto px-4 z-10">
-        <div className="max-w-4xl mx-auto text-center animate-fade-in">
-          {/* Neural halo effect */}
-          <div className="inline-flex items-center gap-2 mb-6 px-6 py-3 bg-primary/20 backdrop-blur-sm border border-gold/30 rounded-lg">
-            <Sparkles className="w-5 h-5 text-gold animate-glow-pulse" />
-            <span className="font-inter text-sm text-gold font-medium">Closing is Art - Not Tbla3it</span>
-          </div>
+  return (
+    <section
+      id="hero"
+      className="relative flex min-h-screen items-center justify-center overflow-hidden pt-20"
+    >
+      {/* Photographie */}
+      <img
+        src={heroImage}
+        alt=""
+        aria-hidden="true"
+        fetchPriority="high"
+        className="absolute inset-0 h-full w-full object-cover object-center"
+      />
 
-          {/* Main title */}
-          <h1 className="font-playfair font-bold text-2xl md:text-4xl lg:text-5xl text-white dark:text-primary mb-6 leading-tight">
+      {/* Voile de lecture — malachite profond vers noir, jeton --gradient-veil. */}
+      <div
+        className="absolute inset-0"
+        style={{ background: 'var(--gradient-veil)' }}
+        aria-hidden="true"
+      />
+
+      <div className="container relative z-10 mx-auto px-4">
+        <div className="mx-auto max-w-3xl text-center animate-fade-in">
+          {/* Signature de marque */}
+          <p className="mb-6 inline-flex items-center rounded-full border border-gold-glow/40 bg-black/25 px-4 py-1.5 font-inter text-xs font-medium tracking-[0.14em] text-gold-glow uppercase backdrop-blur-sm">
+            Closing is Art — Not Tbla3it
+          </p>
+
+          {/* Titre */}
+          <h1 className="mb-6 font-display text-3xl font-bold leading-[1.15] text-white md:text-5xl lg:text-[3.25rem]">
             {t('hero.title')}
           </h1>
 
-          {/* Subtitle */}
-          <p className="font-inter text-lg md:text-xl text-white/90 mb-10 max-w-2xl mx-auto">
+          {/* Sous-titre */}
+          <p className="mx-auto mb-10 max-w-2xl font-inter text-lg leading-relaxed text-white/85 md:text-xl">
             {t('hero.subtitle')}
           </p>
 
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button asChild size="lg" className="bg-secondary hover:bg-secondary/90 text-primary font-semibold px-8 py-6 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all group">
+          {/* Appels à l'action */}
+          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Button
+              asChild
+              size="lg"
+              className="group rounded-full bg-gold-glow px-8 py-6 font-semibold text-[hsl(168_74%_12%)] shadow-soft transition-colors hover:bg-gold-glow/90"
+            >
               <Link to="/reserver-appel">
                 {t('hero.cta.primary')}
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-0.5" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="bg-background/10 backdrop-blur-sm border-2 border-secondary hover:bg-secondary hover:text-primary text-white font-semibold px-8 py-6 rounded-full transition-all">
-              <Link to="/auth">
-                {t('hero.cta.secondary')}
-              </Link>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="rounded-full border-2 border-white/45 bg-white/5 px-8 py-6 font-semibold text-white backdrop-blur-sm transition-colors hover:border-white hover:bg-white/15 hover:text-white"
+            >
+              <Link to="/auth">{t('hero.cta.secondary')}</Link>
             </Button>
           </div>
-
-          {/* Floating animation hint */}
-          
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
+
 export default Hero;

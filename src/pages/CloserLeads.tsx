@@ -59,7 +59,7 @@ export default function CloserLeads() {
     <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-playfair text-3xl text-primary mb-2">Mes Leads</h1>
+          <h1 className="font-display text-3xl text-primary mb-2">Mes Leads</h1>
           <p className="text-muted-foreground">
             {filteredLeads.length} lead{filteredLeads.length > 1 ? 's' : ''} assigné{filteredLeads.length > 1 ? 's' : ''}
           </p>

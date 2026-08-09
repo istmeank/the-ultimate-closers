@@ -134,7 +134,7 @@ const LeadDetail = () => {
               Retour
             </Button>
           <div>
-            <h1 className="font-playfair text-3xl text-primary dark:text-gold">{lead.full_name}</h1>
+            <h1 className="font-display text-3xl text-primary dark:text-gold">{lead.full_name}</h1>
             <p className="text-muted-foreground dark:text-white/70">
               Créé {formatDistanceToNow(new Date(lead.created_at), { 
                 addSuffix: true, 
@@ -165,7 +165,7 @@ const LeadDetail = () => {
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
 
               <CardHeader className="relative z-10">
-                <CardTitle className="font-playfair text-xl dark:text-gold">Timeline des Interactions</CardTitle>
+                <CardTitle className="font-display text-xl dark:text-gold">Timeline des Interactions</CardTitle>
               </CardHeader>
               <CardContent className="relative z-10">
                 <InteractionsTimeline leadId={lead.id} />
@@ -182,7 +182,7 @@ const LeadDetail = () => {
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
 
                 <CardHeader className="relative z-10">
-                  <CardTitle className="font-playfair text-xl dark:text-gold">Deals Associés</CardTitle>
+                  <CardTitle className="font-display text-xl dark:text-gold">Deals Associés</CardTitle>
                 </CardHeader>
                 <CardContent className="relative z-10">
                   <div className="space-y-4">
@@ -214,7 +214,7 @@ const LeadDetail = () => {
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
 
               <CardHeader className="relative z-10">
-                <CardTitle className="font-playfair text-lg dark:text-gold">Informations</CardTitle>
+                <CardTitle className="font-display text-lg dark:text-gold">Informations</CardTitle>
               </CardHeader>
               <CardContent className="relative z-10 space-y-4">
                 <div>
@@ -250,7 +250,7 @@ const LeadDetail = () => {
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
 
               <CardHeader className="relative z-10">
-                <CardTitle className="font-playfair text-lg dark:text-gold">Actions Rapides</CardTitle>
+                <CardTitle className="font-display text-lg dark:text-gold">Actions Rapides</CardTitle>
               </CardHeader>
               <CardContent className="relative z-10 space-y-3">
                 {lead.phone && (

@@ -64,7 +64,7 @@ export const ClosersManager = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-playfair font-bold text-3xl text-background">
+          <h2 className="font-display font-bold text-3xl text-background">
             Gestion des Closers
           </h2>
           <p className="text-muted-foreground mt-1">

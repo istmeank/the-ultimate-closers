@@ -80,14 +80,14 @@ export const CreateUserDialog = ({ onUserCreated }: { onUserCreated: () => void 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-secondary hover:bg-secondary/90 text-primary">
+        <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
           <UserPlus className="w-4 h-4 mr-2" />
           Créer utilisateur
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle className="font-playfair text-2xl text-primary">
+          <DialogTitle className="font-display text-2xl text-primary">
             Créer un nouvel utilisateur
           </DialogTitle>
         </DialogHeader>
@@ -191,7 +191,7 @@ export const CreateUserDialog = ({ onUserCreated }: { onUserCreated: () => void 
             </Button>
             <Button
               type="submit"
-              className="flex-1 bg-secondary hover:bg-secondary/90 text-primary"
+              className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
               disabled={loading}
             >
               {loading ? 'Création...' : 'Créer l\'utilisateur'}

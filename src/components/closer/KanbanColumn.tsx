@@ -1,8 +1,7 @@
 import { Droppable, Draggable } from '@hello-pangea/dnd';
-import { CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { LeadCard } from './LeadCard';
-import type { DealStage, DealWithLead } from '@/lib/services/meet.service';
+import { STAGE_TOKENS } from './stageTokens';
+import { formatAmountCents, type DealStage, type DealWithLead } from '@/lib/services/meet.service';
 
 interface KanbanColumnProps {
   stage: DealStage;
@@ -11,73 +10,85 @@ interface KanbanColumnProps {
   isUpdating: boolean;
 }
 
-/** Habillage décoratif par stade — pas un jeton de sens (ne remplace jamais un libellé). */
-const STAGE_SURFACE: Record<DealStage, string> = {
-  opportunite: 'border-violet-200 bg-violet-50/50 dark:border-violet-900/40 dark:bg-violet-950/20',
-  programme: 'border-blue-200 bg-blue-50/50 dark:border-blue-900/40 dark:bg-blue-950/20',
-  a_reprogrammer: 'border-amber-200 bg-amber-50/50 dark:border-amber-900/40 dark:bg-amber-950/20',
-  a_relancer: 'border-orange-200 bg-orange-50/50 dark:border-orange-900/40 dark:bg-orange-950/20',
-  close: 'border-emerald-200 bg-emerald-50/50 dark:border-emerald-900/40 dark:bg-emerald-950/20',
-  paye: 'border-primary/40 bg-primary/10',
-  perdu: 'border-red-200 bg-red-50/50 dark:border-red-900/40 dark:bg-red-950/20',
-};
-
+/**
+ * Colonne du pipeline. Grammaire Linear : largeur fixe, filet fin, entête
+ * collante, densité d'information — pas d'aplat coloré ni d'ombre portée
+ * décorative. Le seul signal chromatique est la pastille de stade, doublée du
+ * libellé (voir stageTokens.ts).
+ */
 export const KanbanColumn = ({ stage, title, deals, isUpdating }: KanbanColumnProps) => {
+  const token = STAGE_TOKENS[stage];
+
+  // Somme des montants de la colonne — un closer lit d'abord la valeur du stade.
+  // Les affaires sans montant sont ignorées, elles ne valent pas zéro.
+  const valued = deals.filter((deal) => deal.amount_cents != null);
+  const currency = valued[0]?.currency ?? 'DZD';
+  const totalCents = valued.reduce((sum, deal) => sum + (deal.amount_cents ?? 0), 0);
+
   return (
-    <div
-      className={`group relative overflow-hidden bg-background/80 dark:bg-black/80 backdrop-blur-sm rounded-2xl border-2 ${STAGE_SURFACE[stage]} transition-all hover:shadow-lg`}
+    <section
+      aria-label={`${title} — ${token.srLabel}`}
+      className="flex w-[286px] shrink-0 flex-col rounded-[var(--radius)] border border-hairline bg-surface-2/60"
     >
-      {/* Gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-30 group-hover:opacity-50 transition-opacity" />
+      {/* Filet de stade — 2 px, le seul aplat de couleur autorisé. */}
+      <div className={`h-0.5 w-full rounded-t-[var(--radius)] ${token.rail}`} aria-hidden="true" />
 
-      <CardHeader className="relative z-10 pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="font-playfair font-bold text-lg text-primary dark:text-gold">
+      <header className="sticky top-0 z-10 rounded-t-[var(--radius)] bg-surface-2/95 px-3 py-2.5 backdrop-blur-sm">
+        <div className="flex items-center gap-2">
+          <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${token.dot}`} aria-hidden="true" />
+          <h3 className={`min-w-0 flex-1 truncate font-inter text-[0.8125rem] font-semibold tracking-tight ${token.title}`}>
             {title}
-          </CardTitle>
-          <Badge variant="outline" className="text-xs dark:text-white/80">
+          </h3>
+          <span className="tuc-numeric rounded-full bg-background/70 px-1.5 py-0.5 text-2xs font-medium text-muted-foreground">
             {deals.length}
-          </Badge>
+          </span>
         </div>
-      </CardHeader>
 
-      <CardContent className="relative z-10 pt-0">
-        <Droppable droppableId={stage}>
-          {(provided, snapshot) => (
-            <div
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-              className={`space-y-3 min-h-[200px] transition-colors ${
-                snapshot.isDraggingOver ? 'bg-primary/5 rounded-lg' : ''
-              } ${isUpdating ? 'opacity-50 pointer-events-none' : ''}`}
-            >
-              {deals.map((deal, index) => (
-                <Draggable key={deal.id} draggableId={deal.id} index={index}>
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className={`transition-all ${
-                        snapshot.isDragging ? 'rotate-2 scale-105 shadow-2xl' : 'hover:scale-105'
-                      }`}
-                    >
-                      <LeadCard deal={deal} />
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
+        {valued.length > 0 && (
+          <p className="tuc-numeric mt-1 pl-3.5 text-2xs text-muted-foreground">
+            {formatAmountCents(totalCents, currency)}
+          </p>
+        )}
+      </header>
 
-              {deals.length === 0 && (
-                <div className="text-center text-muted-foreground text-sm py-8">
-                  Aucune affaire
-                </div>
-              )}
-            </div>
-          )}
-        </Droppable>
-      </CardContent>
-    </div>
+      <Droppable droppableId={stage}>
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            className={`flex-1 space-y-2 px-2 pb-2 transition-colors duration-150 ${
+              snapshot.isDraggingOver ? token.dropTint : ''
+            } ${isUpdating ? 'pointer-events-none opacity-60' : ''}`}
+            style={{ minHeight: 180 }}
+          >
+            {deals.map((deal, index) => (
+              <Draggable key={deal.id} draggableId={deal.id} index={index}>
+                {(dragProvided, dragSnapshot) => (
+                  <div
+                    ref={dragProvided.innerRef}
+                    {...dragProvided.draggableProps}
+                    {...dragProvided.dragHandleProps}
+                    className={
+                      dragSnapshot.isDragging
+                        ? 'shadow-raised [&>*]:border-primary/60'
+                        : 'transition-shadow duration-150'
+                    }
+                  >
+                    <LeadCard deal={deal} />
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+
+            {deals.length === 0 && !snapshot.isDraggingOver && (
+              <p className="px-2 py-6 text-center text-2xs text-muted-foreground/70">
+                Aucune affaire
+              </p>
+            )}
+          </div>
+        )}
+      </Droppable>
+    </section>
   );
 };

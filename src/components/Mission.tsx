@@ -24,7 +24,7 @@ const Mission = () => {
   return <section id="mission" className="py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center mb-16 animate-fade-in">
-          <h2 className="font-playfair font-bold text-4xl md:text-5xl mb-6 text-[#02744e]">
+          <h2 className="font-display font-bold text-4xl md:text-5xl mb-6 text-[#02744e]">
             {t('mission.title')}
           </h2>
           <p className="font-inter text-lg md:text-xl text-foreground/80 leading-relaxed">
@@ -38,14 +38,14 @@ const Mission = () => {
           key,
           icon: Icon,
           color
-        }, index) => <div key={key} className="group relative overflow-hidden p-8 rounded-2xl bg-card backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale" style={{
+        }, index) => <div key={key} className="group relative overflow-hidden p-8 rounded-2xl bg-card backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 animate-fade-in-scale" style={{
           animationDelay: `${index * 0.1}s`
         }}>
               {/* Gradient background */}
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
               
               {/* Glow effect */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)]" />
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--gold-glow)/0.14),transparent_70%)]" />
               
               <div className="relative z-10 flex flex-col items-center text-center gap-4">
                 <div className={`p-4 rounded-full bg-background border-2 border-border group-hover:border-secondary group-hover:scale-110 transition-transform ${color}`}>

@@ -90,7 +90,11 @@ const Auth = () => {
           backgroundRepeat: 'no-repeat'
         }}
       >
-        <div className="absolute inset-0 bg-[hsl(167,69%,18%)]/80 backdrop-blur-sm" />
+        {/* Voile de la charte plutôt qu'un HSL écrit en dur — suit le thème. */}
+        <div
+          className="absolute inset-0 backdrop-blur-[2px]"
+          style={{ background: 'var(--gradient-veil)' }}
+        />
       </div>
 
       {/* Debug Info */}
@@ -102,14 +106,14 @@ const Auth = () => {
         <LanguageSelector />
       </div>
 
-      <Card className="w-full max-w-md relative z-10 bg-background/95 backdrop-blur-sm border-secondary/20 shadow-2xl animate-fade-in">
+      <Card className="w-full max-w-md relative z-10 bg-surface-1/97 backdrop-blur-sm border-hairline shadow-raised animate-fade-in">
         <div className="p-8 space-y-8">
           {/* Logo and Title */}
           <div className="text-center space-y-4">
             <div className="flex justify-center mb-4">
               <img src={logo} alt="The Ultimate Closers Logo" className="w-20 h-20 object-contain" />
             </div>
-            <h1 className="font-playfair font-bold text-3xl text-secondary">
+            <h1 className="font-display font-bold text-3xl text-ink-strong">
               {t('auth.title')}
             </h1>
             <p className="font-inter text-muted-foreground">
@@ -148,7 +152,7 @@ const Auth = () => {
               <Button
                 type="submit"
                 disabled={isSubmitting || loading}
-                className="w-full bg-secondary hover:bg-secondary/90 text-primary font-bold py-6 rounded-lg shadow-lg hover:shadow-[0_0_30px_rgba(233,196,106,0.5)] transition-all"
+                className="w-full py-6 text-base font-semibold shadow-soft transition-colors"
               >
                 {isSubmitting ? t('auth.signingIn') : t('auth.signin')}
               </Button>

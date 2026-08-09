@@ -116,7 +116,7 @@ export const UsersManager = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-playfair font-bold text-3xl text-background">
+          <h2 className="font-display font-bold text-3xl text-background">
             Utilisateurs
           </h2>
           <p className="text-background/70 font-inter mt-1">
@@ -126,12 +126,12 @@ export const UsersManager = () => {
         <CreateUserDialog onUserCreated={loadUsers} />
       </div>
 
-      <Card className="group relative overflow-hidden bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale p-6">
+      <Card className="group relative overflow-hidden bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 animate-fade-in-scale p-6">
         {/* Gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
         
         {/* Glow effect */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)]" />
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--gold-glow)/0.14),transparent_70%)]" />
 
         <div className="relative z-10">
           <div className="mb-4">
@@ -180,7 +180,7 @@ export const UsersManager = () => {
                           <Badge className="bg-purple-500 text-white">Owner</Badge>
                         )}
                         {isAdmin && (
-                          <Badge className="bg-secondary text-primary">Admin</Badge>
+                          <Badge className="bg-primary text-primary-foreground">Admin</Badge>
                         )}
                         {isCloser && (
                           <Badge className="bg-blue-500 text-white">Closer</Badge>

@@ -100,7 +100,7 @@ const FormStep6Commitment = ({ form, onPrevious, isSubmitting }: FormStep6Commit
         </Button>
         <Button
           type="submit"
-          className="flex-1 bg-gradient-to-r from-secondary to-primary hover:shadow-[0_0_40px_rgba(233,196,106,0.5)] transition-all"
+          className="flex-1 bg-gradient-to-r from-secondary to-primary transition-all"
           disabled={isSubmitting}
         >
           {isSubmitting ? (

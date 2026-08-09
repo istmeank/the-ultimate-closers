@@ -67,14 +67,14 @@ export const AddContentDialog = ({ onContentAdded }: { onContentAdded: () => voi
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-secondary hover:bg-secondary/90 text-primary">
+        <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
           <Plus className="w-4 h-4 mr-2" />
           Ajouter une section
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="font-playfair text-2xl text-primary">
+          <DialogTitle className="font-display text-2xl text-primary">
             Ajouter une section de contenu
           </DialogTitle>
         </DialogHeader>
@@ -151,7 +151,7 @@ export const AddContentDialog = ({ onContentAdded }: { onContentAdded: () => voi
             </Button>
             <Button
               type="submit"
-              className="flex-1 bg-secondary hover:bg-secondary/90 text-primary"
+              className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
               disabled={loading}
             >
               {loading ? 'Ajout...' : 'Ajouter la section'}

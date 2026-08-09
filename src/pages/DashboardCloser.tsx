@@ -8,19 +8,23 @@ const DashboardCloser = () => {
   
   return (
     <div className="space-y-6">
-      {/* Header avec image de poignée de main */}
-      <div className="relative rounded-lg overflow-hidden border">
-        <img 
-          src={handshakeImage} 
-          alt={t('closer.title')}
-          className="w-full h-48 object-cover opacity-70"
+      {/* Bandeau — la poignée de main du logo, voilée pour rester un fond et non un sujet. */}
+      <div className="relative overflow-hidden rounded-[var(--radius)] border border-hairline">
+        <img
+          src={handshakeImage}
+          alt=""
+          aria-hidden="true"
+          className="h-32 w-full object-cover object-center md:h-36"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70 flex items-center px-8">
+        <div
+          className="absolute inset-0 flex items-center px-6 md:px-8"
+          style={{ background: 'var(--gradient-veil)' }}
+        >
           <div>
-            <h1 className="font-playfair text-4xl text-primary-foreground font-bold drop-shadow-lg">
+            <h1 className="font-display text-2xl font-bold leading-tight text-white md:text-3xl">
               {t('closer.title')}
             </h1>
-            <p className="text-primary-foreground/90 mt-2 font-inter text-lg">
+            <p className="mt-1 font-inter text-sm text-white/80 md:text-base">
               {t('closer.subtitle')}
             </p>
           </div>

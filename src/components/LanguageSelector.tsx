@@ -42,7 +42,7 @@ const LanguageSelector = ({ className = '' }: LanguageSelectorProps) => {
             key={lang.code}
             onClick={() => setLanguage(lang.code)}
             className={`cursor-pointer ${
-              language === lang.code ? 'bg-secondary text-primary font-semibold' : ''
+              language === lang.code ? 'bg-primary text-primary-foreground font-semibold' : ''
             }`}
           >
             <span className="mr-2">{lang.flag}</span>

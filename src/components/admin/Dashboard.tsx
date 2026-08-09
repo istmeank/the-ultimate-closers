@@ -57,19 +57,19 @@ export const Dashboard = () => {
     color: 'text-secondary'
   }];
   return <div className="space-y-6">
-      <h2 className="font-playfair font-bold text-3xl text-primary dark:text-gold">
+      <h2 className="font-display font-bold text-3xl text-primary dark:text-gold">
         Vue d'ensemble
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {statCards.map((stat, index) => <Card key={stat.title} className="group relative overflow-hidden bg-background/95 dark:bg-[hsl(167,69%,18%)]/80 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale p-6" style={{
+        {statCards.map((stat, index) => <Card key={stat.title} className="group relative overflow-hidden bg-surface-1 border border-hairline hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 animate-fade-in-scale p-6" style={{
         animationDelay: `${index * 0.1}s`
       }}>
             {/* Gradient background */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
             
             {/* Glow effect */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)]" />
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--gold-glow)/0.14),transparent_70%)]" />
 
             <div className="relative z-10 flex items-center justify-between">
               <div>
@@ -85,7 +85,7 @@ export const Dashboard = () => {
           </Card>)}
       </div>
 
-      <Card className="group relative overflow-hidden bg-background/95 dark:bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale p-6">
+      <Card className="group relative overflow-hidden bg-background/95 dark:bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 animate-fade-in-scale p-6">
         {/* Background image pour light mode */}
         <div 
           className="absolute inset-0 dark:hidden bg-cover bg-center opacity-40"
@@ -99,10 +99,10 @@ export const Dashboard = () => {
         <div className="hidden dark:block absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
         
         {/* Glow effect pour dark mode */}
-        <div className="hidden dark:block absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)] bg-[#10433c]" />
+        <div className="hidden dark:block absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--gold-glow)/0.14),transparent_70%)] bg-malachite" />
 
         <div className="relative z-10 bg-white dark:bg-transparent p-6 rounded-lg">
-          <h3 className="font-playfair font-bold text-xl mb-4 text-secondary dark:text-[#e8c669]">
+          <h3 className="font-display font-bold text-xl mb-4 text-secondary dark:text-[#e8c669]">
             Bienvenue dans le panel d'administration
           </h3>
           <p className="text-foreground dark:text-muted-foreground font-inter">

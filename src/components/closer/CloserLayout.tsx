@@ -59,7 +59,7 @@ export const CloserLayout = ({ children }: CloserLayoutProps) => {
               alt="Logo" 
               className="w-8 h-8 object-contain hover:drop-shadow-[0_0_10px_hsl(44,73%,66%/0.6)] transition-all" 
             />
-            <h1 className="font-playfair text-xl font-bold bg-gradient-to-r from-primary via-secondary/80 to-primary bg-clip-text text-transparent">
+            <h1 className="font-display text-xl font-bold bg-gradient-to-r from-primary via-secondary/80 to-primary bg-clip-text text-transparent">
               Dashboard Closer
             </h1>
           </div>
@@ -82,7 +82,7 @@ export const CloserLayout = ({ children }: CloserLayoutProps) => {
             <RoleSwitcher />
             <Button
               onClick={handleSignOut}
-              className="bg-secondary text-primary hover:bg-secondary/90 hover:shadow-[0_0_20px_hsl(44,73%,66%/0.5)] transition-all duration-300"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300"
             >
               <LogOut className="w-4 h-4 mr-2" />
               {t('closer.logout')}
@@ -157,7 +157,7 @@ const CloserSidebarContent = () => {
                       className={({ isActive }) =>
                         `flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300 ${
                           isActive
-                            ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-[0_0_15px_hsl(44,73%,66%/0.4)] dark:bg-secondary/20 dark:text-secondary dark:border-secondary'
+                            ? 'bg-primary/20 text-primary border-l-4 border-primary dark:bg-secondary/20 dark:text-secondary dark:border-secondary'
                             : 'text-secondary-foreground/90 hover:text-primary hover:bg-primary/10 dark:text-primary-foreground/70 dark:hover:text-secondary dark:hover:bg-secondary/10'
                         }`
                       }

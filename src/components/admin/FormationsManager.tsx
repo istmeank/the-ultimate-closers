@@ -126,7 +126,7 @@ export const FormationsManager = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="font-playfair font-bold text-3xl text-background">
+        <h2 className="font-display font-bold text-3xl text-background">
           Formations
         </h2>
         <Dialog open={open} onOpenChange={setOpen}>
@@ -136,7 +136,7 @@ export const FormationsManager = () => {
                 setEditingFormation(emptyFormation);
                 setOpen(true);
               }}
-              className="bg-secondary hover:bg-secondary/90 text-primary"
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
             >
               <Plus className="w-4 h-4 mr-2" />
               Ajouter
@@ -160,12 +160,12 @@ export const FormationsManager = () => {
       </div>
 
       {formations.length === 0 ? (
-        <Card className="group relative overflow-hidden bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale p-6">
+        <Card className="group relative overflow-hidden bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 animate-fade-in-scale p-6">
           {/* Gradient background */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
           
           {/* Glow effect */}
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)]" />
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--gold-glow)/0.14),transparent_70%)]" />
 
           <p className="relative z-10 text-muted-foreground font-inter">
             Aucune formation pour le moment. Cliquez sur "Ajouter" pour créer votre première formation.
@@ -176,14 +176,14 @@ export const FormationsManager = () => {
           {formations.map((formation, index) => (
             <Card
               key={formation.id}
-              className="group relative overflow-hidden bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale p-6"
+              className="group relative overflow-hidden bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 animate-fade-in-scale p-6"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               {/* Gradient background */}
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
               
               {/* Glow effect */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)]" />
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--gold-glow)/0.14),transparent_70%)]" />
 
               <div className="relative z-10">
                 <div className="flex items-start justify-between gap-4">
@@ -200,7 +200,7 @@ export const FormationsManager = () => {
                       </div>
                     )}
                     <div className="flex-1">
-                      <h3 className="font-playfair font-bold text-lg text-primary">
+                      <h3 className="font-display font-bold text-lg text-primary">
                         {formation.title}
                       </h3>
                       <p className="text-sm text-muted-foreground mt-1">
@@ -354,7 +354,7 @@ const FormationForm = ({
 
       <Button
         onClick={() => onSave(formation)}
-        className="w-full bg-secondary hover:bg-secondary/90 text-primary"
+        className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
       >
         <Save className="w-4 h-4 mr-2" />
         Sauvegarder

@@ -38,7 +38,7 @@ export const AccessDenied = () => {
         </div>
         
         <div className="space-y-2">
-          <h1 className="font-playfair text-3xl text-primary">{t('access.title')}</h1>
+          <h1 className="font-display text-3xl text-primary">{t('access.title')}</h1>
           <p className="text-muted-foreground">
             {t('access.subtitle')}
           </p>

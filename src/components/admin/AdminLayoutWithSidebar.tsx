@@ -32,7 +32,7 @@ export const AdminLayoutWithSidebar = () => {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat'
       }}>
-          <div className="absolute inset-0 bg-[hsl(167,69%,18%)]/60 dark:bg-[hsl(167,69%,10%)]/90 backdrop-blur-sm" />
+          <div className="absolute inset-0 backdrop-blur-sm" style={{ background: 'var(--gradient-veil)' }} />
         </div>
 
         {/* Header avec accent vert */}
@@ -40,7 +40,7 @@ export const AdminLayoutWithSidebar = () => {
           <div className="flex items-center gap-3">
             <SidebarTrigger className="text-white hover:text-secondary-foreground" />
             <img src={logo} alt="Logo" className="w-8 h-8 object-contain" />
-            <h1 className="font-playfair text-xl font-bold text-white">
+            <h1 className="font-display text-xl font-bold text-white">
               Admin Dashboard
             </h1>
           </div>

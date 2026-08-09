@@ -15,7 +15,7 @@ const FormStep1Intro = ({
       <div className="text-center space-y-4">
         <div className="flex flex-col items-center gap-3 mb-4">
           <img src={logoTUC} alt="The Ultimate Closers" className="w-20 h-20 object-contain" />
-          <p className="font-playfair text-2xl font-semibold text-[#0e4e40]">
+          <p className="font-display text-2xl font-semibold text-[#0e4e40]">
             The Ultimate Closers
           </p>
         </div>
@@ -29,12 +29,12 @@ const FormStep1Intro = ({
         </p>
       </div>
 
-      <div className="group relative overflow-hidden bg-card/50 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale rounded-2xl p-6 md:p-8 space-y-4">
+      <div className="group relative overflow-hidden bg-card/50 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 animate-fade-in-scale rounded-2xl p-6 md:p-8 space-y-4">
         {/* Gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity rounded-2xl" />
         
         {/* Glow effect */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)] rounded-2xl" />
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--gold-glow)/0.14),transparent_70%)] rounded-2xl" />
 
         <div className="relative z-10">
           <h3 className="text-xl font-semibold text-secondary">
@@ -65,7 +65,7 @@ const FormStep1Intro = ({
       </div>
 
       <div className="flex justify-center pt-4">
-        <Button onClick={onNext} size="lg" className="bg-gradient-to-r from-secondary to-primary hover:shadow-[0_0_40px_rgba(233,196,106,0.5)] transition-all px-12 py-6 text-lg font-bold group">
+        <Button onClick={onNext} size="lg" className="bg-gradient-to-r from-secondary to-primary transition-all px-12 py-6 text-lg font-bold group">
           {t('booking.step1.button')}
           <Sparkles className="ml-2 w-5 h-5 group-hover:rotate-180 transition-transform duration-500" />
         </Button>

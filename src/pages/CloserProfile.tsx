@@ -87,7 +87,7 @@ export default function CloserProfile() {
           <AvatarFallback className="text-2xl">AM</AvatarFallback>
         </Avatar>
         <div>
-          <h1 className="font-playfair text-3xl text-primary dark:text-gold mb-2">Mon Profil Closer</h1>
+          <h1 className="font-display text-3xl text-primary dark:text-gold mb-2">Mon Profil Closer</h1>
           <p className="text-muted-foreground dark:text-white/70">
             Gérez vos informations et préférences
           </p>

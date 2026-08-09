@@ -71,7 +71,7 @@ export const GoogleCalendarSettings = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-playfair font-bold text-3xl text-primary dark:text-gold mb-2">
+        <h2 className="font-display font-bold text-3xl text-primary dark:text-gold mb-2">
           Google Calendar
         </h2>
         <p className="text-muted-foreground dark:text-white/70">
@@ -79,7 +79,7 @@ export const GoogleCalendarSettings = () => {
         </p>
       </div>
 
-      <Card className="p-6 bg-background/95 dark:bg-[hsl(167,69%,18%)]/80 backdrop-blur-sm border-secondary/20 dark:border-gold/20">
+      <Card className="p-6 bg-surface-1 border-hairline">
         <div className="flex items-start gap-4">
           <div className="p-3 rounded-lg bg-secondary/20 dark:bg-gold/20">
             <Calendar className="w-6 h-6 text-secondary dark:text-gold" />

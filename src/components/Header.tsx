@@ -19,13 +19,13 @@ const Header = () => {
 
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/85 backdrop-blur-md border-b border-hairline">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <a href="#hero" className="flex items-center gap-3 group">
             <img src={logo} alt="The Ultimate Closers Logo" className="w-10 h-10 object-contain" />
-            <span className="font-playfair font-bold text-xl text-secondary dark:text-gold group-hover:text-primary transition-colors">
+            <span className="font-display font-bold text-xl text-secondary dark:text-gold group-hover:text-primary transition-colors">
               The Ultimate Closers
             </span>
           </a>
@@ -39,7 +39,7 @@ const Header = () => {
                 className="font-inter text-sm font-medium text-foreground hover:text-secondary transition-colors relative group"
               >
                 {t(item.key)}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary group-hover:w-full transition-all duration-300" />
+                <span className="absolute -bottom-1 left-0 w-0 h-px bg-gold-glow group-hover:w-full transition-all duration-300" />
               </a>
             ))}
           </nav>

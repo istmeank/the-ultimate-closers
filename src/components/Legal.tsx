@@ -43,7 +43,7 @@ const Legal = () => {
               </Button>
             </Link>
           </div>
-          <h1 className="font-playfair font-bold text-4xl md:text-5xl text-primary mb-4">
+          <h1 className="font-display font-bold text-4xl md:text-5xl text-primary mb-4">
             Mentions Légales & Politique de Confidentialité
           </h1>
           <p className="text-muted-foreground text-lg">

@@ -142,7 +142,7 @@ export const UnifiedSidebar = () => {
   const closerItems = visibleItems.filter(i => i.href.startsWith('/dashboard-closer'));
 
   return (
-    <Sidebar collapsible="icon" className="bg-[hsl(167,69%,18%)] border-r border-gold/10">
+    <Sidebar collapsible="icon" className="bg-sidebar text-sidebar-foreground border-r border-sidebar-border">
       <SidebarContent className="pt-20">
         {/* Section Admin */}
         {adminItems.length > 0 && (
@@ -165,7 +165,7 @@ export const UnifiedSidebar = () => {
                                 ? 'bg-gold/30 text-gold border-2 border-gold shadow-[0_0_20px_hsl(44,73%,66%/0.6)] font-bold'
                                 : 'bg-gold/10 text-gold border border-gold/50 hover:bg-gold/20 hover:shadow-[0_0_15px_hsl(44,73%,66%/0.4)] font-semibold'
                               : isActive
-                                ? 'bg-gold/20 text-gold border-l-4 border-gold shadow-[0_0_15px_hsl(44,73%,66%/0.4)]'
+                                ? 'bg-gold/20 text-gold border-l-4 border-gold'
                                 : 'text-gold/70 hover:text-gold hover:bg-gold/10'
                           }`
                         }
@@ -198,7 +198,7 @@ export const UnifiedSidebar = () => {
                         className={({ isActive }) =>
                           `flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300 ${
                             isActive
-                              ? 'bg-gold/20 text-gold border-l-4 border-gold shadow-[0_0_15px_hsl(44,73%,66%/0.4)]'
+                              ? 'bg-gold/20 text-gold border-l-4 border-gold'
                               : 'text-gold/70 hover:text-gold hover:bg-gold/10'
                           }`
                         }

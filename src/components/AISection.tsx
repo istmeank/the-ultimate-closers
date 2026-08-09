@@ -30,7 +30,7 @@ const AISection = () => {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center mb-16 animate-fade-in">
-          <h2 className="font-playfair font-bold text-4xl md:text-5xl text-white mb-6">
+          <h2 className="font-display font-bold text-4xl md:text-5xl text-white mb-6">
             {t('ai.title')}
           </h2>
           <p className="font-inter text-lg md:text-xl text-white/90 leading-relaxed">

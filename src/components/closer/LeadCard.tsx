@@ -1,9 +1,7 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { RefreshCw, CheckCircle2, MoreHorizontal, Flame, Thermometer, Snowflake } from 'lucide-react';
+import { RefreshCw, CheckCircle2, Flame, Thermometer, Snowflake } from 'lucide-react';
 import { useState } from 'react';
 import { integrationsService } from '@/lib/services/integrations.service';
 import { useToast } from '@/hooks/use-toast';
@@ -21,22 +19,23 @@ interface LeadCardProps {
 }
 
 /**
- * Classes du signal température appliquées à la carte elle-même.
- * Règle charte TUC : chaud = fond/bordure or + halo --glow-gold ; tiède =
- * contour or sans remplissage ni halo ; froid = bordure --border, aucun halo.
- * Jamais de texte or sur fond crème : le texte du badge chaud est en malachite
- * (text-secondary), pas en or, pour respecter le contraste (charte TUC).
+ * Signal de température appliqué à la carte.
+ * Charte TUC : chaud = filet or et fond or pâle ; tiède = contour or sans
+ * remplissage ; froid = filet neutre. Aucun halo, aucun néon (charte §8).
+ *
+ * WCAG 1.4.1 : la couleur ne porte jamais seule le sens — l'icône et le libellé
+ * (« Chaud », « Tiède », « Froid ») accompagnent systématiquement la teinte.
  */
 const TEMPERATURE_CARD_CLASS = {
-  chaud: 'border-2 border-primary bg-primary/10 shadow-[var(--glow-gold)]',
-  tiede: 'border-2 border-primary bg-transparent',
-  froid: 'border-2 border-border',
+  chaud: 'border-gold/70 bg-gold-soft/40',
+  tiede: 'border-gold/40',
+  froid: 'border-hairline',
 } as const;
 
-const TEMPERATURE_BADGE_CLASS = {
-  chaud: 'bg-primary text-secondary border-transparent',
-  tiede: 'border-primary text-primary bg-transparent',
-  froid: 'border-border text-muted-foreground bg-transparent',
+const TEMPERATURE_CHIP_CLASS = {
+  chaud: 'border-gold/60 bg-gold-soft/70 text-gold',
+  tiede: 'border-gold/40 text-gold',
+  froid: 'border-hairline text-muted-foreground',
 } as const;
 
 const TEMPERATURE_ICON = {
@@ -45,6 +44,15 @@ const TEMPERATURE_ICON = {
   froid: Snowflake,
 } as const;
 
+/** Libellés lisibles des sources — la source est une information, pas une décoration. */
+const SOURCE_LABELS: Record<string, string> = {
+  chatbot: 'Chatbot',
+  website: 'Site web',
+  referral: 'Recommandation',
+  ads: 'Publicité',
+  audit: 'Audit',
+};
+
 export const LeadCard = ({ deal, hubspotSynced = false, onSyncSuccess }: LeadCardProps) => {
   const [isSyncing, setIsSyncing] = useState(false);
   const { toast } = useToast();
@@ -52,6 +60,7 @@ export const LeadCard = ({ deal, hubspotSynced = false, onSyncSuccess }: LeadCar
 
   const temperature = resolveTemperature(lead.score, lead.temperature_override);
   const TemperatureIcon = TEMPERATURE_ICON[temperature];
+  const isQualified = lead.qualification === 'qualifie';
 
   const handleSyncToHubSpot = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -69,7 +78,8 @@ export const LeadCard = ({ deal, hubspotSynced = false, onSyncSuccess }: LeadCar
     } catch (error) {
       toast({
         title: 'Erreur',
-        description: error instanceof Error ? error.message : 'Impossible de synchroniser avec HubSpot',
+        description:
+          error instanceof Error ? error.message : 'Impossible de synchroniser avec HubSpot',
         variant: 'destructive',
       });
     } finally {
@@ -77,121 +87,83 @@ export const LeadCard = ({ deal, hubspotSynced = false, onSyncSuccess }: LeadCar
     }
   };
 
-  const getSourceBadge = (source: string) => {
-    const sourceColors = {
-      chatbot: 'bg-purple-100 text-purple-800',
-      website: 'bg-blue-100 text-blue-800',
-      referral: 'bg-green-100 text-green-800',
-      ads: 'bg-yellow-100 text-yellow-800',
-      audit: 'bg-pink-100 text-pink-800',
-    };
-
-    return (
-      <Badge className={sourceColors[source as keyof typeof sourceColors] || 'bg-gray-100 text-gray-800'}>
-        {source}
-      </Badge>
-    );
-  };
-
   return (
-    <Card
-      className={`group relative overflow-hidden p-4 hover:shadow-xl hover:-translate-y-2 cursor-pointer bg-background dark:bg-black/80 transition-all duration-300 ${TEMPERATURE_CARD_CLASS[temperature]}`}
+    <article
+      className={`group relative overflow-hidden rounded-[calc(var(--radius)-2px)] border bg-surface-1 p-3 pl-3.5 transition-shadow duration-150 hover:shadow-soft ${TEMPERATURE_CARD_CLASS[temperature]}`}
     >
-      {/* Liseré de qualification — jamais seul porteur du sens : toujours accompagné du libellé (WCAG 1.4.1). */}
+      {/* Liseré de qualification — doublé du libellé plus bas, jamais seul (WCAG 1.4.1). */}
       {lead.qualification !== 'non_evalue' && (
-        <div
+        <span
           aria-hidden="true"
-          className={`absolute left-0 top-0 bottom-0 w-1.5 ${
-            lead.qualification === 'qualifie' ? 'bg-secondary' : 'bg-muted-foreground/40'
+          className={`absolute inset-y-0 left-0 w-[3px] ${
+            isQualified ? 'bg-secondary' : 'bg-muted-foreground/35'
           }`}
         />
       )}
 
-      {/* Gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
+      {/* Nom + température */}
+      <div className="flex items-start justify-between gap-2">
+        <h4 className="min-w-0 flex-1 truncate text-sm font-semibold leading-snug text-ink-strong">
+          {lead.full_name}
+        </h4>
+        <span
+          className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-1.5 py-0.5 text-2xs font-medium ${TEMPERATURE_CHIP_CLASS[temperature]}`}
+        >
+          <TemperatureIcon className="h-3 w-3" aria-hidden="true" />
+          {LEAD_TEMPERATURE_LABELS[temperature]}
+        </span>
+      </div>
 
-      <CardContent className="relative z-10 p-0 space-y-3 pl-2">
-        {/* Header avec nom et menu */}
-        <div className="flex justify-between items-start">
-          <div className="flex-1 min-w-0">
-            <h4 className="font-semibold text-primary dark:text-gold truncate">
-              {lead.full_name}
-            </h4>
-            <p className="text-sm text-muted-foreground dark:text-white/70 truncate">
-              {lead.email}
-            </p>
-          </div>
-          <Button variant="ghost" size="sm" className="h-6 w-6 p-0 ml-2 shrink-0">
-            <MoreHorizontal className="h-3 w-3" />
-          </Button>
-        </div>
+      <p className="mt-0.5 truncate text-2xs text-muted-foreground">{lead.email}</p>
 
-        {/* Affaire : offre + montant */}
-        <div className="text-xs">
-          <span className="font-medium text-foreground dark:text-white">{deal.offer_name}</span>
-          <span className="text-muted-foreground"> · {formatAmountCents(deal.amount_cents, deal.currency)}</span>
-        </div>
+      {/* Affaire : l'offre et son montant sont la ligne que le closer lit en premier. */}
+      <div className="mt-2 flex items-baseline justify-between gap-2 border-t border-hairline pt-2">
+        <span className="min-w-0 truncate text-xs text-foreground">{deal.offer_name}</span>
+        <span className="tuc-numeric shrink-0 text-xs font-semibold text-ink-strong">
+          {formatAmountCents(deal.amount_cents, deal.currency)}
+        </span>
+      </div>
 
-        {/* Qualification et température — deux signaux, toujours texte + couleur */}
-        <div className="flex flex-wrap items-center gap-2">
-          {lead.qualification !== 'non_evalue' && (
-            <Badge
-              variant="outline"
-              className={
-                lead.qualification === 'qualifie'
-                  ? 'border-secondary text-secondary'
-                  : 'border-muted-foreground/40 text-muted-foreground'
-              }
-            >
-              {LEAD_QUALIFICATION_LABELS[lead.qualification]}
-            </Badge>
-          )}
-          <Badge variant="outline" className={`gap-1 ${TEMPERATURE_BADGE_CLASS[temperature]}`}>
-            <TemperatureIcon className="h-3 w-3" aria-hidden="true" />
-            {LEAD_TEMPERATURE_LABELS[temperature]}
-          </Badge>
-        </div>
-
-        {/* Source et date */}
-        <div className="flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2">
-            {getSourceBadge(lead.source)}
-          </div>
-          <span className="text-muted-foreground">
-            {formatDistanceToNow(new Date(lead.created_at), {
-              addSuffix: true,
-              locale: fr,
-            })}
+      {/* Qualification, source, ancienneté */}
+      <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-2xs text-muted-foreground">
+        {lead.qualification !== 'non_evalue' && (
+          <span className={isQualified ? 'font-medium text-secondary' : ''}>
+            {LEAD_QUALIFICATION_LABELS[lead.qualification]}
           </span>
-        </div>
+        )}
+        {lead.qualification !== 'non_evalue' && <span aria-hidden="true">·</span>}
+        <span>{SOURCE_LABELS[lead.source] ?? lead.source}</span>
+        <span aria-hidden="true">·</span>
+        <time dateTime={lead.created_at}>
+          {formatDistanceToNow(new Date(lead.created_at), { addSuffix: true, locale: fr })}
+        </time>
+      </div>
 
-        {/* HubSpot sync */}
-        <div className="flex items-center justify-end gap-2">
+      {/* HubSpot — affiché seulement quand il y a quelque chose à faire ou à dire. */}
+      {(hubspotSynced || lead.score >= 75) && (
+        <div className="mt-2 flex justify-end">
           {hubspotSynced ? (
-            <Badge variant="outline" className="text-xs gap-1 bg-green-50 text-green-700 border-green-200">
-              <CheckCircle2 className="w-3 h-3" />
+            <span className="inline-flex items-center gap-1 text-2xs text-secondary">
+              <CheckCircle2 className="h-3 w-3" aria-hidden="true" />
               HubSpot
-            </Badge>
-          ) : lead.score >= 75 ? (
+            </span>
+          ) : (
             <Button
               size="sm"
-              variant="outline"
-              className="h-6 text-xs px-2"
+              variant="ghost"
+              className="h-6 px-2 text-2xs text-muted-foreground hover:text-foreground"
               onClick={handleSyncToHubSpot}
               disabled={isSyncing}
             >
-              {isSyncing ? (
-                <RefreshCw className="w-3 h-3 animate-spin" />
-              ) : (
-                <>
-                  <RefreshCw className="w-3 h-3 mr-1" />
-                  Sync
-                </>
-              )}
+              <RefreshCw
+                className={`mr-1 h-3 w-3 ${isSyncing ? 'animate-spin' : ''}`}
+                aria-hidden="true"
+              />
+              {isSyncing ? 'Sync…' : 'Envoyer vers HubSpot'}
             </Button>
-          ) : null}
+          )}
         </div>
-      </CardContent>
-    </Card>
+      )}
+    </article>
   );
 };

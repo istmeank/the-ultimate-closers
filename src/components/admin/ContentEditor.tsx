@@ -57,7 +57,7 @@ export const ContentEditor = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="font-playfair font-bold text-3xl text-background">
+        <h2 className="font-display font-bold text-3xl text-background">
           Modifier le contenu
         </h2>
         <div className="flex gap-3">
@@ -73,12 +73,12 @@ export const ContentEditor = () => {
       </div>
 
       {sections.length === 0 ? (
-        <Card className="group relative overflow-hidden bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale p-6">
+        <Card className="group relative overflow-hidden bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 animate-fade-in-scale p-6">
           {/* Gradient background */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
           
           {/* Glow effect */}
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)]" />
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--gold-glow)/0.14),transparent_70%)]" />
 
           <p className="relative z-10 text-muted-foreground font-inter">
             Aucun contenu à modifier pour le moment. Ajoutez des sections de contenu depuis la base de données.
@@ -89,17 +89,17 @@ export const ContentEditor = () => {
           {sections.map((section, index) => (
             <Card
               key={section.id}
-              className="group relative overflow-hidden bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-scale p-6"
+              className="group relative overflow-hidden bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 animate-fade-in-scale p-6"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               {/* Gradient background */}
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
               
               {/* Glow effect */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,rgba(233,196,106,0.15),transparent_70%)]" />
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--gold-glow)/0.14),transparent_70%)]" />
 
               <div className="relative z-10">
-                <h3 className="font-playfair font-bold text-xl text-primary mb-4">
+                <h3 className="font-display font-bold text-xl text-primary mb-4">
                   Section: {section.section_id}
                 </h3>
                 
@@ -179,7 +179,7 @@ export const ContentEditor = () => {
 
                   <Button
                     onClick={() => handleSave(section)}
-                    className="bg-secondary hover:bg-secondary/90 text-primary"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90"
                   >
                     <Save className="w-4 h-4 mr-2" />
                     Sauvegarder
