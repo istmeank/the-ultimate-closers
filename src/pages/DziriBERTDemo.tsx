@@ -14,10 +14,8 @@ export default function DziriBERTDemo() {
 
         <Card className="group relative overflow-hidden border-2 hover:border-secondary transition-all duration-300 bg-background dark:bg-black/80">
           {/* Gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
           
           {/* Glow effect */}
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
 
           <CardHeader className="relative z-10">
             <CardTitle className="dark:text-gold">Comment utiliser DziriBERT</CardTitle>
@@ -46,10 +44,8 @@ export default function DziriBERTDemo() {
 
         <Card className="group relative overflow-hidden border-2 hover:border-secondary transition-all duration-300 bg-background dark:bg-black/80">
           {/* Gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
           
           {/* Glow effect */}
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
 
           <CardHeader className="relative z-10">
             <CardTitle className="dark:text-gold">À propos de DziriBERT</CardTitle>

@@ -52,7 +52,7 @@ export const AdminLayoutWithSidebar = () => {
             <ThemeToggle />
             <LanguageSelector className="scale-90" />
             <RoleSwitcher />
-            <Button onClick={handleSignOut} className="bg-white/10 hover:bg-white/20 border border-white/20 transition-all duration-300 text-[#e8c669]">
+            <Button onClick={handleSignOut} className="bg-white/10 hover:bg-white/20 border border-white/20 transition-all duration-300 text-gold">
               <LogOut className="w-4 h-4 mr-2" />
               {t('closer.logout')}
             </Button>

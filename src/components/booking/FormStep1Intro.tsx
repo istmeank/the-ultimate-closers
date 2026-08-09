@@ -15,7 +15,7 @@ const FormStep1Intro = ({
       <div className="text-center space-y-4">
         <div className="flex flex-col items-center gap-3 mb-4">
           <img src={logoTUC} alt="The Ultimate Closers" className="w-20 h-20 object-contain" />
-          <p className="font-display text-2xl font-semibold text-[#0e4e40]">
+          <p className="font-display text-2xl font-semibold text-secondary">
             The Ultimate Closers
           </p>
         </div>
@@ -29,12 +29,11 @@ const FormStep1Intro = ({
         </p>
       </div>
 
-      <div className="group relative overflow-hidden bg-card/50 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 animate-fade-in-scale rounded-2xl p-6 md:p-8 space-y-4">
+      <div className="group relative overflow-hidden bg-card/50 backdrop-blur-sm border border-hairline hover:border-secondary transition-all duration-300 hover:shadow-soft hover:-translate-y-0.5 animate-fade-in-scale rounded-2xl p-6 md:p-8 space-y-4">
         {/* Gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity rounded-2xl" />
         
         {/* Glow effect */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--gold-glow)/0.14),transparent_70%)] rounded-2xl" />
 
         <div className="relative z-10">
           <h3 className="text-xl font-semibold text-secondary">

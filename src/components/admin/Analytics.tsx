@@ -38,12 +38,10 @@ export const Analytics = () => {
         Statistiques
       </h2>
 
-      <Card className="group relative overflow-hidden bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 animate-fade-in-scale p-6">
+      <Card className="group relative overflow-hidden bg-background/95 backdrop-blur-sm border border-hairline hover:border-secondary transition-all duration-300 hover:shadow-soft hover:-translate-y-0.5 animate-fade-in-scale p-6">
         {/* Gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
         
         {/* Glow effect */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--gold-glow)/0.14),transparent_70%)]" />
 
         <div className="relative z-10">
           <h3 className="font-display font-bold text-xl text-primary mb-4">
@@ -68,12 +66,10 @@ export const Analytics = () => {
         </div>
       </Card>
 
-      <Card className="group relative overflow-hidden bg-background/95 backdrop-blur-sm border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 animate-fade-in-scale p-6">
+      <Card className="group relative overflow-hidden bg-background/95 backdrop-blur-sm border border-hairline hover:border-secondary transition-all duration-300 hover:shadow-soft hover:-translate-y-0.5 animate-fade-in-scale p-6">
         {/* Gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
         
         {/* Glow effect */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--gold-glow)/0.14),transparent_70%)]" />
 
         <div className="relative z-10">
           <h3 className="font-display font-bold text-xl text-primary mb-4">

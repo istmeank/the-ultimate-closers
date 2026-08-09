@@ -121,6 +121,19 @@ export default {
         raised: "var(--shadow-raised)",
         glass: "var(--shadow-glass)",
       },
+      /*
+       * Les dégradés de la charte sont déclarés ici, sinon `bg-gradient-cosmic`
+       * et ses voisines ne produisent aucune règle CSS : la classe est ignorée
+       * en silence et la section apparaît transparente. C'était le cas de la
+       * section d'appel à l'action, qui laissait voir le crème et deux halos.
+       */
+      backgroundImage: {
+        "gradient-cosmic": "var(--gradient-cosmic)",
+        "gradient-gold": "var(--gradient-gold)",
+        "gradient-ai": "var(--gradient-ai)",
+        "gradient-neural": "var(--gradient-neural)",
+        "gradient-veil": "var(--gradient-veil)",
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },

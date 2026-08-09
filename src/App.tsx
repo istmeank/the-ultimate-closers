@@ -71,7 +71,7 @@ const queryClient = new QueryClient();
 const RouteFallback = () => (
   <div className="flex min-h-[50vh] items-center justify-center" role="status" aria-live="polite">
     <span className="sr-only">Chargement…</span>
-    <div className="h-8 w-8 animate-spin rounded-full border-2 border-border border-t-primary" />
+    <div className="h-8 w-8 animate-spin rounded-full border border-hairline border-t-primary" />
   </div>
 );
 

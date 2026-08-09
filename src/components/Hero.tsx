@@ -44,7 +44,7 @@ const Hero = () => {
       <div className="container relative z-10 mx-auto px-4">
         <div className="mx-auto max-w-3xl text-center animate-fade-in">
           {/* Signature de marque */}
-          <p className="mb-6 inline-flex items-center rounded-full border border-gold-glow/40 bg-black/25 px-4 py-1.5 font-inter text-xs font-medium tracking-[0.14em] text-gold-glow uppercase backdrop-blur-sm">
+          <p className="mb-6 inline-flex items-center rounded-full border border-gold/40 bg-black/30 px-4 py-1.5 font-inter text-xs font-medium tracking-[0.14em] text-gold uppercase backdrop-blur-sm">
             Closing is Art — Not Tbla3it
           </p>
 
@@ -63,7 +63,7 @@ const Hero = () => {
             <Button
               asChild
               size="lg"
-              className="group rounded-full bg-gold-glow px-8 py-6 font-semibold text-[hsl(168_74%_12%)] shadow-soft transition-colors hover:bg-gold-glow/90"
+              className="group rounded-full bg-gold px-8 py-6 font-semibold text-secondary shadow-soft transition-colors hover:bg-gold-strong"
             >
               <Link to="/reserver-appel">
                 {t('hero.cta.primary')}

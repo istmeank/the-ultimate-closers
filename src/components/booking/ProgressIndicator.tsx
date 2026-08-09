@@ -28,7 +28,7 @@ const ProgressIndicator = ({ currentStep, totalSteps }: ProgressIndicatorProps) 
                   ? 'bg-gradient-to-br from-secondary to-primary shadow-lg' 
                   : step === currentStep
                   ? 'bg-gradient-to-br from-secondary to-primary scale-110'
-                  : 'bg-muted border-2 border-border'
+                  : 'bg-muted border border-hairline'
                 }
               `}
             >

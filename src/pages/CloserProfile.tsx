@@ -96,10 +96,8 @@ export default function CloserProfile() {
 
       <Card className="group relative overflow-hidden p-6 bg-background/95 dark:bg-black/80 backdrop-blur-sm border-2 hover:border-secondary transition-all duration-300">
         {/* Gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
         
         {/* Glow effect */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
 
         <div className="relative z-10 space-y-6">
           <div className="flex items-center gap-3 pb-4 border-b dark:border-white/10">
@@ -152,10 +150,8 @@ export default function CloserProfile() {
 
       <Card className="group relative overflow-hidden p-6 bg-background/95 dark:bg-black/80 backdrop-blur-sm border-2 hover:border-secondary transition-all duration-300">
         {/* Gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
         
         {/* Glow effect */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
 
         <div className="relative z-10 space-y-6">
           <div className="flex items-center gap-3 pb-4 border-b dark:border-white/10">

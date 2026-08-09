@@ -6,12 +6,12 @@ export const ChatbotQualif = () => {
   const [isOpen, setIsOpen] = useState(false);
   return <>
       {/* Bubble flottante */}
-      {!isOpen && <Button onClick={() => setIsOpen(true)} aria-label="Ouvrir le chatbot" className="fixed bottom-4 right-4 md:bottom-6 md:right-6 h-16 w-16 rounded-full shadow-lg hover:scale-110 transition-transform z-50 bg-[#016946]">
+      {!isOpen && <Button onClick={() => setIsOpen(true)} aria-label="Ouvrir le chatbot" className="fixed bottom-4 right-4 md:bottom-6 md:right-6 h-16 w-16 rounded-full shadow-lg hover:scale-110 transition-transform z-50 bg-secondary">
           <MessageCircle className="h-8 w-8 text-background" />
         </Button>}
 
       {/* Fenêtre de conversation */}
-      {isOpen && <div className="fixed bottom-4 right-4 left-4 md:left-auto md:right-6 md:w-[400px] w-auto h-[85vh] md:h-[600px] max-h-[600px] bg-background rounded-lg shadow-2xl flex flex-col z-50 border border-secondary/20">
+      {isOpen && <div className="fixed bottom-4 right-4 left-4 md:left-auto md:right-6 md:w-[400px] w-auto h-[85vh] md:h-[600px] max-h-[600px] bg-background rounded-lg shadow-raised flex flex-col z-50 border border-secondary/20">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b bg-primary text-background rounded-t-lg">
             <div className="flex items-center gap-3">

@@ -27,7 +27,7 @@ const WhyWeExist = () => {
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="font-display font-bold text-4xl md:text-5xl mb-6 text-[#016946]">
+          <h2 className="font-display font-bold text-4xl md:text-5xl mb-6 text-secondary">
             {t('why.title')}
           </h2>
           <p className="font-inter text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto leading-relaxed">

@@ -159,10 +159,8 @@ const LeadDetail = () => {
             {/* Timeline des interactions */}
             <Card className="group relative overflow-hidden border-2 hover:border-secondary transition-all duration-300 bg-background dark:bg-black/80">
               {/* Gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
               
               {/* Glow effect */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
 
               <CardHeader className="relative z-10">
                 <CardTitle className="font-display text-xl dark:text-gold">Timeline des Interactions</CardTitle>
@@ -176,10 +174,8 @@ const LeadDetail = () => {
             {deals && deals.length > 0 && (
               <Card className="group relative overflow-hidden border-2 hover:border-secondary transition-all duration-300 bg-background dark:bg-black/80">
                 {/* Gradient background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
                 
                 {/* Glow effect */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
 
                 <CardHeader className="relative z-10">
                   <CardTitle className="font-display text-xl dark:text-gold">Deals Associés</CardTitle>
@@ -208,10 +204,8 @@ const LeadDetail = () => {
             {/* Informations du lead */}
             <Card className="group relative overflow-hidden border-2 hover:border-secondary transition-all duration-300 bg-background dark:bg-black/80">
               {/* Gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
               
               {/* Glow effect */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
 
               <CardHeader className="relative z-10">
                 <CardTitle className="font-display text-lg dark:text-gold">Informations</CardTitle>
@@ -244,10 +238,8 @@ const LeadDetail = () => {
             {/* Actions rapides */}
             <Card className="group relative overflow-hidden border-2 hover:border-secondary transition-all duration-300 bg-background dark:bg-black/80">
               {/* Gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-50 group-hover:opacity-100 transition-opacity" />
               
               {/* Glow effect */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--secondary)/0.15),transparent_70%)]" />
 
               <CardHeader className="relative z-10">
                 <CardTitle className="font-display text-lg dark:text-gold">Actions Rapides</CardTitle>

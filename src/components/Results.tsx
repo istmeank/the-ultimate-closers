@@ -27,7 +27,7 @@ const Results = () => {
   }, {
     key: 'results.metric2',
     icon: Shield,
-    color: 'text-accent'
+    color: 'text-primary'
   }, {
     key: 'results.metric3',
     icon: Star,
@@ -36,7 +36,7 @@ const Results = () => {
   return <section id="results" className="py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center mb-16 animate-fade-in">
-          <h2 className="font-display font-bold text-4xl md:text-5xl mb-6 text-[#016946]">
+          <h2 className="font-display font-bold text-4xl md:text-5xl mb-6 text-secondary">
             {t('results.title')}
           </h2>
         </div>
@@ -47,17 +47,15 @@ const Results = () => {
           key,
           icon: Icon,
           color
-        }, index) => <div key={key} className={`group relative overflow-hidden p-8 rounded-2xl bg-card border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 animate-fade-in-scale ${isVisible ? '' : 'opacity-0'}`} style={{
+        }, index) => <div key={key} className={`group relative overflow-hidden p-8 rounded-2xl bg-card border border-hairline hover:border-secondary transition-all duration-300 hover:shadow-soft hover:-translate-y-0.5 animate-fade-in-scale ${isVisible ? '' : 'opacity-0'}`} style={{
           animationDelay: `${index * 0.2}s`
         }}>
               {/* Gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
               
               {/* Glow effect */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--gold-glow)/0.14),transparent_70%)]" />
 
               <div className="relative z-10 flex flex-col items-center text-center gap-4">
-                <div className={`p-4 rounded-full bg-background border-2 border-border group-hover:border-secondary group-hover:scale-110 transition-transform ${color}`}>
+                <div className={`p-4 rounded-full bg-surface-3 border border-hairline group-hover:border-secondary transition-colors ${color}`}>
                   <Icon className="w-10 h-10" />
                 </div>
                 <h3 className="font-display font-bold text-2xl text-secondary">

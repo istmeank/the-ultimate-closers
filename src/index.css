@@ -52,14 +52,20 @@
     --popover: 0 0% 100%;
     --popover-foreground: 167 69% 18%;
 
-    /* --- Le malachite mène sur fond clair -------------------------------- */
-    --primary: 167 69% 18%;
+    /*
+     * Rôles historiques conservés : `primary` = la famille or, `secondary` = le
+     * malachite. Toute la landing a été écrite avec ces rôles ; les inverser
+     * repeignait 600 usages en aveugle.
+     * Le seul correctif : sur le crème, l'or de `primary` est descendu à un or
+     * profond (5,2:1) au lieu du #E8C669 qui plafonnait à 1,50 et délavait tout.
+     * L'or vif reste disponible en remplissage via --gold.
+     */
+    --primary: 45 68% 34%;           /* Or profond — lisible en texte sur crème */
     --primary-foreground: 44 30% 95%;
-    --primary-glow: 167 45% 30%;
+    --primary-glow: 44 73% 66%;
 
-    /* --- L'or remplit, le malachite écrit dessus (5,9:1) ----------------- */
-    --secondary: 44 73% 66%;         /* #E8C669 — or de production */
-    --secondary-foreground: 167 69% 18%;
+    --secondary: 167 69% 18%;        /* Malachite #0E4E40 */
+    --secondary-foreground: 44 30% 95%;
 
     --gold: 44 73% 66%;              /* Remplissage uniquement */
     --gold-strong: 44 100% 75%;      /* #FFDD80 — lueur */
@@ -165,6 +171,7 @@
 
     --secondary: 165 36% 46%;        /* Malachite relevé, lisible en texte */
     --secondary-foreground: 167 69% 8%;
+    /* `primary` reste la famille or : sur le malachite profond elle est vive. */
 
     --gold: 44 73% 66%;
     --gold-strong: 44 100% 75%;

@@ -104,14 +104,12 @@ export const CloserDashboard = () => {
           return (
             <Card
               key={stat.title}
-              className="group relative overflow-hidden border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 animate-fade-in-scale bg-background dark:bg-black/80"
+              className="group relative overflow-hidden border border-hairline hover:border-secondary transition-all duration-300 hover:shadow-soft hover:-translate-y-0.5 animate-fade-in-scale bg-background dark:bg-black/80"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               {/* Gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
               
               {/* Glow effect */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--gold-glow)/0.14),transparent_70%)]" />
 
               <CardHeader className="relative z-10 flex flex-row items-center justify-between space-y-0 pb-2">
                 <h3 className="tracking-tight text-sm font-medium text-muted-foreground dark:text-white/70">
@@ -135,12 +133,10 @@ export const CloserDashboard = () => {
       </div>
 
       {/* Pipeline Kanban */}
-      <Card className="group relative overflow-hidden border-2 border-border hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 animate-fade-in-scale">
+      <Card className="group relative overflow-hidden border border-hairline hover:border-secondary transition-all duration-300 hover:shadow-soft hover:-translate-y-0.5 animate-fade-in-scale">
         {/* Gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
         
         {/* Glow effect */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--gold-glow)/0.14),transparent_70%)]" />
 
         <CardHeader className="relative z-10">
           <div className="flex items-center justify-between">
@@ -166,14 +162,12 @@ export const CloserDashboard = () => {
               return (
                 <div
                   key={column.id}
-                  className={`group relative overflow-hidden bg-background/80 dark:bg-black/80 backdrop-blur-sm rounded-2xl border-2 ${borderColor} hover:border-secondary transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 animate-fade-in-scale`}
+                  className={`group relative overflow-hidden bg-background/80 dark:bg-black/80 backdrop-blur-sm rounded-2xl border-2 ${borderColor} hover:border-secondary transition-all duration-300 hover:shadow-soft hover:-translate-y-0.5 animate-fade-in-scale`}
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   {/* Gradient background */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-50 group-hover:opacity-100 transition-opacity" />
                   
                   {/* Glow effect */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--gold-glow)/0.14),transparent_70%)]" />
 
                   <div className="flex flex-col space-y-1.5 p-6 relative z-10 pb-3">
                     <div className="flex items-center justify-between">

@@ -46,7 +46,6 @@ const AISection = () => {
               style={{ animationDelay: `${index * 0.2}s` }}
             >
               {/* Glow on hover */}
-              <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--accent-ondark)/0.16),transparent_70%)]" />
               
               <div className="relative z-10 flex flex-col items-center text-center gap-4">
                 <div className="p-4 rounded-full bg-accent-ondark/15 border-2 border-accent-ondark/70 group-hover:border-gold group-hover:rotate-12 transition-all">
