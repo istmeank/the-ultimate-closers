@@ -26,7 +26,7 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { RoleSwitcher } from '@/components/shared/RoleSwitcher';
 import { Button } from '@/components/ui/button';
-import logo from '@/assets/logo.png';
+import logo from '@/assets/logo.webp';
 import { useLanguage } from '@/contexts/LanguageContext';
 import LanguageSelector from '@/components/LanguageSelector';
 

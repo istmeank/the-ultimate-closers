@@ -2,7 +2,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Linkedin, Instagram, Youtube, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import logo from '@/assets/logo.png';
+import logo from '@/assets/logo.webp';
 const Footer = () => {
   const {
     t

@@ -3,7 +3,7 @@ import { Menu, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import LanguageSelector from '@/components/LanguageSelector';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import logo from '@/assets/logo.png';
+import logo from '@/assets/logo.webp';
 
 const Header = () => {
   const { language, setLanguage, t } = useLanguage();

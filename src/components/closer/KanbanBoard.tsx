@@ -1,92 +1,112 @@
-import { useState, useEffect } from 'react';
-import { DragDropContext, Droppable, DropResult } from '@hello-pangea/dnd';
+import { useMemo } from 'react';
+import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { authService } from '@/lib/services/auth.service';
-import { leadsService } from '@/lib/services/leads.service';
+import {
+  meetService,
+  DEAL_STAGE_ORDER,
+  DEAL_STAGE_LABELS,
+  computeNextPreviousStage,
+  isDealStage,
+  type DealStage,
+  type DealWithLead,
+} from '@/lib/services/meet.service';
 import { KanbanColumn } from './KanbanColumn';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { AlertTriangle } from 'lucide-react';
 
-interface Lead {
-  id: string;
-  full_name: string;
-  email: string;
-  phone?: string;
-  status: string;
-  score: number;
-  source: string;
-  created_at: string;
-  owner_id: string;
-}
+type DealsByStage = Record<DealStage, DealWithLead[]>;
 
-interface LeadsByStatus {
-  [key: string]: Lead[];
-}
-
-const columns = [
-  { id: 'new', title: 'Nouveau', color: 'violet', description: 'Nouveaux leads' },
-  { id: 'qualified', title: 'Qualifié', color: 'blue', description: 'Leads qualifiés' },
-  { id: 'in_progress', title: 'En cours', color: 'orange', description: 'En négociation' },
-  { id: 'won', title: 'Gagné', color: 'green', description: 'Deals conclus' },
-  { id: 'lost', title: 'Perdu', color: 'red', description: 'Opportunités perdues' }
-];
+const emptyDealsByStage = (): DealsByStage =>
+  DEAL_STAGE_ORDER.reduce((acc, stage) => {
+    acc[stage] = [];
+    return acc;
+  }, {} as DealsByStage);
 
 export const KanbanBoard = () => {
   const queryClient = useQueryClient();
-  const [leadsByStatus, setLeadsByStatus] = useState<LeadsByStatus>({});
 
-  // Récupérer les leads du closer connecté
-  const { data: leads, isLoading } = useQuery({
-    queryKey: ['closerLeads'],
+  // Récupérer les affaires (deals) du closer connecté, avec le lead dénormalisé
+  const { data: deals, isLoading } = useQuery({
+    queryKey: ['closerDeals'],
     queryFn: async () => {
       const user = await authService.getCurrentUser();
       if (!user) throw new Error('User not authenticated');
-
-      const data = await leadsService.listForCloser(user.id);
-      return data as unknown as Lead[];
+      return meetService.listForCloser(user.id);
     },
   });
 
-  // Mutation pour mettre à jour le statut d'un lead
-  const updateLeadStatus = useMutation({
-    mutationFn: async ({ leadId, newStatus }: { leadId: string; newStatus: string }) => {
-      await leadsService.updateStatus(leadId, newStatus);
+  // Mutation pour déplacer une affaire vers un nouveau stade
+  const updateDealStage = useMutation({
+    mutationFn: async (vars: {
+      dealId: string;
+      stage: DealStage;
+      previousStage: DealStage | null;
+    }) => {
+      await meetService.updateStage(vars.dealId, {
+        stage: vars.stage,
+        previousStage: vars.previousStage,
+      });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['closerLeads'] });
+      queryClient.invalidateQueries({ queryKey: ['closerDeals'] });
     },
   });
 
-  // Organiser les leads par statut
-  useEffect(() => {
-    if (leads) {
-      const organized: LeadsByStatus = {};
-      columns.forEach(col => {
-        organized[col.id] = leads.filter(lead => lead.status === col.id);
-      });
-      setLeadsByStatus(organized);
+  // Organiser les affaires par stade. Garde-fou : une affaire dont le stade ne
+  // correspond à aucune des 7 colonnes ne doit jamais disparaître en silence
+  // (bug constaté sur l'ancien filtrage strict par leads.status).
+  const { dealsByStage, unmatchedDeals } = useMemo(() => {
+    const organized = emptyDealsByStage();
+    const unmatched: DealWithLead[] = [];
+
+    for (const deal of deals ?? []) {
+      if (isDealStage(deal.stage)) {
+        organized[deal.stage].push(deal);
+      } else {
+        unmatched.push(deal);
+      }
     }
-  }, [leads]);
+
+    return { dealsByStage: organized, unmatchedDeals: unmatched };
+  }, [deals]);
+
+  if (unmatchedDeals.length > 0) {
+    console.error(
+      `KanbanBoard : ${unmatchedDeals.length} affaire(s) avec un stade inconnu, ` +
+        'exclue(s) des 7 colonnes pour éviter un affichage incohérent :',
+      unmatchedDeals.map((d) => ({ id: d.id, stage: d.stage }))
+    );
+  }
 
   const onDragEnd = async (result: DropResult) => {
     const { destination, source, draggableId } = result;
 
-    // Si pas de destination, on ne fait rien
     if (!destination) return;
-
-    // Si même colonne et même position, on ne fait rien
     if (destination.droppableId === source.droppableId && destination.index === source.index) {
       return;
     }
 
-    // Mettre à jour le statut du lead
+    const destinationStage = destination.droppableId as DealStage;
+    const sourceStage = source.droppableId as DealStage;
+    const deal = (deals ?? []).find((d) => d.id === draggableId);
+    if (!deal) return;
+
+    const nextPreviousStage = computeNextPreviousStage(
+      sourceStage,
+      deal.previous_stage,
+      destinationStage
+    );
+
     try {
-      await updateLeadStatus.mutateAsync({
-        leadId: draggableId,
-        newStatus: destination.droppableId,
+      await updateDealStage.mutateAsync({
+        dealId: draggableId,
+        stage: destinationStage,
+        previousStage: nextPreviousStage,
       });
     } catch (error) {
-      console.error('Error updating lead status:', error);
+      console.error('Error updating deal stage:', error);
     }
   };
 
@@ -94,7 +114,7 @@ export const KanbanBoard = () => {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Pipeline Kanban</CardTitle>
+          <CardTitle>Pipeline d'affaires</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex justify-center items-center h-64">
@@ -105,27 +125,37 @@ export const KanbanBoard = () => {
     );
   }
 
-  const totalLeads = leads?.length || 0;
+  const totalDeals = deals?.length ?? 0;
 
   return (
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="font-playfair text-xl">Pipeline Kanban</CardTitle>
+          <CardTitle className="font-playfair text-xl">Pipeline d'affaires</CardTitle>
           <Badge variant="secondary" className="text-sm">
-            {totalLeads} leads au total
+            {totalDeals} affaire{totalDeals > 1 ? 's' : ''} au total
           </Badge>
         </div>
+        {unmatchedDeals.length > 0 && (
+          <div className="mt-2 flex items-center gap-2 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            <AlertTriangle className="h-4 w-4 shrink-0" aria-hidden="true" />
+            <span>
+              {unmatchedDeals.length} affaire{unmatchedDeals.length > 1 ? 's' : ''} avec un stade
+              inconnu — masquée{unmatchedDeals.length > 1 ? 's' : ''} du pipeline, voir la console.
+            </span>
+          </div>
+        )}
       </CardHeader>
       <CardContent>
         <DragDropContext onDragEnd={onDragEnd}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            {columns.map((column) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+            {DEAL_STAGE_ORDER.map((stage) => (
               <KanbanColumn
-                key={column.id}
-                column={column}
-                leads={leadsByStatus[column.id] || []}
-                isUpdating={updateLeadStatus.isPending}
+                key={stage}
+                stage={stage}
+                title={DEAL_STAGE_LABELS[stage]}
+                deals={dealsByStage[stage]}
+                isUpdating={updateDealStage.isPending}
               />
             ))}
           </div>

@@ -1,23 +1,11 @@
 import { useEffect, useState } from 'react';
 import { authService } from '@/lib/services/auth.service';
-import { leadsService } from '@/lib/services/leads.service';
+import { leadsService, LEAD_STATUS_LABELS, type Lead, type LeadStatus } from '@/lib/services/leads.service';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Search, Mail, Phone, Building2, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
-interface Lead {
-  id: string;
-  full_name: string;
-  email: string;
-  phone: string | null;
-  source: string;
-  status: string;
-  score: number;
-  interest: string | null;
-  created_at: string;
-}
 
 export default function CloserLeads() {
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -48,8 +36,8 @@ export default function CloserLeads() {
     lead.email.toLowerCase().includes(search.toLowerCase())
   );
 
-  const getStatusColor = (status: string) => {
-    const colors: Record<string, string> = {
+  const getStatusColor = (status: LeadStatus) => {
+    const colors: Record<LeadStatus, string> = {
       new: 'bg-blue-500',
       qualified: 'bg-green-500',
       in_progress: 'bg-yellow-500',
@@ -100,7 +88,7 @@ export default function CloserLeads() {
                 <div className="flex items-center gap-3">
                   <h3 className="font-semibold text-lg">{lead.full_name}</h3>
                   <Badge className={getStatusColor(lead.status)}>
-                    {lead.status}
+                    {LEAD_STATUS_LABELS[lead.status]}
                   </Badge>
                   <Badge variant="outline" className="flex items-center gap-1">
                     <TrendingUp className="w-3 h-3" />

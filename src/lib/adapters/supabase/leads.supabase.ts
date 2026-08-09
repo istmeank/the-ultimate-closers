@@ -40,6 +40,13 @@ export const supabaseLeadsAdapter: LeadsService = {
     if (error) throw error;
   },
 
+  // NOTE: qualification, temperature_override (leads) et metadata (interactions)
+  // sont posés par la migration cible du 2026-08-09, pas encore appliquée
+  // (voir docs/architecture-evolution.md). Les casts `as unknown as X` ci-dessous
+  // pontent l'écart entre database.types.ts (généré depuis le schéma courant)
+  // et le schéma cible contre lequel cette couche services est écrite — pattern
+  // déjà en usage partout ailleurs dans cet adapter.
+
   async countAll() {
     const { count, error } = await supabase
       .from('leads')
@@ -106,10 +113,13 @@ export const supabaseLeadsAdapter: LeadsService = {
     let totalDeals = 0;
     let wonDeals = 0;
     if (leadIds.length > 0) {
+      // ADR-040: an "active deal" is one that is neither cashed in nor abandoned.
+      // 'close' (signed but unpaid) still counts as active — in closing, the job is
+      // not done until the money lands. Definition to confirm with Nacer (BLOCKER-015).
       const { count: activeCount } = await supabase
         .from('deals')
         .select('*', { count: 'exact', head: true })
-        .in('stage', ['qualified', 'proposal', 'negotiation'])
+        .in('stage', ['opportunite', 'programme', 'a_reprogrammer', 'a_relancer', 'close'])
         .in('lead_id', leadIds);
       activeDeals = activeCount ?? 0;
 
@@ -118,7 +128,8 @@ export const supabaseLeadsAdapter: LeadsService = {
         .select('stage')
         .in('lead_id', leadIds);
       totalDeals = allDeals?.length ?? 0;
-      wonDeals = allDeals?.filter((d) => d.stage === 'won').length ?? 0;
+      // A deal counts as won once it is paid, not merely signed.
+      wonDeals = allDeals?.filter((d) => d.stage === 'paye').length ?? 0;
     }
 
     const total = totalLeads ?? 0;

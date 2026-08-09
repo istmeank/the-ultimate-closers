@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
-import logo from '@/assets/logo.png';
+import logo from '@/assets/logo.webp';
 import handshake from '@/assets/hero-handshake.jpg';
 import LanguageSelector from '@/components/LanguageSelector';
 import DebugInfo from '@/components/DebugInfo';

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { LogOut, House, PanelLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import logo from '@/assets/logo.png';
+import logo from '@/assets/logo.webp';
 import LanguageSelector from '@/components/LanguageSelector';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 

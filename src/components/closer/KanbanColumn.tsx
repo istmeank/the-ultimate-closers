@@ -1,66 +1,48 @@
 import { Droppable, Draggable } from '@hello-pangea/dnd';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LeadCard } from './LeadCard';
-
-interface Lead {
-  id: string;
-  full_name: string;
-  email: string;
-  phone?: string;
-  status: string;
-  score: number;
-  source: string;
-  created_at: string;
-  owner_id: string;
-}
-
-interface Column {
-  id: string;
-  title: string;
-  color: string;
-  description: string;
-}
+import type { DealStage, DealWithLead } from '@/lib/services/meet.service';
 
 interface KanbanColumnProps {
-  column: Column;
-  leads: Lead[];
+  stage: DealStage;
+  title: string;
+  deals: DealWithLead[];
   isUpdating: boolean;
 }
 
-export const KanbanColumn = ({ column, leads, isUpdating }: KanbanColumnProps) => {
-  const getColumnColor = (color: string) => {
-    const colors = {
-      violet: 'border-violet-200 bg-violet-50/50',
-      blue: 'border-blue-200 bg-blue-50/50',
-      orange: 'border-orange-200 bg-orange-50/50',
-      green: 'border-green-200 bg-green-50/50',
-      red: 'border-red-200 bg-red-50/50',
-    };
-    return colors[color as keyof typeof colors] || 'border-gray-200 bg-gray-50/50';
-  };
+/** Habillage décoratif par stade — pas un jeton de sens (ne remplace jamais un libellé). */
+const STAGE_SURFACE: Record<DealStage, string> = {
+  opportunite: 'border-violet-200 bg-violet-50/50 dark:border-violet-900/40 dark:bg-violet-950/20',
+  programme: 'border-blue-200 bg-blue-50/50 dark:border-blue-900/40 dark:bg-blue-950/20',
+  a_reprogrammer: 'border-amber-200 bg-amber-50/50 dark:border-amber-900/40 dark:bg-amber-950/20',
+  a_relancer: 'border-orange-200 bg-orange-50/50 dark:border-orange-900/40 dark:bg-orange-950/20',
+  close: 'border-emerald-200 bg-emerald-50/50 dark:border-emerald-900/40 dark:bg-emerald-950/20',
+  paye: 'border-primary/40 bg-primary/10',
+  perdu: 'border-red-200 bg-red-50/50 dark:border-red-900/40 dark:bg-red-950/20',
+};
 
+export const KanbanColumn = ({ stage, title, deals, isUpdating }: KanbanColumnProps) => {
   return (
-    <div className={`group relative overflow-hidden bg-background/80 dark:bg-black/80 backdrop-blur-sm rounded-2xl border-2 ${getColumnColor(column.color)} transition-all hover:shadow-lg`}>
+    <div
+      className={`group relative overflow-hidden bg-background/80 dark:bg-black/80 backdrop-blur-sm rounded-2xl border-2 ${STAGE_SURFACE[stage]} transition-all hover:shadow-lg`}
+    >
       {/* Gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-primary/10 opacity-30 group-hover:opacity-50 transition-opacity" />
-      
+
       <CardHeader className="relative z-10 pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="font-playfair font-bold text-lg text-primary dark:text-gold">
-            {column.title}
+            {title}
           </CardTitle>
           <Badge variant="outline" className="text-xs dark:text-white/80">
-            {leads.length}
+            {deals.length}
           </Badge>
         </div>
-        <p className="text-xs text-muted-foreground dark:text-white/60">
-          {column.description}
-        </p>
       </CardHeader>
-      
+
       <CardContent className="relative z-10 pt-0">
-        <Droppable droppableId={column.id}>
+        <Droppable droppableId={stage}>
           {(provided, snapshot) => (
             <div
               ref={provided.innerRef}
@@ -69,8 +51,8 @@ export const KanbanColumn = ({ column, leads, isUpdating }: KanbanColumnProps) =
                 snapshot.isDraggingOver ? 'bg-primary/5 rounded-lg' : ''
               } ${isUpdating ? 'opacity-50 pointer-events-none' : ''}`}
             >
-              {leads.map((lead, index) => (
-                <Draggable key={lead.id} draggableId={lead.id} index={index}>
+              {deals.map((deal, index) => (
+                <Draggable key={deal.id} draggableId={deal.id} index={index}>
                   {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}
@@ -80,16 +62,16 @@ export const KanbanColumn = ({ column, leads, isUpdating }: KanbanColumnProps) =
                         snapshot.isDragging ? 'rotate-2 scale-105 shadow-2xl' : 'hover:scale-105'
                       }`}
                     >
-                      <LeadCard lead={lead} />
+                      <LeadCard deal={deal} />
                     </div>
                   )}
                 </Draggable>
               ))}
               {provided.placeholder}
-              
-              {leads.length === 0 && (
+
+              {deals.length === 0 && (
                 <div className="text-center text-muted-foreground text-sm py-8">
-                  Aucun lead
+                  Aucune affaire
                 </div>
               )}
             </div>

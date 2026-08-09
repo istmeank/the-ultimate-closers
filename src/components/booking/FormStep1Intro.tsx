@@ -1,6 +1,6 @@
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logoTUC from "@/assets/logo.png";
+import logoTUC from "@/assets/logo.webp";
 import { useLanguage } from "@/contexts/LanguageContext";
 interface FormStep1IntroProps {
   onNext: () => void;

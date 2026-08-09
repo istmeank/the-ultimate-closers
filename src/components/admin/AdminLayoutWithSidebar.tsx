@@ -5,7 +5,7 @@ import { RoleSwitcher } from '@/components/shared/RoleSwitcher';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
-import logo from '@/assets/logo.png';
+import logo from '@/assets/logo.webp';
 import handshake from '@/assets/hero-handshake.jpg';
 import { useLanguage } from '@/contexts/LanguageContext';
 import LanguageSelector from '@/components/LanguageSelector';

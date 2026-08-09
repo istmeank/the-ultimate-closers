@@ -48,7 +48,9 @@ const CONTRACTS: Array<[string, unknown, string[]]> = [
   ['analytics', analyticsService, [
     'trackEvent', 'getPageViewsByDay', 'getAdminOverview',
   ]],
-  ['meet', meetService, ['submitBooking', 'listDealsForLead']],
+  ['meet', meetService, [
+    'submitBooking', 'listDealsForLead', 'listForCloser', 'updateStage',
+  ]],
   ['integrations', integrationsService, [
     'getHubspotConnection', 'listHubspotSyncLogs', 'testHubspotConnection',
     'saveHubspotApiKey', 'syncAllLeads', 'syncLead', 'disconnectHubspot',

@@ -15,4 +15,20 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        // Split the heavy third-party libraries out of the entry chunk so the
+        // landing page does not pay for the CRM's dependencies. Route-level
+        // code splitting lives in src/App.tsx (React.lazy).
+        manualChunks: {
+          "vendor-react": ["react", "react-dom", "react-router-dom"],
+          "vendor-charts": ["recharts"],
+          "vendor-dnd": ["@hello-pangea/dnd"],
+          "vendor-supabase": ["@supabase/supabase-js"],
+          "vendor-motion": ["framer-motion"],
+        },
+      },
+    },
+  },
 }));

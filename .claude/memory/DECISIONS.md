@@ -536,3 +536,145 @@ résolus, à trancher en session dédiée plutôt que devinée ici.
 ### Lien
 `docs/skeleton-modules/00-INDEX.md` (SILICATE) · P16-B étape 7 · ADR-031/032/033
 (relay initial v0.6) · EVAL-002 (audit P25) · `PLANIFICATION.md`
+
+---
+
+## ADR-040 — Le kanban du closer devient un pipeline d'affaires
+
+**Date** : 2026-08-09
+**Session** : 37
+**Statut** : Actif
+**Décideur** : Nacer (clarification vocabulaire : « l'état de l'affaire, pas seulement du prospect »)
+
+### Contexte
+Historiquement, deux sources racontaient la même histoire : `leads.status` (6 valeurs) décrivait l'état du prospect, `deals.stage` (5 valeurs) décrivait celui de l'affaire. Le vocabulaire était redondant (`Qualifié` vs pas, `Proposé` vs `Négociation`) et perdait de l'information — un prospect écarté mais revivifiable (relancer) n'avait nulle part où se ranger sans confondre l'action (« le relancer ») avec l'état durable (« le lead est en train d'être qualifié »).
+
+Nacer demande : « `deals.stage` doit porter l'état de chaque **affaire**, de sa naissance jusqu'au paiement ». Ceci implique qu'une affaire peut naître au stade `opportunite` (avant tout chiffrage) — donc `amount_cents` doit être nullable, ce qui n'était pas le cas.
+
+### Décision
+Le kanban du closer affiche désormais une carte = une affaire (`deal`), plus un prospect (`lead`). Les 7 stades du pipeline, portés par `deals.stage`, sont :
+
+1. **`opportunite`** — affaire identifiée, aucun chiffrage. (Une même prospect peut porter plusieurs affaires à des stades différents.)
+2. **`programme`** — devis proposé, en attente de réponse.
+3. **`a_relancer`** — no response suite à relance. Affaire mise en attente, meilleur moment à trouver. **`deals.previous_stage` mémorise le stade quitté** pour proposer le retour au bon endroit (ex : retour à `programme` après relance réussie).
+4. **`a_reprogrammer`** — prospect intéressé mais rendez-vous reporté. Aussi une situation d'attente, traçée via `previous_stage`.
+5. **`close`** — deal remporté, en route vers la signature.
+6. **`paye`** — facture acquittée (ou modèle d'engagement signé si pas facturable en MVP).
+7. **`perdu`** — prospect déqualifié ou affaire abandon explicite. Irrévocable jusqu'à preuve du contraire.
+
+**Conséquences positives** :
+- Chaque affaire porte son propre état, indépendant du prospect.
+- Le geste du closer (drag-drop) — une carte qui quitte le kanban pour une queue d'attente (ex : pile `À relancer`) — n'efface plus l'état réel ; il se restitue via `previous_stage`.
+- Fin de la duplication.
+
+**Conséquences négatives** :
+- `amount_cents` nullable signifie que les agrégations (SUM()) doivent utiliser COALESCE.
+- `leads.status` subsiste historiquement et n'est plus utilisé pour piloter le kanban — dette à trancher (supprimer ou conserver pour compatibilité ancien client).
+- Fonction `getCloserPipelineStats` compte toujours sur l'ancien vocabulaire (`qualified`, `proposal`, `negotiation`, `won`) — elle donne des chiffres faux tant que le changement n'est pas arbitré. **BLOCKER-015 ouvert**.
+
+**Alternatives écartées** :
+- Garder les 9 valeurs historiques sur `leads.status` — écarté car « Relancer » et « Reprogrammer » sont des **situations**, pas des états durs, et dupliqueraient `deals.stage` + `Closé`/`Payé`.
+- Reporter à plus tard — écarté car le coût du changement n'est jamais plus bas qu'à zéro ligne en base. Migration appliquée prod : 0 lignes affectées.
+
+### Détail technique (migrations futures)
+`deals.amount_cents` : passage `NOT NULL DEFAULT 0` → `NULL DEFAULT NULL` (sera fait).
+`deals.previous_stage` : nouvelle colonne `app_stage` (enum des 7 valeurs), pour rejouabilité.
+`deals.stage` : CHECK constraint `IN ('opportunite', 'programme', 'a_relancer', ...)` — les 7 valeurs.
+`leads.status` : **non supprimée**, marquée comme dépréciée si nécessaire via colonne ou commentaire. À arbitrer avec Nacer : suppression ou conservation ?
+
+### Lien
+T10 (kanban UI) · skill `workload-management-matching` (priority queues) · BLOCKER-015 (fonction stats obsolète)
+
+---
+
+## ADR-041 — `interactions.metadata` : la base stocke le fait, le front le met en forme
+
+**Date** : 2026-08-09
+**Session** : 37
+**Statut** : Actif
+**Décideur** : Nacer (arbitrage fuseau horaire)
+
+### Contexte
+Le trigger T05 (`log_appointment_as_interaction`) écrivait dans `interactions.content` une phrase français à heure figée, avec fuseau `Africa/Algiers` en dur — hors, un closer de la diaspora montréalaise aurait un meeting affiché « 21h00 GMT+01:00 » quand sa montre locale dit 14h00. Le montant était figé similairement (`1500 DA`).
+
+La donnée brute — horodatage ISO 8601 UTC, montant en centimes — était perdue. Seul l'artefact linguistic restait, dans une unique locale.
+
+### Décision
+Ajout de `interactions.metadata JSONB NOT NULL DEFAULT '{}'` (Postgres).
+
+**Qui écrit dedans** : le trigger (T05). Chaque enregistrement métier écrira la donnée brute : l'horodatage ISO 8601 UTC (`created_at`), identifiants liés (ex : `appointment_id`), valeurs sans traduction (`kind: 'meet' | 'note' | 'call'`, `type: 'appointment' | 'deal'`, pas des libellés français), tout ce qui sera nécessaire au front pour afficher juste.
+
+**`content` redevient** : une phrase française courte, optionnelle (peut être NULL). Utile pour une note textuelle du closer (« Rendez-vous reporté »), pas pour des données systématiques.
+
+**Le front** : lit `metadata` en priorité (sûr, factuel) ; retombe sur `content` si métadonnées vides (robustesse) ; met en forme avec `Intl.DateTimeFormat` (fuseau du lecteur) et `Intl.NumberFormat` (selon locale) — chacun voit juste.
+
+**Conséquences positives** :
+- Même enregistrement s'affiche juste quel que soit le fuseau de lecture.
+- Les traductions françaises quittent le SQL (elles n'étaient de toute façon pas versionnées en i18n).
+- La donnée redevient exploitable sans regexes de reparsage.
+
+**Conséquences négatives** :
+- Deux chemins de lecture possibles (métadonnées vs fallback), double logique à maintenir côté front.
+
+**Alternatives écartées** :
+- Figer le fuseau sur Alger pour tout le monde — écarté explicitement par Nacer.
+- Stocker plusieurs fuseaux dans une colonne TEXT — écarté au profit du format structuré JSONB.
+
+### Détail technique
+Migration T05+ : colonne `metadata` ajoutée à `interactions`.
+Trigger : recopie en metadata l'heure brute UTC + identifiants, écrit une phrase française courte en `content` uniquement si pertinente.
+Front : `InteractionsTimeline.tsx` → `interaction.metadata?.created_at ? formatWithIntl(metadata.created_at) : formatDate(content)`.
+
+### Lien
+T05 (triggers) · ADR-041 complément — ce qui a été découvert en écrivant T05
+
+---
+
+## ADR-042 — Qualification et température : deux signaux distincts portés par le prospect
+
+**Date** : 2026-08-09
+**Session** : 37
+**Statut** : Actif
+**Décideur** : Nacer (arbitrage affichage couleur + jugement vs mesure)
+
+### Contexte
+Au démarrage du projet, Nacer voulait « Qualifié / non Qualifié » comme colonnes du kanban. Puis il demande de les afficher en couleur sur les cartes. Il ajoute aussi un qualificatif chaud / tiède / froid — déjà spécifié dans `docs/ARCHITECTURE.md` et `docs/GLOSSAIRE.md` sous les termes `cold/warm/hot`, mais classé V3 et jamais implémenté.
+
+Les trois notions se mélangent : un prospect « à relancer » est-il froid ou tiède ? Un « disqualifié » n'est-il qu'un froid, ou une catégorie à part ?
+
+### Décision
+Deux notions **distinctes**, toutes deux portées par le **prospect** (pas par l'affaire), pour qu'un même prospect n'ait jamais deux jugements contradictoires :
+
+**1. `leads.qualification` — jugement humain** (triplet) :
+   - `non_evalue` — aucun avis formé (par défaut).
+   - `qualifie` — le closer a estimé le prospect viable → ajout à la pipeline.
+   - `non_qualifie` — le closer a tranché qu'il n'entrera pas en conversation.
+
+**2. `leads.temperature` (ou champ dédié) — mesure** (triplet) :
+   - Calculée de `leads.score` par la couche services (< 40 = cold, 40-69 = warm, ≥ 70 = hot).
+   - Surcharge manuelle possible via `leads.temperature_override` : le score propose, le closer décide.
+
+**Rendu UI** :
+   - Liseré malachite (#60a5a5) pour un prospect `qualifie`, gris atténué (#d1d5db) pour `non_qualifie`, aucune bordure si `non_evalue` (WCAG 1.4.1 — jamais se reposer sur la couleur seule).
+   - Halo doré `--glow-gold` autour des cartes chaudes (`temperature == 'hot'`), aucun glow pour warm/cold (le halo perd sa valeur si 70% des cartes l'ont).
+   - Chaque couleur est doublée d'un libellé textuel («Qualifié»/«Non qualifié»/«En évaluation», puis «Chaud»/«Tiède»/«Froid»).
+
+**Exclusions explicites** :
+   - Pas de néon rose ou magenta — réservé à LULG par la charte.
+   - Pas de rouge pour « non qualifié » — ce n'est pas une erreur, c'est un tri sain.
+
+**Conséquences négatives** :
+   - Le halo doré perd son sens distinctif s'il y a trop de leads chauds — solution : revoir le barème de scoring, pas l'affichage.
+
+**Collision lexicale** :
+   - Attention à ne pas confondre avec l'ancienne échelle `cold/warm/hot/disqualified` du PRD (qui mélange température + qualification). Cette ADR établit la distinction formelle.
+
+### Détail technique
+Migration future :
+   - `leads.qualification` : enum à 3 valeurs (non_evalue, qualifie, non_qualifie), NOT NULL DEFAULT 'non_evalue'.
+   - `leads.temperature` : nullable, stocke cold/warm/hot (computed from score si NULL, ou override explicite).
+   - Fonction dans la couche services : `deriveTemperature(score, override?) → cold | warm | hot`.
+   - LeadCard.tsx : applique le liseré malachite si qualification, le halo doré si hot, label textuel systématique.
+
+### Lien
+T10 (kanban UI) · kanban du closer (ADR-040) · docs/GLOSSAIRE.md (température, déjà documenté) · skill workload-management-matching (priority queues HOT/WARM/COLD)

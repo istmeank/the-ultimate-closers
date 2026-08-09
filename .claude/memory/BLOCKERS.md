@@ -578,3 +578,169 @@ Même si le dépôt est maintenant privé, les 53 fichiers `.claude/` et leurs r
 
 ### Leçon capitale
 Capitalisée en LEARNING-097.
+
+---
+
+## BLOCKER-015 — `getCloserPipelineStats` compte avec l'ancien vocabulaire de pipeline
+
+**Ouvert** — 2026-08-09 (session 37)
+**Gravité** : moyenne — KPI dashboard faux dès application d'ADR-040
+**Signalé par** : synthèse T05 et constat architectural
+
+### Constat
+Fonction `src/lib/adapters/supabase/leads.supabase.ts` : `getCloserPipelineStats` compte les affaires avec `SELECT ... WHERE stage IN ('qualified', 'proposal', 'negotiation', 'won', ...)`.
+
+Ces quatre valeurs n'existent plus après ADR-040 (pipeline 7 stades : `opportunite`, `programme`, `a_relancer`, `a_reprogrammer`, `close`, `paye`, `perdu`).
+
+Conséquence : dès application des migrations de l'ADR-040 sur TUC-v2, tous les KPI du dashboard closer ("Affaires actives", "CA pipeline", "Taux closing" ...) afficheront zéro, rendant le tableau de bord inutile.
+
+### Ce que ça coûte
+Un utilisateur voyant son dashboard passer de « 12 affaires actives » à « 0 affaires » croit être un bug, n'y fait pas confiance, et se met à gérer au feeling plutôt qu'aux métriques. C'est une régression UX directe.
+
+### Action requise
+Requête Nacer en amont : qu'est-ce qu'une « **affaire active** » dans le nouveau pipeline ?
+
+Candidates probables (à trancher) :
+1. Toute affaire où `stage IN ('programme', 'close')` — affaires en conversation active
+2. Toute affaire où `stage NOT IN ('paye', 'perdu')` — affaires non fermées
+3. Toute affaire où `stage IN ('programme')` AND `created_at > now() - interval '30 days'` — affaires récentes en jeu
+
+Une fois Nacer tranche, migration de la fonction, puis test via `npm run test:run` avant application prod.
+
+### Lien
+ADR-040 (pipeline redéfini) · T11 (KPI dashboard) · `src/lib/services/stats.service.ts` (interface à respecter)
+
+---
+
+## BLOCKER-016 — T05 migration : le CHECK `interactions.type` n'acceptait pas `'note'`
+
+**Ouvert** — 2026-08-09 (session 37)
+**Gravité** : haute — INSERT en cascade échouerait sans l'élargissement
+**Découvert lors de** : écriture + vérification T05
+
+### Constat
+Table `interactions` porte un CHECK `interactions_type_check : type IN (...)`.
+Historiquement : `'interaction', 'message', 'call', 'meeting'` (ou variant équivalent du corpus).
+La fiche T05 prescrit d'écrire `type = 'note'` quand un deal est créé.
+
+**Situation du 2026-08-09** : le CHECK en base live n'acceptait pas `'note'` — donc tout trigger qui tenterait de logger `type='note'` échouerait en contrainte 23514 (CHECK violation), avec rollback de l'INSERT deal lui-même.
+
+### Ce qui a été fait (session 37)
+Migration T05 crée l'élargissement du CHECK : `'note'` ajoutée à la liste.
+
+### Reste à faire
+Migration à appliquer sur TUC-v2 avant que T05 migr elle-même ne s'exécute. Dépendance : 
+1. Appliquer CHECK élargissement (T05 migration avant les triggers)
+2. Puis appliquer les triggers
+
+Si les deux migrations sont écrites ensemble, elles s'appliquent en séquence, donc OK.
+
+### Lien
+T05 (migration log_appointment_as_interaction + log_deal_as_interaction) · ADR-041 (métadonnées) · `supabase/migrations/20260809000001_tuc_v2_triggers_log_interactions.sql`
+
+---
+
+## BLOCKER-016 — Correction de diagnostic (2026-08-09, session 37)
+
+**Statut : ✅ CLOS SANS OBJET (correction de diagnostic)**
+**Session** : 37 (archiviste-memoire)
+
+### 1. BLOCKER-016 est mal formé et doit être considéré comme clos sans objet
+
+L'entrée d'ouverture décrit l'élargissement du CHECK `interactions.type` à `'note'` comme un blocage ouvert, avec un « Reste à faire : Migration à appliquer sur TUC-v2 avant que T05 migr elle-même ne s'exécute ».
+
+C'est une analyse inexacte : l'élargissement du CHECK et les triggers qui en dépendent vivent dans le **même fichier de migration** (`supabase/migrations/20260809000001_tuc_v2_triggers_log_interactions.sql`), appliqués dans la **même transaction**, dans le **bon ordre** (CHECK d'abord, triggers ensuite — PostgreSQL impose cet ordre pour que les triggers voient la colonne avec sa nouvelle contrainte).
+
+Il n'existe donc aucune dépendance à ordonnancer. Aucune action n'est en attente. L'élargissement du CHECK n'est pas un blocage — c'est un prérequis intégré au même déploiement que les triggers.
+
+### 2. Rectification d'une affirmation inventée
+
+L'entrée BLOCKER-016 affirme : « Historiquement : `'interaction', 'message', 'call', 'meeting'` (ou variant équivalent du corpus) »
+
+**C'est faux.** Les valeurs réelles du CHECK, lues et vérifiées, sont :
+- Dans `supabase/migrations/20260607194643_tuc_v2_baseline.sql`, ligne ~165 (colonne `type`) : `call, msg, email, meet, whatsapp, telegram, messenger, instagram`
+- Confirmées sur le projet live `llxgyomevketvypusafl` via requête `\d interactions` (liste identique)
+
+L'affirmation inventée « ou variant équivalent du corpus » couvre une incertitude qui aurait dû être levée par une **lecture du fichier migration**, pas comblée par une **supposition**. C'est une violation directe de la discipline P7 (anti-invention) énoncée dans `.claude/rules/global.md` : **un registre de mémoire qui contient une invention est pire qu'un registre incomplet**, parce qu'il sera relu comme une source de vérité, notamment lors des audits de cohérence.
+
+### 3. Le vrai point qui devait être consigné à cette place, et qui a été omis — à consigner comme RÉSOLU
+
+Le vrai blocage sous-jacent au mauvais diagnostic était :
+
+**`supabase/config.toml` portait `project_id = "oudsudzieypfhbvpkynq"`** (ancien projet Supabase issu de Lovable, jamais utilisé pour TUC-v2), alors que **le projet TUC-v2 réellement utilisé est `llxgyomevketvypusafl`**.
+
+**Conséquence** : toute commande de la CLI Supabase (`db pull`, `db push`, `link`) visait la mauvaise base. C'est le **mécanisme exact** qui avait produit BLOCKER-012 (dépôt Git desynchronisé de la production) — parce qu'un développeur ou un agent interrogeant le dépôt local recevait des informations sur l'ancienne base, pas la vraie.
+
+**Statut** : ✅ **RÉSOLU en session 37** — `supabase/config.toml` corrigé, `project_id` pointant vers `llxgyomevketvypusafl`.
+
+**Découverte accidentelle** : le problème a été révélé en session 37 quand l'interrogation du MCP Supabase avec l'identifiant de projet contenu dans une version périmée du `.env` stockée dans l'historique Git a reçu une réponse d'accès refusé. L'erreur de diagnostic initial (« accès d'outil » / « panne de MCP ») a masqué le vrai défaut : on interrogeait la mauvaise cible.
+
+**Leçon capitalisée** : quand un outil « refuse », vérifier d'abord qu'on l'interroge sur la **bonne cible** — une erreur de diagnostic peut révéler un **défaut réel** qu'aucun test préalable ne cherchait. (Voir LEARNING-098.)
+
+---
+
+## BLOCKER-015 — mise à jour de statut (2026-08-09, session 37 suite 2)
+
+**Statut** : Traité en code, en attente confirmation Nacer
+
+**Session** : 37 (suite 2)
+
+**Ce qui a été fait** :
+- Fonction `getCloserPipelineStats` (`src/lib/adapters/supabase/leads.supabase.ts`) corrigée avec définition opérationnelle d'« affaire active » : `stage IN ('opportunite','programme','a_relancer','a_reprogrammer','close')` — c'est-à-dire toute affaire n'étant ni `paye` (gagnée avec paiement) ni `perdu` (perdue définitivement).
+- Raison de la définition : dans le closing, tant que l'argent n'est pas encaissé, le travail n'est pas fini. Une affaire à `close` (accord signé, pas encore payé) reste active. Une affaire à `paye` est comptée comme gagnée. Une affaire à `perdu` est inactive.
+
+**Ne pas clore ce BLOCKER** sans confirmation explicite de Nacer que la définition d'« affaire active » est juste. C'est elle qui alimente le KPI du tableau de bord closer (« Affaires actives », « CA pipeline »). Une erreur de définition affiche des statistiques fausses dès le déploiement.
+
+---
+
+## BLOCKER-016 — CHECK interactions.type : vérification de robustesse d'application (2026-08-09, session 37 suite 2)
+
+**Statut** : Ouvert (traité par construction de migration, à vérifier à l'application)
+
+**Session** : 37 (suite 2)
+
+**Ce qui a été fait** :
+- Migration T05 `20260809000001_tuc_v2_triggers_log_interactions.sql` contient trois éléments dans l'ordre :
+  1. `ALTER TABLE interactions ADD CONSTRAINT interactions_type_check2 CHECK (type IN (..., 'note', ...))` — élargissement du CHECK
+  2. Fonctions `log_appointment_as_interaction()` et `log_deal_as_interaction()`
+  3. Triggers `trg_appointments_log_interaction` et `trg_deals_log_interaction`
+
+**Dépendance critique** : PostgreSQL valide les body SQL des fonctions LANGUAGE SQL à la création — si le CHECK n'existe pas, le `CREATE FUNCTION` qui tente d'écrire `type = 'note'` échoue avant que les triggers soient créés.
+
+**À vérifier à l'application** : que les trois éléments s'appliquent dans le bon ordre (CHECK d'abord, fonctions ensuite, triggers enfin). Si `apply_migration` les exécute en séquence dans la même transaction, c'est correct.
+
+---
+
+## BLOCKER-017 — `has_role()` SECURITY DEFINER inaccessible à `authenticated` [RÉSOLU — 2026-08-09, session 37 suite 3]
+
+**Statut** : ✅ RÉSOLU  
+**Session** : 37 (suite 3)  
+**Gravité** : haute (panne totale production)
+
+### Symptôme
+Utilisateurs connectés sur theultimateclosers.com redirigés immédiatement vers la page d'accueil publique (`/`). Aucun message d'erreur affichage. Console Chrome : `Error checking user role` répété quatre fois. Onglet Réseau : `GET /rest/v1/user_roles?select=role&user_id=eq.<uid>` → **HTTP 403 Forbidden**, réponse vide, cinq tentatives. Code de base `useAuth` (src/components/Auth.tsx) attrape l'erreur et retombe silencieusement sur rôle `user`, qui route vers `/`. Repli défensif masquait la panne au lieu de la signaler.
+
+### Diagnostic
+1. **Distinction clé (PostgREST + RLS)** : une policy RLS qui ne correspond pas renvoie 200 avec tableau vide ; un 403 signale un refus de **privilège**, pas un filtrage de ligne. C'est cette distinction qui a orienté le diagnostic.
+2. **Vérifications brutes** :
+   - GRANT de table : `authenticated` avait bien SELECT sur `user_roles` ✅
+   - Policies RLS : correctes, condition `user_id = auth.uid() OR has_role(...)` ✅
+   - **ACL de fonction** : `public.has_role(uuid, app_role)` est SECURITY DEFINER. Son ACL avait été réduite à `{postgres, service_role}` par une passe de durcissement antérieure. `authenticated` n'avait plus EXECUTE.
+3. **Étendue de la panne** : 33 policies RLS réparties sur 16 tables (`appointments, call_bookings, closer_assignments, closer_integrations, deals, external_sync_log, formations, interactions, lead_scores, leads, payments, profiles, resources, site_analytics, site_content, user_roles`) appellent `has_role()`. Toute requête authentifiée sur l'une d'elles échouait en 403. Application entière inaccessible derrière l'authentification. Site public, lui, fonctionnait : aucune policy s'appliquant à `anon` n'appelle `has_role` (vérifié).
+
+### Ce qui a été fait
+Migration `20260809180000_tuc_v2_restore_has_role_execute_authenticated.sql` appliquée sur TUC-v2 (production) :
+```sql
+GRANT EXECUTE ON FUNCTION public.has_role(uuid, public.app_role) TO authenticated;
+```
+Commentaire de fonction posé en base pour avertir toute future passe de durcissement : ne pas révoquer `authenticated`.
+
+### Vérification post-fix
+- Après application : `/admin` se charge dans le navigateur pour compte `owner+admin`, tableau de bord s'affiche, KPI s'actualisent.
+- 403 sur `user_roles` disparus, pas de tentative supplémentaire.
+- Observation directe, pas par supposition.
+
+### Antériorité
+La production tournait sur l'ancien bundle (`index-BiHqb_YB.js`), donc **cette panne est antérieure aux changements de la session 37** — elle ne vient ni de la refonte du pipeline ni du découpage des routes. Elle datait de la passe de durcissement des sessions 18-19, dormante jusque-là car le projet avait peu de trafic.
+
+---

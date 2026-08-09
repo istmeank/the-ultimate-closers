@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { leadsService } from '@/lib/services/leads.service';
-import { meetService } from '@/lib/services/meet.service';
+import { leadsService, LEAD_STATUS_LABELS, type LeadStatus } from '@/lib/services/leads.service';
+import { meetService, DEAL_STAGE_LABELS, formatAmountCents } from '@/lib/services/meet.service';
 import { CloserLayout } from '@/components/closer/CloserLayout';
 import { InteractionsTimeline } from '@/components/closer/InteractionsTimeline';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -53,26 +53,18 @@ const LeadDetail = () => {
     return <Badge className="bg-red-100 text-red-800 border-red-200">❄️ Score: {score}</Badge>;
   };
 
-  const getStatusBadge = (status: string) => {
-    const statusColors = {
+  const getStatusBadge = (status: LeadStatus) => {
+    const statusColors: Record<LeadStatus, string> = {
       new: 'bg-violet-100 text-violet-800',
       qualified: 'bg-blue-100 text-blue-800',
       in_progress: 'bg-orange-100 text-orange-800',
       won: 'bg-green-100 text-green-800',
       lost: 'bg-red-100 text-red-800',
     };
-    
-    const statusLabels = {
-      new: 'Nouveau',
-      qualified: 'Qualifié',
-      in_progress: 'En cours',
-      won: 'Gagné',
-      lost: 'Perdu',
-    };
 
     return (
-      <Badge className={statusColors[status as keyof typeof statusColors] || 'bg-gray-100 text-gray-800'}>
-        {statusLabels[status as keyof typeof statusLabels] || status}
+      <Badge className={statusColors[status] || 'bg-gray-100 text-gray-800'}>
+        {LEAD_STATUS_LABELS[status] || status}
       </Badge>
     );
   };
@@ -199,10 +191,10 @@ const LeadDetail = () => {
                         <div>
                           <h4 className="font-semibold dark:text-white">{deal.offer_name}</h4>
                           <p className="text-sm text-muted-foreground dark:text-white/70">
-                            Montant: {(deal.amount_cents / 100).toLocaleString('fr-FR')} €
+                            Montant: {formatAmountCents(deal.amount_cents, deal.currency)}
                           </p>
                         </div>
-                        <Badge variant="outline">{deal.stage}</Badge>
+                        <Badge variant="outline">{DEAL_STAGE_LABELS[deal.stage]}</Badge>
                       </div>
                     ))}
                   </div>

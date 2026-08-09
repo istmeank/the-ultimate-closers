@@ -1,41 +1,118 @@
--- TUC v2 — Triggers for automatic interaction logging
--- Task: T05 (Création triggers interactions)
--- Date: 2026-08-09
--- Domains: acquisition-qualification (domain 1), meet-coaching (domain 4)
--- What: Extends interactions.type CHECK constraint to accept 'note' type;
--- creates triggers on appointments and deals tables to automatically log them as interactions.
+-- TUC v2 — Automatic interaction logging (T05)
+-- Date: 2026-08-09 (revised same session — see header note below)
+-- Domains: 1. Acquisition & Qualification (interactions) · 4. Meet & Coaching (appointments)
+--
+-- What this migration does:
+--   0. Adds interactions.metadata (JSONB) — structured payload for machine-generated entries.
+--      Needed before steps 2-3 below, which now write into it instead of formatting French
+--      strings straight into content.
+--   1. Widens the interactions.type CHECK constraint to accept 'note'.
+--      Without this, step 3 below would raise 23514 and abort every INSERT on deals.
+--   2. AFTER INSERT trigger on appointments -> writes an interaction of type 'meet'.
+--   3. AFTER INSERT trigger on deals        -> writes an interaction of type 'note'.
+--
+-- Both trigger functions are SECURITY DEFINER so the audit trail is written even when
+-- the RLS policy on interactions would not let the calling role insert directly.
+-- search_path is pinned and EXECUTE is revoked from client roles (see BLOCKER-H10).
+--
+-- REVISION NOTE (2026-08-09, same day, before this migration was ever applied —
+-- list_migrations on llxgyomevketvypusafl confirms T05 never ran, so direct edit is safe
+-- per methodology-guard.md "JAMAIS d'édition d'une migration déjà appliquée"):
+--   Nacer validated the kanban pivot to a deal pipeline (see the sibling migration
+--   ..._tuc_v2_deal_pipeline_and_lead_signals.sql). That migration relies on
+--   interactions.metadata already existing, but its own timestamp is later than this
+--   file's. Rather than rename this file (its name is already referenced in
+--   JOURNAL.md, PLANIFICATION.md and taches-a-faire/README.md as
+--   "20260809000001_tuc_v2_triggers_log_interactions.sql", and those are append-only /
+--   externally-tracked), the interactions.metadata column now gets created here, in T05,
+--   which keeps the natural alphabetical/timestamp ordering: T05 creates the column,
+--   the deal-pipeline migration (later timestamp) consumes it.
+--   Also as part of that pivot: French stage labels no longer belong in SQL (the front
+--   end translates the 7 new stage values), and formatted amount/time strings move out
+--   of `content` into `metadata` as raw machine-readable values. `content` keeps a short
+--   human-readable French sentence without embedded numbers/dates; the front renders the
+--   rest from `metadata` in the user's locale/timezone.
+--
+-- User-facing strings (content) are still French, short, and free of embedded numbers:
+--   - no more inline time/amount formatting in content — that now lives in metadata
+--     as plain ISO 8601 UTC timestamps / raw integers, for the front to format per
+--     the user's locale and timezone.
+-- Wording is aligned with src/pages/LeadDetail.tsx so the timeline and the badges agree
+-- (front-end must be updated to read metadata for the details it used to parse from content).
 
--- 1. Extend CHECK constraint on interactions.type
+SET lock_timeout = '5s';
+
+-- ---------------------------------------------------------------------------
+-- 0. interactions.metadata — structured payload for machine-generated entries
+-- ---------------------------------------------------------------------------
+
+ALTER TABLE public.interactions
+  ADD COLUMN IF NOT EXISTS metadata JSONB NOT NULL DEFAULT '{}'::jsonb;
+
+COMMENT ON COLUMN public.interactions.metadata IS
+'Structured payload for machine-generated interactions (trigger-authored rows: kind, related ids, raw ISO 8601 UTC timestamps, raw enum values). content stays a short human-readable French sentence; metadata carries what the front needs to format numbers/dates in the user''s locale and to translate enum values, without parsing content. Empty object ({}) for interactions created directly by a human action on a channel.';
+
+-- ---------------------------------------------------------------------------
+-- 1. interactions.type — accept 'note'
+-- ---------------------------------------------------------------------------
+
 ALTER TABLE public.interactions DROP CONSTRAINT IF EXISTS interactions_type_check;
 ALTER TABLE public.interactions ADD CONSTRAINT interactions_type_check
-  CHECK (type = ANY(ARRAY['call','msg','email','meet','whatsapp','telegram','messenger','instagram','note']));
+  CHECK (type IN ('call','msg','email','meet','whatsapp','telegram','messenger','instagram','note'));
 
 COMMENT ON CONSTRAINT interactions_type_check ON public.interactions IS
-'Enum-like CHECK: allowed interaction types include call, msg, email, meet, whatsapp, telegram, messenger, instagram, and note (for automated logs).';
+'Allowed interaction types. ''note'' was added in T05 for entries generated by database triggers rather than by a human action on a channel.';
 
--- 2. Function and trigger: log appointments as interactions
+-- ---------------------------------------------------------------------------
+-- 2. appointments -> interactions
+-- ---------------------------------------------------------------------------
+
 CREATE OR REPLACE FUNCTION public.log_appointment_as_interaction()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = pg_catalog, public, pg_temp
 AS $$
-DECLARE v_owner_id UUID;
+DECLARE
+  v_owner_id  UUID;
+  v_channel   TEXT;
 BEGIN
   SELECT owner_id INTO v_owner_id FROM public.leads WHERE id = NEW.lead_id;
-  INSERT INTO public.interactions (lead_id, type, content, by_user_id)
-  VALUES (NEW.lead_id, 'meet',
-    format('Rendez-vous programmé le %s via %s', to_char(NEW.start_at, 'DD/MM/YYYY HH24:MI'), NEW.channel),
-    v_owner_id);
+
+  v_channel := CASE NEW.channel
+                 WHEN 'meet'     THEN 'Google Meet'
+                 WHEN 'phone'    THEN 'téléphone'
+                 WHEN 'teams'    THEN 'Teams'
+                 WHEN 'whatsapp' THEN 'WhatsApp'
+                 ELSE NEW.channel
+               END;
+
+  -- content: short, no embedded date/time — the front renders start_at/end_at from
+  -- metadata in the user's own timezone instead of a fixed Africa/Algiers string.
+  INSERT INTO public.interactions (lead_id, type, content, by_user_id, metadata)
+  VALUES (
+    NEW.lead_id,
+    'meet',
+    format('Rendez-vous programmé — %s', v_channel),
+    COALESCE(NEW.assigned_to, v_owner_id),
+    jsonb_build_object(
+      'kind',           'appointment_created',
+      'appointment_id', NEW.id,
+      -- Session/database timezone is UTC on Supabase (see original T05 note), so the
+      -- OF offset token renders '+00' directly: full ISO 8601 UTC, no manual shift.
+      'start_at',       to_char(NEW.start_at, 'YYYY-MM-DD"T"HH24:MI:SSOF'),
+      'end_at',         to_char(NEW.end_at,   'YYYY-MM-DD"T"HH24:MI:SSOF'),
+      'channel',        NEW.channel
+    )
+  );
+
   RETURN NEW;
 END;
 $$;
 
 COMMENT ON FUNCTION public.log_appointment_as_interaction() IS
-'Automatically creates an interaction record (type=meet) when a new appointment is inserted. Captures lead owner_id and formats a French-language summary.';
+'T05 — writes a timeline entry (type=meet) whenever an appointment is created. Attributed to the assigned closer, falling back to the lead owner. content is a short French sentence; start_at/end_at/channel/appointment_id live in metadata as raw values for the front to format.';
 
--- Trigger functions must not be directly executable by client roles (BLOCKER-H10 lesson:
--- a SECURITY DEFINER function left executable by PUBLIC is a privilege escalation vector).
 REVOKE EXECUTE ON FUNCTION public.log_appointment_as_interaction() FROM PUBLIC, anon, authenticated;
 
 DROP TRIGGER IF EXISTS trg_appointments_log_interaction ON public.appointments;
@@ -44,27 +121,46 @@ CREATE TRIGGER trg_appointments_log_interaction
   FOR EACH ROW
   EXECUTE FUNCTION public.log_appointment_as_interaction();
 
--- 3. Function and trigger: log deals as interactions
+-- ---------------------------------------------------------------------------
+-- 3. deals -> interactions
+-- ---------------------------------------------------------------------------
+
 CREATE OR REPLACE FUNCTION public.log_deal_as_interaction()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = pg_catalog, public, pg_temp
 AS $$
-DECLARE v_owner_id UUID;
+DECLARE
+  v_owner_id UUID;
 BEGIN
   SELECT owner_id INTO v_owner_id FROM public.leads WHERE id = NEW.lead_id;
-  INSERT INTO public.interactions (lead_id, type, content, by_user_id)
-  VALUES (NEW.lead_id, 'note',
-    format('Deal créé: %s - Montant: %s %s - Étape: %s',
-      NEW.offer_name, to_char(NEW.amount_cents / 100.0, 'FM999999990.00'), NEW.currency, NEW.stage),
-    v_owner_id);
+
+  -- content: short, no embedded amount/stage — stage translation and amount
+  -- formatting move to the front, which reads them from metadata. amount_cents
+  -- can now be NULL (a deal is born at stage 'opportunite', before any pricing).
+  INSERT INTO public.interactions (lead_id, type, content, by_user_id, metadata)
+  VALUES (
+    NEW.lead_id,
+    'note',
+    format('Deal créé — %s', NEW.offer_name),
+    v_owner_id,
+    jsonb_build_object(
+      'kind',         'deal_created',
+      'deal_id',      NEW.id,
+      'offer_name',   NEW.offer_name,
+      'amount_cents', NEW.amount_cents,
+      'currency',     NEW.currency,
+      'stage',        NEW.stage
+    )
+  );
+
   RETURN NEW;
 END;
 $$;
 
 COMMENT ON FUNCTION public.log_deal_as_interaction() IS
-'Automatically creates an interaction record (type=note) when a new deal is inserted. Captures deal metadata (offer_name, amount_cents/100, currency, stage) in a formatted French-language summary.';
+'T05 — writes a timeline entry (type=note) whenever a deal is created. content is a short French sentence with only the offer name; amount_cents (nullable), currency and stage live raw in metadata — the front formats the amount and translates the stage. Snapshot only, not updated if the deal changes later.';
 
 REVOKE EXECUTE ON FUNCTION public.log_deal_as_interaction() FROM PUBLIC, anon, authenticated;
 

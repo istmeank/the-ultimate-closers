@@ -133,6 +133,69 @@ identifié par P25). Se référer à `00-INDEX.md` de ce dossier plutôt qu'à u
 
 ---
 
+## 7. Pipeline d'affaires (ADR-040)
+
+**Les 7 stades du pipeline** (valeurs de `deals.stage`) :
+
+| Stade | Description |
+|---|---|
+| `opportunite` | Affaire identifiée, aucun chiffrage (naissance) — `amount_cents` peut être NULL |
+| `programme` | Devis proposé, en attente de réponse |
+| `a_relancer` | Pas de réponse suite relance. Attente, meilleur moment à chercher. `previous_stage` mémorise le stade précédent. |
+| `a_reprogrammer` | Prospect intéressé, rendez-vous reporté. Aussi une attente, tracée via `previous_stage`. |
+| `close` | Deal remporté, en route vers signature |
+| `paye` | Facture acquittée (ou engagement signé si non facturable) |
+| `perdu` | Prospect déqualifié ou affaire abandon explicite — irrévocable |
+
+*Source : ADR-040 (2026-08-09).*
+
+**`deals.previous_stage`** — colonne enum, mémorise le stade quitté quand une affaire entre `a_relancer` ou `a_reprogrammer`, pour proposer le retour automatique au bon endroit après résolution de l'attente. Exemple : affaire à `programme` → drag vers « À relancer » → `previous_stage = 'programme'` ; quelques jours plus tard, relance réussie → retour à `programme` propulsé par ce champ.
+
+**Distinction fin du pipeline historique** : `leads.status` (6 valeurs anciennes : Qualifié, Proposé, Négociation, etc.) n'est plus utilisé pour piloter le kanban. Elle subsiste historiquement, statut à trancher (suppression ou conservation). `deals.stage` est désormais la seule source de vérité.
+
+*Source : ADR-040.*
+
+---
+
+## 8. Qualification & Température (ADR-042)
+
+**Deux notions **distinctes**, toutes deux portées par le prospect** :
+
+| Notion | Domaine | Valeurs | Porté par | Exemple |
+|---|---|---|---|---|
+| **Qualification** | Jugement humain du closer | `non_evalue`, `qualifie`, `non_qualifie` | `leads.qualification` | Closer estime le prospect viable = `qualifie`, ou définitivement non-acheteur = `non_qualifie` |
+| **Température** | Mesure / propension | `cold` (< 40), `warm` (40-69), `hot` (≥ 70) | `leads.temperature` (ou dérivée de `score`) | Score IA haut = `hot`, candidat pour priorité queue HOT dans le matching |
+
+**`temperature_override`** — colonne pour override manuel : le score propose, le closer décide. Ex : prospect en `warm` par le barème, mais closer juge `cold` sur un signal non-quantifié.
+
+**Rendus UI** :
+   - Qualification : liseré **malachite** (#60a5a5) pour `qualifie`, **gris atténué** (#d1d5db) pour `non_qualifie`, **aucune bordure** si `non_evalue`.
+   - Température : halo **doré** (`--glow-gold`) sur cartes `hot`, aucun halo pour warm/cold.
+   - **Tous les visuels doublés d'un libellé textuel** (WCAG 1.4.1 — ne jamais se reposer sur la couleur seule).
+   - **Exclusions** : pas de néon rose (réservé LULG), pas de rouge pour « non qualifié ».
+
+*Source : ADR-042 (2026-08-09).*
+
+---
+
+## 9. Métadonnées d'interaction (ADR-041)
+
+**`interactions.metadata JSONB`** — nouvelle colonne, à la charge des triggers T05.
+
+**Contenue** : donnée brute, système (jamais traduite) :
+   - `created_at` : horodatage ISO 8601 UTC de l'événement
+   - `kind` : enum non traduit (`'meet'`, `'note'`, `'call'`, `'message'`)
+   - Identifiants liés (`appointment_id`, `deal_id`, etc.)
+   - Valeurs d'enum (`type: 'appointment'`, pas « Rendez-vous »)
+
+**`interactions.content`** : phrase française courte, optionnelle (NULL autorisé). Utilisée pour les notes textuelles du closer (ex : « Rendez-vous reporté »), ou fallback si métadonnées vides.
+
+**Mise en forme côté front** : lit `metadata` en priorité → format avec `Intl.DateTimeFormat` (fuseau du lecteur) et `Intl.NumberFormat` (locale) → retombe sur `content` si métadonnées vides (robustesse).
+
+*Source : ADR-041 (2026-08-09). Résout le problème des meetings affichés à l'heure d'Alger pour les closers diaspora.*
+
+---
+
 ## Non tranché (à ne pas combler ici — anti-invention P7)
 
 - Choix du modèle open source de base pour ANK
