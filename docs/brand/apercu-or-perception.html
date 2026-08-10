@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TUC — l'or de PERCEPTION, relevé et transposé</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   Relevé exact de perception-landing/assets/css/sanctuaire.css.
+   Aucune valeur inventée : chaque ligne ci-dessous vient du fichier.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root{
+  --nuit:#062720; --nuit2:#041914; --malachite:#0B4135;
+  --or:#C99D35; --or-clair:#E3C477; --or-vif:#F0D08A;
+  --pierre:#F8F6F1; --brume:#DDEDE5; --terre:#9FB3AA;
+  --creme:#F6F4EE; --mala-tuc:#0E4E40;
+  --tr:.9s cubic-bezier(.22,.61,.36,1);
+  --fd:"Cormorant Garamond",Georgia,serif;
+  --fb:"Lora",Georgia,serif;
+  --fui:Inter,system-ui,sans-serif;
+  --angle:2px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--nuit2);color:var(--pierre);font-family:var(--fb);
+  -webkit-font-smoothing:antialiased;line-height:1.6}
+main{max-width:1040px;margin:0 auto;padding:34px 20px 90px}
+h2{font-family:var(--fd);font-weight:600;font-size:1.7rem;color:var(--pierre);margin-bottom:6px}
+h2 em{font-style:italic;color:var(--or-clair)}
+.kick{font-family:var(--fui);font-size:.66rem;letter-spacing:.30em;text-transform:uppercase;
+  color:var(--or);margin-bottom:14px}
+section{margin-bottom:52px}
+.lead{color:var(--terre);font-size:.92rem;max-width:68ch;margin-bottom:22px}
+.rule{height:1px;background:rgba(201,157,53,.2);margin:44px 0}
+
+/* ── les trois ors ── */
+.ors{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:760px){.ors{grid-template-columns:1fr}}
+.or{border:1px solid rgba(201,157,53,.24);background:rgba(255,255,255,.045);padding:0;overflow:hidden}
+.or .chip{height:64px}
+.or .bd{padding:13px 15px}
+.or b{font-family:var(--fui);font-size:.78rem;letter-spacing:.06em;display:block;color:var(--or-clair)}
+.or code{font-family:ui-monospace,monospace;font-size:.7rem;color:var(--terre)}
+.or p{font-size:.8rem;color:var(--terre);margin-top:7px}
+.ratios{margin-top:9px;font-family:var(--fui);font-size:.68rem;color:var(--terre)}
+.ratios span{display:block;padding:2px 0}
+.ok{color:#8FD3A8} .ko{color:#E09A9A}
+
+/* ── application fidèle ── */
+.demo{border:1px solid rgba(201,157,53,.24);background:rgba(255,255,255,.045);padding:26px 24px}
+.faits{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(201,157,53,.26);
+  border:1px solid rgba(201,157,53,.26);margin:18px 0}
+@media(max-width:600px){.faits{grid-template-columns:1fr}}
+.fait{background:var(--nuit);padding:14px}
+.fait .n{font-family:var(--fd);font-size:1.3rem;color:var(--or-clair);display:block;margin-bottom:2px}
+.fait small{color:var(--terre);font-size:.76rem}
+ul.clean{list-style:none;margin:16px 0}
+ul.clean li{position:relative;padding-left:22px;margin-bottom:11px;font-size:.88rem;color:var(--brume)}
+ul.clean li::before{content:"";position:absolute;left:2px;top:9px;width:8px;height:8px;
+  background:var(--or);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+ul.clean strong{display:block;color:var(--or-clair);font-weight:400;font-family:var(--fd);
+  font-size:1.02rem;margin-bottom:1px}
+.etape{display:flex;gap:13px;align-items:center;margin-bottom:13px}
+.etape .num{flex:0 0 32px;height:32px;border:1px solid var(--or);border-radius:50%;
+  display:grid;place-items:center;font-family:var(--fd);color:var(--or);font-size:.85rem}
+.btn{display:inline-block;margin-top:26px;padding:18px 44px;border-radius:var(--angle);
+  background:linear-gradient(140deg,var(--or-vif),var(--or));color:var(--nuit);
+  font-family:var(--fui);font-weight:500;font-size:.79rem;letter-spacing:.22em;
+  text-transform:uppercase;text-decoration:none;box-shadow:0 8px 44px rgba(201,157,53,.22);
+  transition:var(--tr);border:0;cursor:pointer}
+.btn:hover{transform:translateY(-3px);box-shadow:0 14px 60px rgba(201,157,53,.4)}
+.lien{display:inline-block;margin-left:16px;color:var(--or);font-family:var(--fui);
+  font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;
+  border-bottom:1px solid rgba(201,157,53,.45);padding-bottom:3px}
+.sig{font-family:var(--fd);font-style:italic;font-size:.9rem;color:var(--or);margin-top:14px}
+
+/* ── transposition au thème clair ── */
+.light{background:var(--creme);color:#1F2A26;border:1px solid #D1E0DD;padding:26px 24px}
+.light h3{font-family:var(--fd);font-weight:600;font-size:1.5rem;color:var(--mala-tuc)}
+.light h3 em{font-style:italic;color:#7A6119}
+.light .kick{color:#7A6119}
+.light p{color:#3B4A45;font-size:.88rem}
+.light .btn{color:var(--nuit)}
+.light .faits{background:rgba(14,78,64,.18);border-color:rgba(14,78,64,.18)}
+.light .fait{background:#fff}
+.light .fait .n{color:var(--mala-tuc)}
+.light .fait small{color:#5A6B65}
+.warn{border-left:2px solid #C99D35;padding:10px 0 10px 14px;margin-top:18px;
+  font-size:.83rem;color:var(--terre)}
+.light .warn{color:#5A6B65}
+</style>
+</head>
+<body>
+<main>
+
+<p class="kick">Relevé — sanctuaire.css</p>
+<h2>L'or de <em>PERCEPTION</em>, tel qu'il est écrit</h2>
+<p class="lead">Pas une interprétation : les valeurs viennent ligne par ligne de ton fichier. Ce qui suit est ce que ton or fait réellement, et ce que le mien faisait de trop.</p>
+
+<section>
+  <div class="ors" id="ors"></div>
+  <div class="warn">
+    Ce que je n'avais pas vu : <strong>l'or n'est jamais un aplat large</strong>. Sur toute ta page il n'existe que sous trois formes — un filet très dilué entre 20 et 45 % d'opacité, du texte, et un seul bouton. Le fond des cartes est du blanc à 4,5 %, pas de l'or. Mon dégradé à neuf arrêts imitant du métal poli ne vient d'aucune de tes sources.
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<section>
+  <p class="kick">Application fidèle — fond nuit</p>
+  <h2>Le même or, sur du contenu <em>TUC</em></h2>
+  <p class="lead">Rien n'est ajouté. Filets dilués, italique en or clair dans le titre, losanges de puce, numéros cerclés, un seul bouton.</p>
+
+  <div class="demo">
+    <p class="kick">Le pipeline</p>
+    <h2 style="font-size:1.45rem">Une affaire qui avance <em>se réchauffe</em></h2>
+
+    <div class="faits">
+      <div class="fait"><span class="n">7</span><small>stades du pipeline</small></div>
+      <div class="fait"><span class="n">4</span><small>indicateurs closer</small></div>
+      <div class="fait"><span class="n">3</span><small>couleurs structurelles</small></div>
+    </div>
+
+    <ul class="clean">
+      <li><strong>Connexion psychologique</strong>Comprendre avant de convaincre.</li>
+      <li><strong>Communication effective</strong>Des mots simples, précis, sans artifice.</li>
+      <li><strong>Rôle play</strong>La répétition fait le closer, pas le talent.</li>
+    </ul>
+
+    <div class="etape"><span class="num">1</span><span>Le prospect entre par le formulaire de candidature.</span></div>
+    <div class="etape"><span class="num">2</span><span>Le moteur de scoring propose une température.</span></div>
+    <div class="etape"><span class="num">3</span><span>Le closer arbitre, et le pipeline avance.</span></div>
+
+    <button class="btn">Réserver un audit</button>
+    <a class="lien" href="#">Connexion</a>
+    <p class="sig">— Wisdom in sales, light in growth.</p>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<section>
+  <p class="kick">Transposition — fond crème</p>
+  <h2>Ce qui doit <em>changer</em> en thème clair</h2>
+  <p class="lead">C'est le point que ta recette ne couvre pas : PERCEPTION vit sur du nuit profond, où tes trois ors sont lisibles. Sur le crème de TUC, ils tombent tous sous le seuil — regarde les ratios plus haut. La règle se transpose donc, elle ne se copie pas.</p>
+
+  <div class="light">
+    <p class="kick">Le pipeline</p>
+    <h3>Une affaire qui avance <em>se réchauffe</em></h3>
+    <p style="margin-top:8px">Sur fond clair, l'or ne quitte pas la marque — il change de rôle. Il reste dans le remplissage du bouton et dans le filet kintsugi. Ce qui écrit, c'est le malachite ; et quand un mot doit être doré, il passe à l'or sombre.</p>
+
+    <div class="faits">
+      <div class="fait"><span class="n">7</span><small>stades du pipeline</small></div>
+      <div class="fait"><span class="n">4</span><small>indicateurs closer</small></div>
+      <div class="fait"><span class="n">3</span><small>couleurs structurelles</small></div>
+    </div>
+
+    <button class="btn">Réserver un audit</button>
+    <div class="warn">
+      Le bouton est identique dans les deux thèmes — même dégradé à deux arrêts, même texte nuit, même halo. C'est lui qui fait le lien entre les deux marques.
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<section>
+  <p class="kick">En attente</p>
+  <h2>La <em>matière</em>, je ne la propose plus</h2>
+  <p class="lead">Tu m'as dit que tu me montrerais ce que tu aimes. Je n'ai donc mis aucune texture ici — ni marbre dessiné, ni labradorite, ni grain. Envoie-moi une capture ou un lien d'un site dont la matière te plaît vraiment, et je pars de là.</p>
+</section>
+
+</main>
+
+<script>
+/* Les ratios sont calculés dans la page — je n'affirme aucun chiffre que tu ne
+   puisses vérifier ici même. Formule de luminance relative WCAG 2.2. */
+const h2r=x=>{x=x.replace('#','');return [0,2,4].map(i=>parseInt(x.substr(i,2),16)/255)};
+const lum=c=>{const f=v=>v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);
+  const[r,g,b]=c.map(f);return .2126*r+.7152*g+.0722*b};
+const ratio=(a,b)=>{const la=lum(h2r(a)),lb=lum(h2r(b));
+  return ((Math.max(la,lb)+.05)/(Math.min(la,lb)+.05))};
+const fmt=(v,t)=>`<span class="${v>=t?'ok':'ko'}">${v.toFixed(2)}:1 ${v>=t?'✓':'✗'} </span>`;
+
+const ORS=[
+ ['--or','#C99D35','Filets, petites capitales espacées, signatures, numéros d\'étape, losanges de puce. Toujours dilué en bordure : rgba(201,157,53, .20 à .45), jamais plein.'],
+ ['--or-clair','#E3C477','C\'est l\'or qui écrit. Italiques dans les titres, sous-titres, nombres des faits, intitulés en gras. Le geste signature de la page.'],
+ ['--or-vif','#F0D08A','L\'or de lumière. Uniquement l\'arrêt clair du dégradé du bouton, et la classe .lueur avec son ombre portée. Nulle part ailleurs.'],
+];
+document.getElementById('ors').innerHTML = ORS.map(([n,hex,desc])=>{
+  const rNuit=ratio(hex,'#062720'), rCreme=ratio(hex,'#F6F4EE'), rMala=ratio(hex,'#0E4E40');
+  return `<div class="or">
+    <div class="chip" style="background:${hex}"></div>
+    <div class="bd">
+      <b>${n}</b><code>${hex}</code>
+      <p>${desc}</p>
+      <div class="ratios">
+        <span>sur nuit #062720 — ${fmt(rNuit,4.5)}</span>
+        <span>sur crème #F6F4EE — ${fmt(rCreme,4.5)}</span>
+        <span>sur malachite #0E4E40 — ${fmt(rMala,4.5)}</span>
+      </div>
+    </div></div>`;
+}).join('');
+</script>
+</body>
+</html>

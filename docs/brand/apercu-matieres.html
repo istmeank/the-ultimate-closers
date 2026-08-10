@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TUC — Matières : malachite botryoïde, labradorite, or métallique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Instrument+Serif:ital@0;1&family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --background:44 30% 95%; --surface-1:0 0% 100%; --surface-2:42 33% 94%; --surface-3:150 21% 93%;
+  --foreground:167 69% 18%; --ink-strong:167 69% 12%;
+  --secondary:167 69% 18%; --gold:44 73% 66%; --gold-ink:45 68% 30%; --gold-soft:44 65% 89%;
+  --malachite:167 69% 18%; --malachite-mid:167 43% 32%;
+  --tech:271 70% 42%; --tech-soft:263 48% 95%; --tech-line:271 45% 66%; --tech-strong:271 60% 30%;
+  --muted-foreground:167 14% 36%; --border:167 20% 85%; --hairline:167 18% 89%;
+  /* ── LES ANGLES ────────────────────────────────────────────────────────────
+     Repris du bouton « Candidater » de la landing PERCEPTION : border-radius 2px.
+     Une pierre taillée a des arêtes, pas des pilules. L'échelle descend donc
+     nettement, et le rayon d'un élément imbriqué reste inférieur à celui de son
+     conteneur. */
+  --angle-cut:2px;     /* boutons, puces, étiquettes — l'arête */
+  --angle-panel:6px;   /* cartes, panneaux */
+  --angle-frame:10px;  /* grands cadres, hero, colonnes */
+  --radius:var(--angle-panel);
+  /* Trois familles, permutées par le sélecteur de typographie. */
+  --f-display:'Playfair Display',Georgia,serif;
+  --f-ui:Inter,system-ui,sans-serif;
+  --f-num:Inter,system-ui,sans-serif;
+  /* Or métallique — alternance clair/sombre le long de l'angle, comme un métal
+     poli capte la lumière par bandes. Jamais un aplat. */
+  --metal-gold:linear-gradient(104deg,#6E5518 0%,#B8923A 14%,#F3E2A8 27%,#E8C669 38%,
+      #8B6F1E 52%,#D9BB6A 63%,#FFF6D2 72%,#C9A448 84%,#7A6020 100%);
+  --metal-gold-soft:linear-gradient(104deg,#A98A34 0%,#E8C669 30%,#FFF3C9 48%,#C9A448 70%,#8B6F1E 100%);
+}
+.dark{
+  --background:167 69% 6%; --surface-1:167 55% 9%; --surface-2:167 45% 13%; --surface-3:166 38% 18%;
+  --foreground:44 30% 93%; --ink-strong:44 40% 97%;
+  --secondary:165 36% 46%; --gold-ink:44 73% 66%; --gold-soft:44 40% 18%;
+  --malachite:165 36% 46%; --malachite-mid:167 40% 30%;
+  --tech:268 88% 80%; --tech-soft:268 45% 20%; --tech-line:268 55% 55%; --tech-strong:268 92% 87%;
+  --muted-foreground:150 12% 70%; --border:166 30% 21%; --hairline:166 32% 17%;
+}
+/* Permutations typographiques */
+.type-a{--f-display:Fraunces,Georgia,serif; --f-ui:Inter,sans-serif; --f-num:'JetBrains Mono',monospace}
+.type-b{--f-display:'Instrument Serif',Georgia,serif; --f-ui:'IBM Plex Sans',sans-serif; --f-num:'IBM Plex Mono',monospace}
+.type-c{--f-display:'Playfair Display',Georgia,serif; --f-ui:Inter,sans-serif; --f-num:Inter,sans-serif}
+
+*{box-sizing:border-box}
+html{background:hsl(var(--background));transition:background-color .4s}
+body{margin:0;background:transparent;color:hsl(var(--foreground));font-family:var(--f-ui);
+  -webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--f-display);color:hsl(var(--ink-strong));margin:0;letter-spacing:-.012em}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+
+.bar{position:sticky;top:0;z-index:20;display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+  padding:11px 18px;background:hsl(var(--background)/.9);backdrop-filter:blur(10px);
+  border-bottom:1px solid hsl(var(--hairline))}
+.bar b{font-family:var(--f-display);font-size:15px;color:hsl(var(--ink-strong))}
+.sp{flex:1}
+button{border:1px solid hsl(var(--hairline));background:hsl(var(--surface-1));color:hsl(var(--foreground));
+  border-radius:var(--angle-cut);padding:6px 14px;font:500 12.5px var(--f-ui);cursor:pointer;transition:.25s}
+button:hover{border-color:hsl(var(--secondary))}
+button[aria-pressed=true]{background:hsl(var(--secondary));color:hsl(var(--background));border-color:transparent}
+main{max-width:1120px;margin:0 auto;padding:26px 18px 80px}
+section{margin-bottom:46px}
+.eyebrow{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.15em;
+  color:hsl(var(--muted-foreground));margin:0 0 10px}
+.note{font-size:12.5px;color:hsl(var(--muted-foreground));line-height:1.65;margin:11px 0 0;max-width:66ch}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:800px){.g3,.g2{grid-template-columns:1fr}}
+
+/* ---- Cadres de matière ---- */
+.mat{position:relative;border-radius:var(--angle-panel);overflow:hidden;border:1px solid hsl(var(--hairline));
+  height:190px}
+.mat svg,.mat .fill{position:absolute;inset:0;width:100%;height:100%}
+.mat figcaption{position:absolute;left:0;right:0;bottom:0;margin:0;padding:7px 11px;font-size:11.5px;
+  color:#fff;background:rgba(0,0,0,.45);backdrop-filter:blur(3px)}
+
+/* ---- Or métallique ---- */
+.metal{background:var(--metal-gold)}
+.metal-text{background:var(--metal-gold);-webkit-background-clip:text;background-clip:text;
+  color:transparent;-webkit-text-fill-color:transparent}
+.metal-rule{height:2px;border:0;background:var(--metal-gold-soft);margin:26px 0;border-radius:2px}
+
+/* Bouton de prestige — l'angle et la métrique du « Candidater » de PERCEPTION.
+   Arête à 2 px, or en dégradé oblique, texte nuit, capitales très espacées,
+   halo doré large et doux. La montée de 3 px au survol est le seul mouvement. */
+.btn-metal{border:0;border-radius:var(--angle-cut);padding:18px 44px;cursor:pointer;
+  background:var(--metal-gold);color:#062720;
+  font-family:var(--f-ui);font-weight:500;font-size:.79rem;letter-spacing:.22em;text-transform:uppercase;
+  box-shadow:0 8px 44px rgba(201,157,53,.22);transition:transform .4s cubic-bezier(.22,.61,.36,1),box-shadow .4s}
+.btn-metal:hover{transform:translateY(-3px);box-shadow:0 14px 60px rgba(201,157,53,.4)}
+.btn-outline{border:1px solid rgba(232,198,105,.5);border-radius:var(--angle-cut);
+  padding:17px 40px;background:transparent;color:#E3C477;cursor:pointer;
+  font-family:var(--f-ui);font-weight:500;font-size:.79rem;letter-spacing:.22em;text-transform:uppercase;
+  transition:.4s cubic-bezier(.22,.61,.36,1)}
+.btn-outline:hover{border-color:#F0D08A;color:#F0D08A;transform:translateY(-3px)}
+
+/* ---- Hero en malachite ---- */
+.hero{position:relative;border-radius:var(--angle-frame);overflow:hidden;min-height:300px;
+  display:grid;place-items:center;text-align:center;padding:52px 24px}
+.hero .stone{position:absolute;inset:0}
+.hero .veil{position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(6,32,26,.55),rgba(4,20,16,.82))}
+.hero .in{position:relative;max-width:640px}
+.hero h1{font-size:clamp(28px,4.4vw,46px);line-height:1.14;margin:16px 0 14px;color:#F4EFE0}
+.hero p{color:rgba(244,239,224,.84);font-size:16.5px;line-height:1.6;margin:0 0 26px}
+.sig{display:inline-block;border:1px solid rgba(232,198,105,.45);background:rgba(0,0,0,.32);
+  border-radius:var(--angle-cut);padding:6px 16px;font-size:11px;font-weight:500;text-transform:uppercase;
+  letter-spacing:.22em}
+
+/* ---- Cartes typographie ---- */
+.tp{border:1px solid hsl(var(--hairline));background:hsl(var(--surface-1));border-radius:var(--radius);padding:18px}
+.tp h3{font-size:26px;margin-bottom:4px}
+.tp .sub{font-size:13px;color:hsl(var(--muted-foreground));margin:0 0 14px}
+.tp p{font-size:13.5px;line-height:1.65;margin:0 0 12px}
+.tp .row{display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid hsl(var(--hairline));
+  font-size:13px}
+.tp .amt{font-weight:600;color:hsl(var(--ink-strong))}
+.ta{--f-display:Fraunces,Georgia,serif;--f-ui:Inter,sans-serif;--f-num:'JetBrains Mono',monospace}
+.tb{--f-display:'Instrument Serif',Georgia,serif;--f-ui:'IBM Plex Sans',sans-serif;--f-num:'IBM Plex Mono',monospace}
+.tc{--f-display:'Playfair Display',Georgia,serif;--f-ui:Inter,sans-serif;--f-num:Inter,sans-serif}
+.tag{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.14em;
+  color:hsl(var(--muted-foreground));border:1px solid hsl(var(--hairline));border-radius:99px;
+  padding:2px 9px;margin-bottom:12px}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+
+  <!-- ===== MALACHITE BRUT — bandes concentriques botryoïdes ================
+       La malachite ne se raye pas, elle se dépose : des bandes concentriques
+       en grappes de bosses rondes. On dessine les bandes, puis on les déforme
+       par une turbulence à basse fréquence : les cercles deviennent organiques. -->
+  <filter id="botryo" x="-15%" y="-15%" width="130%" height="130%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.014 0.02" numOctaves="4" seed="17" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="34" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+
+  <!-- Velouté fibreux : micro-grain éclairé en lumière rasante, posé en
+       superposition. C'est ce qui donne la surface soyeuse de la pierre. -->
+  <filter id="velvet" x="0%" y="0%" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.62 0.95" numOctaves="3" seed="5" result="g"/>
+    <feDiffuseLighting in="g" lighting-color="#ffffff" surfaceScale="1.6" diffuseConstant="1">
+      <feDistantLight azimuth="238" elevation="52"/>
+    </feDiffuseLighting>
+  </filter>
+
+  <!-- ===== LABRADORITE — schiller ==========================================
+       Plans internes qui renvoient la lumière en éclats obliques bleu-vert-or.
+       Larges bandes inclinées, déplacées puis floutées, en mode « écran ». -->
+  <filter id="schiller" x="-20%" y="-20%" width="140%" height="140%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.006 0.028" numOctaves="4" seed="23" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="60"/>
+    <feGaussianBlur stdDeviation="1.6"/>
+  </filter>
+
+  <linearGradient id="mal-band" x1="0" y1="0" x2="0.3" y2="1">
+    <stop offset="0" stop-color="#0A4033"/><stop offset=".5" stop-color="#14705C"/>
+    <stop offset="1" stop-color="#062B22"/>
+  </linearGradient>
+  <linearGradient id="lab-flash" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0" stop-color="#0E5E4E"/><stop offset=".35" stop-color="#2AA6A0"/>
+    <stop offset=".6" stop-color="#B8923A"/><stop offset=".85" stop-color="#4A2178"/>
+    <stop offset="1" stop-color="#0A2A28"/>
+  </linearGradient>
+</defs></svg>
+
+<div class="bar">
+  <b>TUC — matières &amp; typographie</b>
+  <span class="sp"></span>
+  <button id="th">Sombre</button>
+  <span style="font-size:11.5px;color:hsl(var(--muted-foreground))">Typo :</span>
+  <button class="tsel" data-t="type-a">A · Fraunces</button>
+  <button class="tsel" data-t="type-b">B · Instrument</button>
+  <button class="tsel" data-t="type-c" aria-pressed="true">C · Playfair</button>
+</div>
+
+<main>
+
+<!-- ============================ MATIÈRES ============================ -->
+<section>
+  <p class="eyebrow">Les trois matières</p>
+  <div class="g3">
+
+    <figure class="mat" style="margin:0">
+      <svg viewBox="0 0 300 190" preserveAspectRatio="xMidYMid slice">
+        <rect width="300" height="190" fill="#083a2f"/>
+        <g filter="url(#botryo)">
+          <g id="bot1">
+            <circle cx="70" cy="70" r="66" fill="#0A4033"/>
+            <circle cx="70" cy="70" r="56" fill="#1a8067" opacity=".85"/>
+            <circle cx="70" cy="70" r="48" fill="#0d5142"/>
+            <circle cx="70" cy="70" r="39" fill="#25a184" opacity=".8"/>
+            <circle cx="70" cy="70" r="31" fill="#0a4436"/>
+            <circle cx="70" cy="70" r="22" fill="#3ec0a0" opacity=".7"/>
+            <circle cx="70" cy="70" r="13" fill="#0d5b49"/>
+          </g>
+          <g>
+            <circle cx="215" cy="128" r="78" fill="#09372c"/>
+            <circle cx="215" cy="128" r="64" fill="#1c8a6f" opacity=".8"/>
+            <circle cx="215" cy="128" r="52" fill="#0b4737"/>
+            <circle cx="215" cy="128" r="40" fill="#31ae91" opacity=".75"/>
+            <circle cx="215" cy="128" r="28" fill="#0a4033"/>
+            <circle cx="215" cy="128" r="16" fill="#4ccfae" opacity=".65"/>
+          </g>
+          <g>
+            <circle cx="250" cy="26" r="46" fill="#0b4a3b"/>
+            <circle cx="250" cy="26" r="34" fill="#2a9c81" opacity=".7"/>
+            <circle cx="250" cy="26" r="22" fill="#0a3d31"/>
+          </g>
+        </g>
+        <rect width="300" height="190" filter="url(#velvet)" opacity=".30" style="mix-blend-mode:overlay"/>
+      </svg>
+      <figcaption>Malachite brute — bandes botryoïdes, surface veloutée</figcaption>
+    </figure>
+
+    <figure class="mat" style="margin:0">
+      <svg viewBox="0 0 300 190" preserveAspectRatio="xMidYMid slice">
+        <rect width="300" height="190" fill="#07211f"/>
+        <g filter="url(#schiller)" style="mix-blend-mode:screen">
+          <rect x="-60" y="10" width="440" height="34" fill="url(#lab-flash)" opacity=".9" transform="rotate(-18 150 95)"/>
+          <rect x="-60" y="66" width="440" height="26" fill="url(#lab-flash)" opacity=".72" transform="rotate(-18 150 95)"/>
+          <rect x="-60" y="112" width="440" height="40" fill="url(#lab-flash)" opacity=".8" transform="rotate(-18 150 95)"/>
+          <rect x="-60" y="166" width="440" height="20" fill="url(#lab-flash)" opacity=".6" transform="rotate(-18 150 95)"/>
+        </g>
+        <rect width="300" height="190" filter="url(#velvet)" opacity=".16" style="mix-blend-mode:overlay"/>
+        <rect width="300" height="190" fill="#07211f" opacity=".2"/>
+      </svg>
+      <figcaption>Labradorite — schiller, éclats obliques vert-or-violet</figcaption>
+    </figure>
+
+    <figure class="mat metal" style="margin:0">
+      <div class="fill" style="background:
+        repeating-linear-gradient(104deg,rgba(255,255,255,.10) 0 2px,transparent 2px 5px),
+        var(--metal-gold)"></div>
+      <figcaption>Or métallique — bandes de lumière, grain brossé</figcaption>
+    </figure>
+
+  </div>
+  <p class="note">Les trois sont fabriquées en SVG dans la page : aucune image, aucun téléchargement, elles suivent le thème et s'impriment proprement. La malachite est dessinée comme elle se forme — par dépôts concentriques, pas par rayures — puis déformée pour donner les grappes. Le velouté est un micro-grain éclairé en lumière rasante, posé en superposition à 30 %.</p>
+</section>
+
+<hr class="metal-rule">
+
+<!-- ============================ HERO ============================ -->
+<section>
+  <p class="eyebrow">Le hero sur la pierre</p>
+  <div class="hero">
+    <svg class="stone" viewBox="0 0 900 300" preserveAspectRatio="xMidYMid slice">
+      <rect width="900" height="300" fill="#062b23"/>
+      <g filter="url(#botryo)">
+        <g>
+          <circle cx="150" cy="150" r="180" fill="#0A4033"/><circle cx="150" cy="150" r="150" fill="#166b58" opacity=".8"/>
+          <circle cx="150" cy="150" r="122" fill="#0b4436"/><circle cx="150" cy="150" r="96" fill="#20927a" opacity=".72"/>
+          <circle cx="150" cy="150" r="70" fill="#0a3b2f"/><circle cx="150" cy="150" r="44" fill="#33ae92" opacity=".6"/>
+        </g>
+        <g>
+          <circle cx="620" cy="80" r="200" fill="#093a2e"/><circle cx="620" cy="80" r="164" fill="#177a63" opacity=".75"/>
+          <circle cx="620" cy="80" r="130" fill="#0a4235"/><circle cx="620" cy="80" r="96" fill="#2aa085" opacity=".65"/>
+          <circle cx="620" cy="80" r="62" fill="#0a3529"/>
+        </g>
+        <g>
+          <circle cx="820" cy="260" r="150" fill="#0b4739"/><circle cx="820" cy="260" r="112" fill="#1e8b72" opacity=".7"/>
+          <circle cx="820" cy="260" r="76" fill="#0a3d31"/>
+        </g>
+      </g>
+      <rect width="900" height="300" filter="url(#velvet)" opacity=".26" style="mix-blend-mode:overlay"/>
+    </svg>
+    <div class="veil"></div>
+    <div class="in">
+      <span class="sig metal-text">Closing is Art — Not Tbla3it</span>
+      <h1>Convertir sans forcer.<br>Performer avec <span class="metal-text">conscience</span>.</h1>
+      <p>L'alliance entre psychologie, IA et éthique pour une vente augmentée.</p>
+      <button class="btn-metal">Réserver un audit</button>
+      <button class="btn-outline" style="margin-left:8px">Connexion</button>
+    </div>
+  </div>
+  <p class="note">La pierre porte le hero, le voile garantit la lisibilité, et l'or métallique n'apparaît que sur trois éléments : la signature, un mot du titre, le bouton. Au-delà, le métal devient clinquant et détruit le prestige.</p>
+</section>
+
+<hr class="metal-rule">
+
+<!-- ============================ LES ANGLES ============================ -->
+<section>
+  <p class="eyebrow">Les angles — l'arête taillée</p>
+  <div class="g2">
+    <div class="tp" style="border-radius:var(--angle-panel)">
+      <span class="tag">Avant — la pilule</span>
+      <p style="margin-bottom:16px">Rayon 12 px partout, boutons en pilule complète. C'est le réglage par défaut de la bibliothèque de composants, pas une décision de marque.</p>
+      <span style="display:inline-block;border-radius:99px;padding:12px 26px;background:hsl(var(--gold));
+        color:hsl(var(--secondary));font:600 15px var(--f-ui)">Réserver un audit offert</span>
+    </div>
+    <div class="tp" style="border-radius:var(--angle-panel);border-color:hsl(var(--gold-ink)/.5)">
+      <span class="tag">Après — l'angle PERCEPTION</span>
+      <p style="margin-bottom:16px">Arête à 2 px, or en dégradé oblique, capitales espacées à 0,22em, halo doré large. Une pierre taillée a des arêtes. C'est la même main que le bouton « Candidater ».</p>
+      <span class="btn-metal" style="display:inline-block">Réserver un audit</span>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+    <div style="flex:1;min-width:150px;border:1px solid hsl(var(--hairline));background:hsl(var(--surface-1));
+      border-radius:var(--angle-cut);padding:14px;text-align:center;font-size:12px">
+      <b style="font-family:var(--f-ui);font-size:13px">2 px</b><br>
+      <span style="color:hsl(var(--muted-foreground))">boutons, puces, étiquettes</span></div>
+    <div style="flex:1;min-width:150px;border:1px solid hsl(var(--hairline));background:hsl(var(--surface-1));
+      border-radius:var(--angle-panel);padding:14px;text-align:center;font-size:12px">
+      <b style="font-family:var(--f-ui);font-size:13px">6 px</b><br>
+      <span style="color:hsl(var(--muted-foreground))">cartes, panneaux</span></div>
+    <div style="flex:1;min-width:150px;border:1px solid hsl(var(--hairline));background:hsl(var(--surface-1));
+      border-radius:var(--angle-frame);padding:14px;text-align:center;font-size:12px">
+      <b style="font-family:var(--f-ui);font-size:13px">10 px</b><br>
+      <span style="color:hsl(var(--muted-foreground))">grands cadres, hero, colonnes</span></div>
+  </div>
+  <p class="note">Trois valeurs, jamais plus. Le rayon d'un élément imbriqué reste toujours inférieur à celui de son conteneur — une puce à 2 px dans une carte à 6 px dans un cadre à 10 px. C'est une révision du jeton TUC actuel, qui est à 12 px partout.</p>
+</section>
+
+<hr class="metal-rule">
+
+<!-- ============================ TYPOGRAPHIE ============================ -->
+<section>
+  <p class="eyebrow">Trois identités typographiques — à trancher</p>
+  <div class="g3">
+
+    <div class="tp ta">
+      <span class="tag">A · Éditorial</span>
+      <h3>Convertir sans forcer</h3>
+      <p class="sub">Fraunces · Inter · JetBrains Mono</p>
+      <p>Un serif variable contemporain, dessiné avec du caractère plutôt qu'avec du contraste. Élégant sans être ancien. Les chiffres passent en monospace : un pipeline devient lisible colonne par colonne.</p>
+      <div class="row"><span>Pack Sales System</span><span class="amt num">700 000,00 DZD</span></div>
+    </div>
+
+    <div class="tp tb">
+      <span class="tag">B · Technique</span>
+      <h3>Convertir sans forcer</h3>
+      <p class="sub">Instrument Serif · IBM Plex Sans · IBM Plex Mono</p>
+      <p>Un serif éditorial resserré, une grotesque d'ingénierie, une famille cohérente de bout en bout. C'est la combinaison qui dit « cabinet » et « logiciel » dans la même phrase.</p>
+      <div class="row"><span>Pack Sales System</span><span class="amt num">700 000,00 DZD</span></div>
+    </div>
+
+    <div class="tp tc">
+      <span class="tag">C · Actuelle</span>
+      <h3>Convertir sans forcer</h3>
+      <p class="sub">Playfair Display · Inter</p>
+      <p>Ce qui tourne aujourd'hui. Élégant, mais c'est un serif de mode : très contrasté, très vu, et sans signal technique. Les chiffres n'ont pas de traitement propre.</p>
+      <div class="row"><span>Pack Sales System</span><span class="amt num">700 000,00 DZD</span></div>
+    </div>
+
+  </div>
+  <p class="note">Les boutons en haut appliquent chaque combinaison à toute la page, hero compris — regarde le titre sur la pierre avant de choisir. Mon avis : <strong>B</strong>. Instrument Serif a la retenue d'un cabinet, IBM Plex porte le versant logiciel sans effort, et la famille Plex couvre l'arabe — ce qui compte pour un produit trilingue FR / EN / DZ.</p>
+</section>
+
+</main>
+
+<script>
+const th=document.getElementById('th');
+th.onclick=()=>{const d=document.documentElement.classList.toggle('dark');th.textContent=d?'Clair':'Sombre';};
+document.querySelectorAll('.tsel').forEach(b=>b.onclick=()=>{
+  document.documentElement.classList.remove('type-a','type-b','type-c');
+  document.documentElement.classList.add(b.dataset.t);
+  document.querySelectorAll('.tsel').forEach(x=>x.setAttribute('aria-pressed',x===b));
+});
+document.documentElement.classList.add('type-c');
+</script>
+</body>
+</html>
