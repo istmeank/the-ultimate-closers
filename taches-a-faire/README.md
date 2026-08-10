@@ -88,6 +88,7 @@ Chaque fichier `Txx-nom.md` contient un **prompt complet copier-coller** à util
 | T23 | Architecture MCP providers (futur) | integrations | **sonnet** | ⏸️ deferred | Confirmé absent, conforme à la note "Différé V3" |
 | T24 | WhatsApp Bot local Node.js whatsapp-web.js | integrations | **sonnet** | ⏳ pending | Confirmé absent (2026-08-08) ; interne/test OK (ADR-038), réel = API officielle |
 | T25 | Stubs HubSpot/Stripe (avec MCP HubSpot natif) | integrations | 🔄 partiel | Vérifié 2026-08-08 : HubSpot réellement implémenté (`hubspot-sync`), Stripe reste un stub explicite (TODO) |
+| T29 | Rebranding complet du site sur la nouvelle charte graphique (sessions 38-39) | frontend-react + produit-spec + redacteur-voix | **sonnet** (opus pour l'alignement messaging) | ⏳ pending | Créée session 39 (2026-08-10). Charte source : `TUC — Charte Graphique (session 39, 2026-08-10).md` dans TUC business/Branding. **4 réserves à trancher avant de démarrer** — voir le fichier T29. |
 
 ### P8 — DevOps & Validation
 

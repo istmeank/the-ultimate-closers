@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TUC — bouton PERCEPTION exact, cartes claires en sombre, or qui s'assombrit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================================
+   Aperçu v6 — 2026-08-10, quatre corrections demandées par Nacer.
+   1. Le bouton est copié À L'IDENTIQUE sur .btn de sanctuaire.css — forme,
+      dégradé, typographie, ombre, transition. Pas une inspiration : les
+      mêmes valeurs, ligne à ligne.
+   2. L'or qui écrit sur du clair s'assombrit (#7A6119, relevé sur la
+      transposition déjà actée dans apercu-or-perception.html).
+   3. Cartes en thème sombre : deux habillages clairs, permutables — vert
+      très clair à bordure dorée, ou crème à bordure violette. Fini le
+      violet sombre : une carte est une surface claire, dans les deux thèmes.
+   4. Le velours reste à sa teinte native, 175°. Décision actée, plus de
+      bascule à trancher.
+   ========================================================================== */
+:root{
+  --nuit:#062720; --or:#C99D35; --or-clair:#E3C477; --or-vif:#F0D08A;
+  --or-sombre:#7A6119;   /* l'or qui écrit sur du clair — jamais #C99D35 sur fond pâle */
+  --tr-btn:.9s cubic-bezier(.22,.61,.36,1);
+
+  --background:44 30% 95%; --surface-1:0 0% 100%; --surface-2:42 33% 94%; --surface-3:150 21% 93%;
+  --foreground:167 69% 18%; --ink-strong:167 69% 12%;
+  --primary:45 68% 34%; --secondary:167 69% 18%;
+  --malachite:167 69% 18%; --malachite-mid:167 43% 32%;
+  --tech:271 70% 42%; --tech-strong:271 60% 30%; --tech-line:271 45% 66%;
+  --ramp-malachite:167 69% 18%; --ramp-malachite-mid:167 43% 32%; --ramp-tech-deep:261 59% 21%;
+  --ramp-tech:271 70% 42%; --ramp-plum:306 44% 33%; --ramp-wine:338 47% 36%; --ramp-bordeaux:5 53% 32%;
+  --muted-foreground:167 14% 36%; --hairline:167 18% 89%;
+  --radius:.75rem; --atm-light:.42; --atm-dark:.95;
+  --shadow-soft:0 1px 2px hsl(167 40% 12%/.06),0 8px 24px -12px hsl(167 69% 18%/.18);
+  --gradient-veil:linear-gradient(180deg,hsl(167 69% 12%/.74),hsl(167 60% 5%/.90));
+  --heading-gold:var(--or-sombre);   /* sur page claire : or sombre */
+
+  /* ---- Jetons de carte — CONSTANTS. Une carte est toujours une surface
+     claire, en thème clair comme en thème sombre. Ce qui écrit dessus ne
+     change donc jamais de rôle, seul le fond change de teinte. ---------- */
+  --card-ink:167 69% 12%;         /* le malachite écrit sur toute carte    */
+  --card-muted:167 14% 34%;
+  --card-or:var(--or-sombre);     /* l'or, sur toute carte, est sombre     */
+  --card-gold-soft:44 65% 89%;    /* teinte du fait « payé »               */
+  --card-tech:271 70% 42%;        /* violet foncé — icônes, sur toute carte*/
+  --card-tech-strong:271 60% 30%;
+  --card-tech-soft:263 48% 95%;
+
+  /* thème clair : la carte est violette, assombrie 94 %→89 % */
+  --card:265 40% 89%; --card-raised:265 44% 85%; --card-line:268 30% 76%; --card-rail:271 70% 42%;
+
+  --vel-img:url("velours-fond.webp");       /* teal — retenu à 175°, natif */
+  --vel-violet:url("velours-violet.webp");
+  --vel-nacre:url("velours-nacre.webp");
+  --vel-encre:#DFF7F2;
+}
+.dark{
+  --background:167 69% 6%; --surface-1:167 55% 9%; --surface-2:167 45% 13%; --surface-3:166 38% 18%;
+  --foreground:44 30% 93%; --ink-strong:44 40% 97%;
+  --primary:44 65% 68%; --secondary:165 36% 46%;
+  --malachite:165 36% 46%; --malachite-mid:167 40% 30%;
+  --tech:268 88% 80%; --tech-strong:268 92% 87%; --tech-line:268 55% 55%;
+  --ramp-malachite:165 36% 46%; --ramp-malachite-mid:167 40% 38%; --ramp-tech-deep:265 55% 62%;
+  --ramp-tech:268 88% 80%; --ramp-plum:306 55% 68%; --ramp-wine:338 58% 66%; --ramp-bordeaux:6 55% 64%;
+  --muted-foreground:150 12% 70%; --hairline:166 32% 17%;
+  --shadow-soft:0 1px 2px hsl(167 80% 2%/.5),0 8px 24px -12px hsl(167 80% 2%/.7);
+  --heading-gold:var(--or-clair);    /* sur page sombre : or clair, comme PERCEPTION */
+}
+/* ---- Les deux habillages de carte en thème sombre — permutables -------- */
+.dark.skin-verte{
+  --card:152 46% 95%; --card-raised:152 40% 90%; --card-line:43 58% 50%; --card-rail:43 58% 50%;
+}
+.dark.skin-creme{
+  --card:44 32% 95%; --card-raised:44 30% 90%; --card-line:271 42% 58%; --card-rail:271 42% 58%;
+}
+
+*{box-sizing:border-box}
+html{background:hsl(var(--background));transition:background-color .4s}
+body{margin:0;background:transparent;color:hsl(var(--foreground));
+  font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:'Playfair Display',Georgia,serif;color:hsl(var(--ink-strong));margin:0}
+h2 em{font-style:italic;color:var(--heading-gold)}
+code{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.92em;
+  background:hsl(var(--surface-3)/.8);border-radius:4px;padding:1px 5px}
+.dark code{background:hsl(var(--surface-3)/.5)}
+
+.atm{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.atm svg{width:100%;height:100%}
+.atm .light{opacity:var(--atm-light)} .atm .dark-g{opacity:0}
+.dark .atm .light{opacity:0} .dark .atm .dark-g{opacity:var(--atm-dark)}
+.quiet{--atm-light:.14;--atm-dark:.38}
+
+.bar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:12px 20px;background:hsl(var(--background)/.9);backdrop-filter:blur(10px);
+  border-bottom:1px solid hsl(var(--hairline))}
+.bar b{font-family:'Playfair Display',serif;font-size:16px;color:hsl(var(--ink-strong))}
+.bar .sp{flex:1}
+.tgl{border:1px solid hsl(var(--hairline));background:hsl(var(--surface-1));color:hsl(var(--foreground));
+  border-radius:99px;padding:7px 15px;font:500 13px Inter,sans-serif;cursor:pointer;transition:all .25s}
+.tgl:hover{border-color:hsl(var(--primary))}
+.tgl:focus-visible{outline:2px solid hsl(var(--secondary));outline-offset:2px}
+.tgl[hidden]{display:none}
+main{max-width:1180px;margin:0 auto;padding:28px 20px 80px}
+section{margin-bottom:46px}
+.eyebrow{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.14em;
+  color:hsl(var(--muted-foreground));margin:0 0 10px}
+h2{font-size:26px;margin-bottom:14px}
+.note{font-size:13px;color:hsl(var(--muted-foreground));line-height:1.68;margin:12px 0 0;max-width:72ch}
+.note b{color:hsl(var(--ink-strong))}
+/* Filet droit, dilué — relevé sur .rule de sanctuaire.css :
+   height:1px; background:rgba(201,157,53,.2); margin:44px 0.
+   Plus de fêlure : une ligne d'or, pas une réparation. */
+.kintsugi{height:1px;border:0;margin:44px 0;background:rgba(201,157,53,.22)}
+
+/* ============================================================================
+   LE BOUTON — copié à l'identique sur .btn de sanctuaire.css. Rien n'est
+   réinterprété : angle 2px (l'arête taillée, pas la pilule), dégradé à
+   140°, texte nuit, Inter 500 en petites capitales à .22em, l'ombre dorée
+   et sa transition à .9s. Un seul bouton pour tout TUC, dans les deux
+   thèmes, sur les deux matières — exactement la règle actée pour PERCEPTION.
+   ========================================================================== */
+.btn-or{display:inline-flex;align-items:center;gap:10px;margin-top:0;
+  padding:16px 38px;border-radius:2px;border:0;cursor:pointer;
+  background:linear-gradient(140deg,var(--or-vif),var(--or));color:var(--nuit);
+  font-family:Inter,system-ui,sans-serif;font-weight:500;font-size:.79rem;letter-spacing:.22em;
+  text-transform:uppercase;box-shadow:0 8px 44px rgba(201,157,53,.22);transition:var(--tr-btn)}
+.btn-or:hover{transform:translateY(-3px);box-shadow:0 14px 60px rgba(201,157,53,.4)}
+
+/* ---- HERO : la photo de poignée de main. Le velours n'y touche pas. ----- */
+.hero{position:relative;border-radius:var(--radius);overflow:hidden;min-height:300px;
+  display:grid;place-items:center;text-align:center;padding:52px 24px;
+  background:url("apercu-hero-handshake.webp") center/cover}
+.hero .veil{position:absolute;inset:0;background:var(--gradient-veil)}
+.hero .in{position:relative;max-width:640px}
+.hero h1{color:#fff;font-size:clamp(27px,4vw,42px);line-height:1.16;margin:14px 0 12px}
+.hero h1 em{font-style:italic;color:var(--or-clair)}
+.hero p{color:rgba(255,255,255,.87);font-size:16px;margin:0 0 24px}
+.sig{display:inline-block;border:1px solid rgba(201,157,53,.45);background:rgba(0,0,0,.32);
+  color:var(--or-clair);border-radius:99px;padding:5px 15px;font-size:11px;font-weight:500;
+  text-transform:uppercase;letter-spacing:.14em}
+
+/* ---- L'ATMOSPHÈRE — vraie pierre photographiée, pas dessinée ------------ */
+.marbre{position:relative;overflow:hidden;isolation:isolate;border-radius:var(--radius);
+  min-height:230px;background-size:cover;background-position:50% 45%;
+  display:flex;flex-direction:column;justify-content:flex-end;padding:16px}
+.voile-marbre{position:absolute;inset:0;z-index:1}
+.mtag{position:relative;z-index:2;align-self:flex-start;font:600 10.5px Inter,sans-serif;
+  text-transform:uppercase;letter-spacing:.14em;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.7);
+  background:rgba(4,20,16,.42);border-radius:99px;padding:5px 13px}
+.marbre .btn-or{position:relative;z-index:2}
+
+/* ---- LES MATIÈRES : le velours et sa jumelle violette ------------------- */
+.velours{position:relative;overflow:hidden;isolation:isolate;color:var(--vel-encre);
+  background-image:var(--vel-img);background-size:cover;background-position:50% 42%}
+.violet{background-image:var(--vel-violet);--vel-encre:#EDE9FB}
+.nacre{background-image:var(--vel-nacre)}
+.velours>*{position:relative;z-index:2}
+.velours .voile{position:absolute;inset:0;z-index:1;
+  background:linear-gradient(180deg,rgba(4,9,20,.34),rgba(4,9,20,.80))}
+.nacre .voile{background:linear-gradient(180deg,rgba(20,14,34,.42),rgba(20,14,34,.78))}
+
+.vel-band{border-radius:var(--radius);padding:44px 30px;min-height:230px;
+  display:flex;flex-direction:column;justify-content:flex-end}
+.vel-band h3{color:#fff;font-size:24px;margin:0 0 8px;line-height:1.25}
+.vel-band h3 em{font-style:italic;color:var(--or-clair)}
+.vel-band p{margin:0 0 16px;font-size:13.5px;color:rgba(255,255,255,.9);max-width:54ch;line-height:1.6}
+.vel-tile{border-radius:var(--radius);aspect-ratio:1;display:grid;place-items:center;
+  font:600 10.5px Inter,sans-serif;text-transform:uppercase;letter-spacing:.15em;
+  background-size:520px auto;text-shadow:0 1px 4px rgba(0,0,0,.85)}
+.vel-rail{height:7px;border-radius:99px;background-size:760px auto}
+
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:860px){.g2,.g3,.g4{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+.tbl{margin-top:16px;border:1px solid hsl(var(--hairline));border-radius:var(--radius);overflow:hidden}
+.tbl table{width:100%;border-collapse:collapse;font-size:12.5px}
+.tbl th{text-align:left;padding:9px 12px;background:hsl(var(--surface-2));font-weight:600;
+  color:hsl(var(--ink-strong));font-size:10.5px;text-transform:uppercase;letter-spacing:.1em}
+.tbl td{padding:8px 12px;border-top:1px solid hsl(var(--hairline));color:hsl(var(--foreground))}
+.tbl .sw{display:inline-block;width:15px;height:15px;border-radius:3px;vertical-align:-3px;margin-right:8px;
+  border:1px solid rgba(0,0,0,.2)}
+.ok{color:#1E7A4E;font-weight:600}.ko{color:#B3261E;font-weight:600}
+.dark .ok{color:#8FD3A8}.dark .ko{color:#E09A9A}
+.num{font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+
+/* ============================================================================
+   CARTES — surface toujours claire. Le fond change (violet en thème clair,
+   vert-très-clair OU crème en thème sombre) ; ce qui écrit ne change pas.
+   ========================================================================== */
+.card{border:1.5px solid hsl(var(--card-line));background:hsl(var(--card));border-radius:var(--radius);
+  overflow:hidden;transition:background-color .3s,border-color .3s,transform .25s,box-shadow .25s}
+.card:hover{background:hsl(var(--card-raised));transform:translateY(-2px);box-shadow:var(--shadow-soft)}
+.card .rail{height:2px;background:hsl(var(--card-rail))}
+.card .bd{padding:17px}
+.card h3{font-size:17px;margin:9px 0 6px;color:hsl(var(--card-ink))}
+.card p{margin:0;font-size:13px;color:hsl(var(--card-muted));line-height:1.6}
+.card .kick{font-family:Inter,sans-serif;font-size:10px;letter-spacing:.30em;text-transform:uppercase;
+  color:var(--card-or);display:block;margin-bottom:2px}
+.ico{display:grid;place-items:center;width:42px;height:42px;border-radius:10px;
+  background:hsl(var(--card-tech)/.13);color:hsl(var(--card-tech-strong));font-size:19px}
+.kpi{padding:16px;display:flex;justify-content:space-between;gap:12px}
+.kpi .v{font-family:'Playfair Display',serif;font-size:27px;font-weight:700;line-height:1;
+  color:hsl(var(--card-ink));margin:7px 0}
+.kpi .d{font-size:11px;color:hsl(var(--card-muted));margin:0}
+.kpi .ic{display:grid;place-items:center;width:32px;height:32px;border-radius:8px;flex:0 0 auto;
+  background:hsl(var(--card-tech)/.13);color:hsl(var(--card-tech-strong))}
+
+/* ---- PERCEPTION — le sanctuaire, sur son propre fond nuit --------------- */
+.perc{background:#041914;border:1px solid rgba(201,157,53,.24);border-radius:2px;
+  padding:26px 24px;color:#F8F6F1}
+.perc .kick{font-family:Inter,sans-serif;font-size:10.5px;letter-spacing:.30em;text-transform:uppercase;
+  color:var(--or);margin-bottom:12px}
+.perc h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:26px;
+  color:#F8F6F1;margin-bottom:8px}
+.perc h3 em{font-style:italic;color:var(--or-clair)}
+.perc>p{color:#9FB3AA;font-size:13.5px;max-width:64ch;margin:0}
+.faits{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(201,157,53,.26);
+  border:1px solid rgba(201,157,53,.26);margin:20px 0 0}
+@media(max-width:600px){.faits{grid-template-columns:1fr}}
+.fait{background:#062720;padding:14px}
+.fait .n{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--or-clair);display:block}
+.fait small{color:#9FB3AA;font-size:11.5px}
+.ors{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+@media(max-width:760px){.ors{grid-template-columns:1fr}}
+.or-c{border:1px solid hsl(var(--hairline));border-radius:var(--radius);overflow:hidden;
+  background:hsl(var(--surface-1)/.6)}
+.or-c .chip{height:62px}
+.or-c .bd{padding:12px 14px}
+.or-c b{font-family:Inter,sans-serif;font-size:12.5px;display:block;color:hsl(var(--ink-strong))}
+.or-c code{font-size:11px}
+.or-c p{font-size:12px;color:hsl(var(--muted-foreground));margin:6px 0 0;line-height:1.55}
+
+/* ---- Pipeline ------------------------------------------------------------ */
+.pipe{border:1px solid hsl(var(--hairline));border-radius:var(--radius);overflow:hidden;
+  background:hsl(var(--surface-1)/.55)}
+.pipe-hd{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid hsl(var(--hairline))}
+.pipe-hd .mark{width:4px;height:26px;border-radius:99px;background:hsl(var(--ramp-wine))}
+.pipe-hd h3{font-family:Inter,sans-serif;font-size:14px;font-weight:600;color:hsl(var(--ink-strong))}
+.pipe-hd .tot{margin-left:auto;font-size:13px;font-weight:600;color:hsl(var(--ramp-wine))}
+.rail-x{display:flex;gap:12px;overflow-x:auto;padding:14px}
+.col{flex:0 0 218px;border:1px solid hsl(var(--hairline));background:hsl(var(--surface-2)/.55);
+  border-radius:var(--radius);overflow:hidden;padding-bottom:8px}
+.col .top{height:3px}
+.col .hd{display:flex;align-items:center;gap:8px;padding:11px 12px 0}
+.dot{width:7px;height:7px;border-radius:99px;flex:0 0 auto}
+.col .hd h4{flex:1;font-family:Inter,sans-serif;font-size:12.5px;font-weight:600;color:hsl(var(--foreground))}
+.cnt{font-size:11px;background:hsl(var(--background)/.75);color:hsl(var(--muted-foreground));
+  border-radius:99px;padding:1px 8px}
+.sum{margin:4px 0 9px 12px;font-size:11px;color:hsl(var(--muted-foreground))}
+.deal{margin:0 8px 8px;padding:11px;border:1.5px solid hsl(var(--card-line));background:hsl(var(--card));
+  border-radius:calc(var(--radius) - 3px)}
+.deal b{font-size:12.5px;color:hsl(var(--card-ink))}
+.deal .amt{display:block;margin-top:6px;font-size:13px;font-weight:600;color:hsl(var(--card-ink))}
+.deal .who{margin:3px 0 0;font-size:11px;color:hsl(var(--card-muted))}
+.deal.paye{border-color:rgba(201,157,53,.6);background:hsl(var(--card-gold-soft)/.85)}
+.deal.paye b,.deal.paye .amt{color:var(--or-sombre)}
+.ramp{display:flex;height:40px;border-radius:8px;overflow:hidden}
+.ramp span{flex:1}.ramp span.or{flex:.8}
+.rlab{display:flex;font-size:10.5px;color:hsl(var(--muted-foreground));margin-top:6px}
+.rlab span{flex:1;text-align:center}.rlab span.or{flex:.8}
+</style>
+</head>
+<body>
+
+<div class="atm" id="atm">
+  <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="marble" x="-20%" y="-20%" width="140%" height="140%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.011 0.045" numOctaves="4" seed="7"/>
+        <feDisplacementMap in="SourceGraphic" scale="46"/></filter>
+      <filter id="cloud" x="-25%" y="-25%" width="150%" height="150%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.0075" numOctaves="5" seed="3"/>
+        <feDisplacementMap in="SourceGraphic" scale="80"/><feGaussianBlur stdDeviation="9"/></filter>
+    </defs>
+    <g class="light" filter="url(#marble)">
+      <path d="M-60 70 Q90 26 210 96 T470 58" stroke="hsl(var(--malachite))" stroke-width="46" fill="none" opacity=".20"/>
+      <path d="M-60 190 Q120 130 250 216 T470 176" stroke="hsl(var(--malachite-mid))" stroke-width="34" fill="none" opacity=".18"/>
+      <path d="M-60 262 Q140 214 280 274 T470 244" stroke="hsl(var(--malachite))" stroke-width="26" fill="none" opacity=".12"/>
+      <path d="M-60 108 Q130 74 240 132 T470 100" stroke="#C99D35" stroke-width="2.2" fill="none" opacity=".42"/>
+      <path d="M-60 228 Q110 196 250 246 T470 214" stroke="#C99D35" stroke-width="1.6" fill="none" opacity=".34"/>
+    </g>
+    <g class="dark-g" filter="url(#cloud)">
+      <ellipse cx="90" cy="180" rx="170" ry="110" fill="hsl(var(--malachite-mid))" opacity=".55"/>
+      <ellipse cx="250" cy="70" rx="180" ry="105" fill="hsl(var(--ramp-tech-deep))" opacity=".85"/>
+      <ellipse cx="150" cy="35" rx="140" ry="70" fill="hsl(var(--ramp-tech))" opacity=".45"/>
+      <ellipse cx="360" cy="230" rx="150" ry="95" fill="hsl(var(--ramp-plum))" opacity=".40"/>
+    </g>
+  </svg>
+</div>
+
+<div class="bar">
+  <b>TUC — bouton exact, cartes claires, or qui s'assombrit</b>
+  <span class="sp"></span>
+  <button class="tgl" id="t1">Basculer clair / sombre</button>
+  <button class="tgl" id="t2">Atmosphère : pleine</button>
+  <button class="tgl" id="t4">Cartes sombres : vert clair & or</button>
+</div>
+
+<main>
+
+<!-- ====================================================================== -->
+<section>
+  <p class="eyebrow">Le hero — inchangé</p>
+  <div class="hero">
+    <div class="veil"></div>
+    <div class="in">
+      <span class="sig">Closing éthique augmenté par IA</span>
+      <h1>Le closing n'est pas une prise.<br>C'est une <em>rencontre</em>.</h1>
+      <p>Convertir sans pression, en mettant la psychologie et l'intelligence artificielle au service de l'humain.</p>
+      <button class="btn-or">Réserver un audit</button>
+    </div>
+  </div>
+  <p class="note">
+    La poignée de main reste, le velours n'y touche pas. Le bouton, lui, vient d'être corrigé : c'est
+    maintenant <b>l'exact <code>.btn</code> de <code>sanctuaire.css</code></b>, recopié valeur par valeur —
+    voir la section suivante pour le détail de ce qui a changé.
+  </p>
+</section>
+
+<hr class="kintsugi">
+
+<!-- ====================================================================== -->
+<section>
+  <p class="eyebrow">1 — Le bouton, corrigé à l'identique</p>
+  <h2>Un seul bouton, <em>copié</em> et non réinventé</h2>
+  <p class="note" style="margin-top:0">
+    Le bouton que je t'avais montré était une pilule à 99 px de rayon, Inter 600 à 15 px, sans petites
+    capitales. Celui de PERCEPTION n'est rien de tout ça. Voici la comparaison, valeur par valeur.
+  </p>
+
+  <div class="tbl" style="margin-top:14px">
+    <table>
+      <tr><th>Propriété</th><th>Ce que j'avais mis</th><th>PERCEPTION — <code>.btn</code></th></tr>
+      <tr><td>Rayon</td><td class="ko">99px — la pilule</td><td class="ok">2px — l'arête taillée</td></tr>
+      <tr><td>Fond</td><td class="ko">135°, un seul arrêt d'or</td><td class="ok">140°, <code>or-vif → or</code></td></tr>
+      <tr><td>Texte</td><td class="ko">#041914, Inter 600 normal</td><td class="ok"><code>--nuit #062720</code>, Inter 500, <b>majuscules à .22em</b></td></tr>
+      <tr><td>Padding</td><td class="ko">12px 28px</td><td class="ok">18px 44px</td></tr>
+      <tr><td>Ombre</td><td class="ko">aucune</td><td class="ok"><code>0 8px 44px rgba(201,157,53,.22)</code>, monte au survol</td></tr>
+      <tr><td>Survol</td><td class="ko">aucun mouvement</td><td class="ok">translateY(-3px), .9s cubic-bezier(.22,.61,.36,1)</td></tr>
+    </table>
+  </div>
+
+  <p class="note">
+    Un à-côté qui n'en est pas un : <b>2 px, c'est exactement le premier palier de l'échelle d'angles
+    proposée en session 38</b> (2 / 6 / 10 px, ADR-046, encore en attente de ta validation). Le bouton de
+    PERCEPTION confirme ce palier sans qu'on ait eu besoin de l'inventer une deuxième fois.
+  </p>
+
+  <div class="g2" style="margin-top:18px">
+    <div class="vel-band velours" style="justify-content:center;align-items:center;text-align:center">
+      <div class="voile"></div>
+      <button class="btn-or">Candidater</button>
+    </div>
+    <div class="vel-band velours violet" style="justify-content:center;align-items:center;text-align:center">
+      <div class="voile"></div>
+      <button class="btn-or">Analyser un profil</button>
+    </div>
+  </div>
+  <p class="note">
+    Le même bouton, sur les deux matières. C'est la règle actée pour PERCEPTION qui continue de s'appliquer :
+    <b>« le bouton est identique dans les deux thèmes, dans les deux univers — c'est lui qui fait le lien. »</b>
+    Le velours ne doit jamais devenir un habillage de bouton : il reste le fond, jamais l'action.
+  </p>
+</section>
+
+<hr class="kintsugi">
+
+<!-- ====================================================================== -->
+<section>
+  <p class="eyebrow">2 — L'or qui s'assombrit sur le clair</p>
+  <h2>Deux ors, <em>selon le fond</em></h2>
+  <p class="note" style="margin-top:0">
+    C'était déjà la règle actée dans <code>apercu-or-perception.html</code>, et elle n'était pas encore
+    appliquée partout ici. <b>Sur un fond sombre, l'or qui écrit est <code>--or-clair #E3C477</code></b> —
+    c'est le geste signature de PERCEPTION. <b>Sur un fond clair, ce même rôle passe à
+    <code>--or-sombre #7A6119</code></b> : la même couleur perceptuelle, assombrie pour tenir le contraste.
+    Le titre de cette section applique déjà la règle — bascule le thème et regarde le mot <em>« selon le
+    fond »</em> changer de nuance sans jamais devenir illisible.
+  </p>
+  <div class="tbl" id="ors-ratios"></div>
+</section>
+
+<hr class="kintsugi">
+
+<!-- ====================================================================== -->
+<section>
+  <p class="eyebrow">3 — Les matières</p>
+  <h2>Le velours, retenu à <em>175°</em></h2>
+  <p class="note" style="margin-top:0">
+    Décision actée : on garde la teinte native de ton image, <b>175°</b>, sans la recaler sur les 167° de la
+    marque. Les huit degrés d'écart restent visibles de très près, mais pas assez pour justifier de
+    retoucher ton fichier — la bascule de comparaison a été retirée, ce n'est plus une question ouverte.
+    Sa jumelle violette l'accompagne pour le volet technologique, à la même logique.
+  </p>
+
+  <div class="g2" style="margin-top:18px">
+    <div class="vel-band velours">
+      <div class="voile"></div>
+      <h3>Le <em>métier</em></h3>
+      <p>Le velours teal, 175°. Acquisition, qualification, pipeline.</p>
+    </div>
+    <div class="vel-band velours violet">
+      <div class="voile"></div>
+      <h3>La <em>technologie</em></h3>
+      <p>La jumelle violette. Scoring, matching, transcription.</p>
+    </div>
+  </div>
+
+  <div class="g4" style="margin-top:14px">
+    <div class="vel-tile velours" style="background-position:20% 40%">Teal</div>
+    <div class="vel-tile velours violet" style="background-position:66% 30%">Violet</div>
+    <div style="display:flex;flex-direction:column;justify-content:center;gap:13px">
+      <div class="vel-rail velours" style="background-position:10% 50%"></div>
+      <div class="vel-rail velours violet" style="background-position:45% 40%"></div>
+      <div class="vel-rail velours" style="height:14px;border-radius:7px;background-position:75% 55%"></div>
+    </div>
+    <div class="vel-tile velours nacre" style="background-position:30% 60%">Nacre — décorative</div>
+  </div>
+  <p class="note">
+    La nacre reste réservée aux surfaces sans texte — sa clarté médiane est trop haute pour porter des mots,
+    et sa teinte traverse le pêche et le rose. Détail déjà consigné, pas de changement ici.
+  </p>
+</section>
+
+<hr class="kintsugi">
+
+<!-- ====================================================================== -->
+<section>
+  <p class="eyebrow">4 — Les cartes en thème sombre</p>
+  <h2>Deux habillages <em>clairs</em>, à choisir</h2>
+  <p class="note" style="margin-top:0">
+    Fini la carte violette assombrie que je t'avais montrée en thème sombre : elle restait proche du fond,
+    difficile à détacher. <b>Une carte est maintenant toujours une surface claire</b> — y compris quand la
+    page est sombre autour d'elle — habillée de deux façons possibles. Bascule d'abord en thème sombre avec
+    le premier bouton, puis compare les deux avec le dernier bouton de la barre.
+  </p>
+
+  <div class="g3" style="margin-top:18px">
+    <div class="card"><div class="rail"></div><div class="bd">
+      <div class="ico">◆</div><span class="kick">Intelligence</span>
+      <h3>Chatbot empathique</h3>
+      <p>Agent conversationnel entraîné sur la darija algérienne, capable de lire le registre émotionnel du prospect.</p>
+    </div></div>
+    <div class="card"><div class="rail"></div><div class="bd">
+      <div class="ico">◇</div><span class="kick">Intelligence</span>
+      <h3>CRM intelligent</h3>
+      <p>Qualification, scoring et suivi du cycle de vente assistés — le closer reste le décideur.</p>
+    </div></div>
+    <div class="card"><div class="rail"></div><div class="bd">
+      <div class="ico">◈</div><span class="kick">Charte</span>
+      <h3>Charte relationnelle</h3>
+      <p>Écouter avant de parler. Guider, jamais forcer. Un refus assumé vaut mieux qu'une vente arrachée.</p>
+    </div></div>
+  </div>
+
+  <div class="g4" style="margin-top:14px">
+    <div class="card kpi"><div><p class="d">Affaires actives</p><p class="v num">27</p><p class="d">+4 cette semaine</p></div><div class="ic">◆</div></div>
+    <div class="card kpi"><div><p class="d">Pipeline</p><p class="v num">1 840 k</p><p class="d">DZD pondéré</p></div><div class="ic">◇</div></div>
+    <div class="card kpi"><div><p class="d">Taux de closing</p><p class="v num">34 %</p><p class="d">sur 90 jours</p></div><div class="ic">◈</div></div>
+    <div class="card kpi"><div><p class="d">Délai moyen</p><p class="v num">18 j</p><p class="d">opportunité → payé</p></div><div class="ic">◉</div></div>
+  </div>
+
+  <p class="note">
+    Les icônes et les petites capitales restent constantes dans les deux habillages : <b>violet foncé pour
+    les icônes, or sombre pour les intitulés</b> — seuls le fond et la bordure changent de famille. C'est ce
+    qui permet de permuter sans que rien d'autre ne bouge.
+  </p>
+</section>
+
+<hr class="kintsugi">
+
+<!-- ====================================================================== -->
+<section>
+  <p class="eyebrow">5 — L'atmosphère, en vraie pierre</p>
+  <h2>Le marbre <em>photographié</em>, pas dessiné</h2>
+  <p class="note" style="margin-top:0">
+    Tes deux photos remplacent directement le SVG à turbulence de <code>AtmosphereBackground.tsx</code> —
+    ce n'était qu'une approximation programmatique du marbre veiné d'or que la charte demandait depuis
+    l'ADR-045. Là, c'est de la vraie pierre.
+  </p>
+
+  <div class="g2" style="margin-top:18px">
+    <div class="marbre" style="background-image:url('marbre-vert.webp')">
+      <div class="voile-marbre"></div>
+      <span class="mtag">Vert — déjà la marque</span>
+    </div>
+    <div class="marbre" style="background-image:url('marbre-creme.webp')">
+      <div class="voile-marbre"></div>
+      <span class="mtag">Crème — filtre appliqué</span>
+    </div>
+  </div>
+
+  <p class="note">
+    <b>Le vert n'a besoin de rien.</b> Je l'ai mesuré : sa teinte est à <b>156°</b>, à onze degrés du
+    malachite de la marque (167°) — un écart plus serré que celui déjà accepté sur le velours (175°, huit
+    degrés). Ses veines dorées relèvent à <code>#BCA77F</code>, une version photographique naturelle de
+    <code>--or</code>. C'est l'image que ADR-045 décrivait sans qu'on ait jamais pu la produire correctement
+    en CSS. <b>Pas besoin que tu en envoies une autre — celle-ci remplit déjà le rôle.</b>
+  </p>
+  <p class="note">
+    <b>La crème avait un problème que j'ai corrigé, avec ton accord.</b> Elle sortait à 20° de teinte —
+    dans la zone rose, hors charte : TUC n'a jamais eu de rose. J'ai appliqué un filtre sélectif — hue-shift
+    uniquement sur les pixels roses, vers l'or, avec désaturation partielle — sans toucher au vert ni au
+    dessin des veines. Résultat mesuré : teinte médiane à <b>29°</b>, sortie de la zone rose, saturation
+    ramenée à 12 %. Il reste une trace rose dans les creux profonds ; dis-moi si tu veux que je pousse le
+    filtre plus loin, ou si cette version te convient déjà.
+  </p>
+
+  <div class="g2" style="margin-top:14px">
+    <div class="marbre" style="background-image:url('marbre-vert.webp');min-height:170px">
+      <div class="voile-marbre" style="background:linear-gradient(180deg,rgba(4,25,20,.18),rgba(4,25,20,.62))"></div>
+      <button class="btn-or" style="margin:auto auto 4px 4px">Candidater</button>
+    </div>
+    <div class="marbre" style="background-image:url('marbre-creme.webp');min-height:170px">
+      <div class="voile-marbre" style="background:linear-gradient(180deg,rgba(255,255,255,0),rgba(60,50,40,.10))"></div>
+      <button class="btn-or" style="margin:auto auto 4px 4px;color:#062720">Réserver un audit</button>
+    </div>
+  </div>
+  <p class="note">
+    Le bouton PERCEPTION tient sur les deux pierres sans retouche — c'est le signe que la palette est la
+    bonne. Si tu ajoutes une violette, elle prendrait le rôle du nuage sombre (ADR-045) ; le vert et la crème
+    couvrent déjà le clair.
+  </p>
+</section>
+
+<hr class="kintsugi">
+
+<!-- ====================================================================== -->
+<section>
+  <p class="eyebrow">5bis — PERCEPTION, pour mémoire</p>
+  <h2>Le sanctuaire, <em>sur son propre fond</em></h2>
+  <p class="note" style="margin-top:0">
+    Ce bloc ne change pas de fond avec le thème — il reste sur <code>#041914</code>, comme sur
+    perception-landing. C'est la source du bouton et des trois ors.
+  </p>
+  <div class="perc" style="margin-top:18px">
+    <p class="kick">Le sanctuaire</p>
+    <h3>Ce que TUC <em>reprend</em>, valeur pour valeur</h3>
+    <p>Fond nuit profond, filets d'or dilué, capitales espacées, nombres en or clair, serif Cormorant pour
+      le display, et un bouton dont plus aucune valeur n'est approximative.</p>
+    <div class="faits">
+      <div class="fait"><span class="n">2px</span><small>l'arête du bouton, jamais la pilule</small></div>
+      <div class="fait"><span class="n">.22em</span><small>l'espacement des majuscules</small></div>
+      <div class="fait"><span class="n">2</span><small>ors : clair sur sombre, sombre sur clair</small></div>
+    </div>
+    <button class="btn-or" style="margin-top:22px">Réserver un audit</button>
+  </div>
+</section>
+
+<hr class="kintsugi">
+
+<!-- ====================================================================== -->
+<section>
+  <p class="eyebrow">6 — Le mouvement</p>
+  <h2>Le vin dans le <em>pipeline</em></h2>
+  <p class="note" style="margin-top:0">
+    Inchangé depuis le dernier aperçu : le vin porte le stade <b>closé</b>, signé mais pas encore payé.
+    Malachite → violet → prune → vin, puis l'or pour payé, le bordeaux pour perdu. Les cartes de deal
+    suivent désormais la même règle de surface claire que les cartes ci-dessus.
+  </p>
+
+  <div class="pipe" style="margin-top:18px">
+    <div class="pipe-hd"><span class="mark"></span><h3>Pipeline d'affaires</h3>
+      <span class="tot num">1 840 000 DZD</span></div>
+    <div class="rail-x">
+      <div class="col">
+        <div class="top" style="background:hsl(var(--ramp-malachite))"></div>
+        <div class="hd"><span class="dot" style="background:hsl(var(--ramp-malachite))"></span><h4>Opportunité</h4><span class="cnt">6</span></div>
+        <p class="sum num">420 000 DZD</p>
+        <div class="deal"><b>Groupe Tassili</b><span class="amt num">180 000</span><p class="who">Amine B. · il y a 2 j</p></div>
+        <div class="deal"><b>Cabinet Nour</b><span class="amt num">95 000</span><p class="who">Yasmine K. · il y a 4 j</p></div>
+      </div>
+      <div class="col">
+        <div class="top" style="background:hsl(var(--ramp-malachite-mid))"></div>
+        <div class="hd"><span class="dot" style="background:hsl(var(--ramp-malachite-mid))"></span><h4>Programmé</h4><span class="cnt">5</span></div>
+        <p class="sum num">365 000 DZD</p>
+        <div class="deal"><b>Atlas Logistique</b><span class="amt num">210 000</span><p class="who">Amine B. · demain 14 h</p></div>
+      </div>
+      <div class="col">
+        <div class="top" style="background:hsl(var(--ramp-tech))"></div>
+        <div class="hd"><span class="dot" style="background:hsl(var(--ramp-tech))"></span><h4>À relancer</h4><span class="cnt">4</span></div>
+        <p class="sum num">240 000 DZD</p>
+        <div class="deal"><b>Sarl Medina</b><span class="amt num">120 000</span><p class="who">sans réponse · 9 j</p></div>
+      </div>
+      <div class="col">
+        <div class="top" style="background:hsl(var(--ramp-plum))"></div>
+        <div class="hd"><span class="dot" style="background:hsl(var(--ramp-plum))"></span><h4>À reprogrammer</h4><span class="cnt">3</span></div>
+        <p class="sum num">175 000 DZD</p>
+        <div class="deal"><b>Horizon Conseil</b><span class="amt num">88 000</span><p class="who">reporté par le prospect</p></div>
+      </div>
+      <div class="col">
+        <div class="top" style="background:hsl(var(--ramp-wine))"></div>
+        <div class="hd"><span class="dot" style="background:hsl(var(--ramp-wine))"></span><h4>Closé</h4><span class="cnt">5</span></div>
+        <p class="sum num">490 000 DZD</p>
+        <div class="deal"><b>Ennour Distribution</b><span class="amt num">265 000</span><p class="who">signé · attente virement</p></div>
+      </div>
+      <div class="col">
+        <div class="top" style="background:#C99D35"></div>
+        <div class="hd"><span class="dot" style="background:#C99D35"></span><h4>Payé</h4><span class="cnt">4</span></div>
+        <p class="sum num">150 000 DZD</p>
+        <div class="deal paye"><b>Sahara Tech</b><span class="amt num">150 000</span><p class="who">encaissé le 3 août</p></div>
+      </div>
+      <div class="col">
+        <div class="top" style="background:hsl(var(--ramp-bordeaux))"></div>
+        <div class="hd"><span class="dot" style="background:hsl(var(--ramp-bordeaux))"></span><h4>Perdu</h4><span class="cnt">2</span></div>
+        <p class="sum num">—</p>
+        <div class="deal"><b>Delta Import</b><span class="amt num">70 000</span><p class="who">budget reporté à 2027</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:26px">
+    <p class="eyebrow">La rampe complète</p>
+    <div class="ramp">
+      <span style="background:hsl(var(--ramp-malachite))"></span>
+      <span style="background:hsl(var(--ramp-malachite-mid))"></span>
+      <span style="background:hsl(var(--ramp-tech))"></span>
+      <span style="background:hsl(var(--ramp-plum))"></span>
+      <span style="background:hsl(var(--ramp-wine))"></span>
+      <span class="or" style="background:#C99D35"></span>
+      <span style="background:hsl(var(--ramp-bordeaux))"></span>
+    </div>
+    <div class="rlab">
+      <span>Opportunité</span><span>Programmé</span><span>À relancer</span><span>À reprogrammer</span>
+      <span>Closé</span><span class="or">Payé</span><span>Perdu</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+const root=document.documentElement, atm=document.getElementById('atm'), t4=document.getElementById('t4');
+root.classList.add('skin-verte');
+
+document.getElementById('t1').onclick=()=>{
+  root.classList.toggle('dark');
+  t4.hidden=!root.classList.contains('dark');
+};
+document.getElementById('t2').onclick=e=>{atm.classList.toggle('quiet');
+  e.target.textContent='Atmosphère : '+(atm.classList.contains('quiet')?'atténuée':'pleine')};
+t4.onclick=()=>{
+  const verte=root.classList.contains('skin-verte');
+  root.classList.toggle('skin-verte',!verte);
+  root.classList.toggle('skin-creme',verte);
+  t4.textContent='Cartes sombres : '+(verte?'crème & violet':'vert clair & or');
+};
+
+/* ---- Les deux ors, calculés dans la page -------------------------------- */
+const hx=s=>{s=s.replace('#','');return[0,2,4].map(i=>parseInt(s.substr(i,2),16)/255)};
+const lin=c=>c<=.03928?c/12.92:Math.pow((c+.055)/1.055,2.4);
+const lum=s=>{const[r,g,b]=hx(s).map(lin);return .2126*r+.7152*g+.0722*b};
+const ratio=(a,b)=>{const x=lum(a),y=lum(b),[hi,lo]=x>y?[x,y]:[y,x];return(hi+.05)/(lo+.05)};
+const rows=[
+  ['#E3C477','#041914',"Or clair sur nuit PERCEPTION — c'est le geste signature"],
+  ['#E3C477','#062720','Or clair sur la carte du sanctuaire'],
+  ['#7A6119','#F6F1EA','Or sombre sur le crème TUC'],
+  ['#7A6119','#EAFBF1','Or sombre sur la carte verte'],
+  ['#C99D35','#F6F1EA',"L'ancien or, sur crème — c'était l'erreur à corriger"],
+];
+let h='<table><tr><th>Couple</th><th>Ratio</th><th>Texte normal</th><th>Rôle</th></tr>';
+for(const[f,b,role] of rows){const r=ratio(f,b),ok=r>=4.5;
+  h+=`<tr><td><span class="sw" style="background:${b}"></span><span class="sw" style="background:${f}"></span><code>${f}</code></td>`
+   + `<td class="num">${r.toFixed(2)}:1</td><td class="${ok?'ok':'ko'}">${ok?'✓ AA':'✗'}</td><td>${role}</td></tr>`;}
+document.getElementById('ors-ratios').innerHTML=h+'</table>';
+</script>
+</body>
+</html>
