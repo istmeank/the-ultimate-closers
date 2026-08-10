@@ -107,6 +107,26 @@
     --ank: 271 70% 42%;
     --ank-soft: 263 48% 95%;
 
+
+    /* --- RAMPE CONTINUE : vert → violet → vin --------------------------------
+     * « Le vin vient du violet. » Le bordeaux n'est plus une couleur isolée :
+     * c'est l'extrémité chaude d'une seule matière qui change de température.
+     *   institution ─────────── technologie ─────────── héritage
+     *   #0E4E40  #2F7569  #2C1654  #7C3AAD  #7A2F73  #86304F  #7B2D26
+     * Les sept stades du pipeline parcourent cette rampe. Seul « payé » en sort,
+     * pour l'or : c'est la seule couleur de prestige, elle ne se mélange pas. */
+    --ramp-malachite: 167 69% 18%;
+    --ramp-malachite-mid: 167 43% 32%;
+    --ramp-tech-deep: 261 59% 21%;   /* #2C1654 violet ANK profond */
+    --ramp-tech: 271 70% 42%;
+    --ramp-plum: 306 44% 33%;        /* #7A2F73 — le violet commence à chauffer */
+    --ramp-wine: 338 47% 36%;        /* #86304F — presque du vin */
+    --ramp-bordeaux: 5 53% 32%;      /* #7B2D26 — l'extrémité chaude */
+
+    /* --- ATMOSPHÈRE : marbre en clair, nuage violet en sombre --------------- */
+    --atm-light: 0.42;
+    --atm-dark: 0.95;
+
     /* --- Neutres --------------------------------------------------------- */
     --muted: 42 33% 94%;
     --muted-foreground: 167 14% 36%;
@@ -221,6 +241,16 @@
     --ank: 268 88% 80%;
     --ank-soft: 268 45% 20%;
 
+
+    /* Rampe relevée pour rester lisible sur le socle malachite. */
+    --ramp-malachite: 165 36% 46%;
+    --ramp-malachite-mid: 167 40% 38%;
+    --ramp-tech-deep: 265 55% 62%;
+    --ramp-tech: 268 88% 80%;
+    --ramp-plum: 306 55% 68%;
+    --ramp-wine: 338 58% 66%;
+    --ramp-bordeaux: 6 55% 64%;
+
     --muted: 167 40% 13%;
     --muted-foreground: 150 12% 70%;
 
@@ -275,8 +305,17 @@
     -webkit-text-size-adjust: 100%;
   }
 
+  /*
+   * `html` porte la couleur de fond, `body` devient transparent : la couche
+   * d'atmosphère se glisse entre les deux, sous tout le contenu.
+   */
+  html {
+    background-color: hsl(var(--background));
+  }
+
   body {
-    @apply bg-background text-foreground font-inter antialiased;
+    @apply text-foreground font-inter antialiased;
+    background-color: transparent;
     text-rendering: optimizeLegibility;
   }
 
@@ -326,6 +365,33 @@
 }
 
 @layer components {
+  /*
+   * ATMOSPHÈRE — couche fixe, sous tout le contenu, jamais cliquable.
+   * Le marbre malachite s'affiche en thème clair, le nuage violet en sombre.
+   * `data-atmosphere="quiet"` la réduit fortement derrière les écrans de
+   * travail : un closer passe huit heures sur son pipeline, la lisibilité des
+   * données passe avant l'ambiance.
+   */
+  .tuc-atmosphere {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .tuc-atmosphere[data-atmosphere='quiet'] {
+    --atm-light: 0.14;
+    --atm-dark: 0.38;
+  }
+  .tuc-atmosphere__light { opacity: var(--atm-light); }
+  .tuc-atmosphere__dark { opacity: 0; }
+  .dark .tuc-atmosphere__light { opacity: 0; }
+  .dark .tuc-atmosphere__dark { opacity: var(--atm-dark); }
+
+  @media print {
+    .tuc-atmosphere { display: none; }
+  }
+
   /* Panneau : brique de base de l'interface produit. */
   .tuc-panel {
     @apply rounded-[var(--radius)] border border-hairline bg-surface-1;

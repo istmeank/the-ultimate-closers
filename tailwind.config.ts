@@ -62,6 +62,16 @@ export default {
           line: "hsl(var(--tech-line))",
           foreground: "hsl(var(--tech-foreground))",
         },
+        /* Rampe continue vert → violet → vin. Le vin est le violet réchauffé. */
+        ramp: {
+          malachite: "hsl(var(--ramp-malachite))",
+          "malachite-mid": "hsl(var(--ramp-malachite-mid))",
+          "tech-deep": "hsl(var(--ramp-tech-deep))",
+          tech: "hsl(var(--ramp-tech))",
+          plum: "hsl(var(--ramp-plum))",
+          wine: "hsl(var(--ramp-wine))",
+          bordeaux: "hsl(var(--ramp-bordeaux))",
+        },
         ank: {
           DEFAULT: "hsl(var(--ank))",
           soft: "hsl(var(--ank-soft))",

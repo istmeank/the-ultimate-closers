@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AtmosphereBackground } from "@/components/AtmosphereBackground";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 
@@ -82,6 +83,8 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          {/* Atmosphère de marque — sous tout le contenu, atténuée sur les écrans de travail. */}
+          <AtmosphereBackground />
           <Suspense fallback={<RouteFallback />}>
             <Routes>
               <Route path="/" element={<Index />} />

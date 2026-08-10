@@ -3,14 +3,24 @@ import type { DealStage } from '@/lib/services/meet.service';
 /**
  * Habillage visuel des 7 stades du pipeline (ADR-040).
  *
- * Les teintes viennent de la charte TUC (ADR-012) — malachite pour la
- * progression, or pour le prestige de l'affaire payée, bordeaux pour la perte.
- * Aucune teinte Tailwind par défaut : `violet-200`, `blue-50` et consorts ne
- * font pas partie de la marque.
+ * LES STADES PARCOURENT LA RAMPE DE LA MARQUE.
+ * La rampe TUC va du vert au vin en passant par le violet — une seule matière
+ * qui change de température, de l'institution vers l'héritage :
  *
- * RÈGLE D'ACCESSIBILITÉ (WCAG 1.4.1) : la couleur n'est jamais seule porteuse
- * du sens. Chaque pastille est doublée du libellé textuel du stade, et
- * `srLabel` décrit la nature du stade pour les lecteurs d'écran.
+ *   malachite-mid → malachite → tech-deep → tech → plum → wine → bordeaux
+ *
+ * Le pipeline s'y installe naturellement : une affaire qui avance se réchauffe.
+ * Elle entre en vert institutionnel, traverse le violet — le territoire de la
+ * machine, là où le scoring et les relances travaillent — et sort soit dans le
+ * vin, soit dans l'or.
+ *
+ * **L'or est la seule sortie de rampe.** « Payé » ne se mélange à rien : c'est
+ * la couleur de prestige de la marque, elle marque l'aboutissement et rien
+ * d'autre.
+ *
+ * ACCESSIBILITÉ (WCAG 1.4.1) : la couleur n'est jamais seule porteuse du sens.
+ * Chaque pastille est doublée du libellé textuel du stade, et `srLabel` décrit
+ * sa nature pour les technologies d'assistance.
  */
 export interface StageToken {
   /** Classe de fond de la pastille de stade. */
@@ -27,41 +37,42 @@ export interface StageToken {
 
 export const STAGE_TOKENS: Record<DealStage, StageToken> = {
   opportunite: {
-    dot: 'bg-muted-foreground',
-    rail: 'bg-muted-foreground/50',
+    dot: 'bg-ramp-malachite-mid',
+    rail: 'bg-ramp-malachite-mid',
     title: 'text-foreground',
-    dropTint: 'bg-muted/60',
+    dropTint: 'bg-ramp-malachite-mid/10',
     srLabel: 'entrée du pipeline',
   },
   programme: {
-    dot: 'bg-secondary',
-    rail: 'bg-secondary',
+    dot: 'bg-ramp-malachite',
+    rail: 'bg-ramp-malachite',
     title: 'text-foreground',
-    dropTint: 'bg-secondary/10',
+    dropTint: 'bg-ramp-malachite/10',
     srLabel: 'rendez-vous programmé',
   },
-  a_reprogrammer: {
-    dot: 'bg-gold-ink',
-    rail: 'bg-gold-ink',
-    title: 'text-foreground',
-    dropTint: 'bg-gold-ink/10',
-    srLabel: 'à reprogrammer',
-  },
   a_relancer: {
-    dot: 'bg-malachite-mid',
-    rail: 'bg-malachite-mid',
+    dot: 'bg-ramp-tech-deep',
+    rail: 'bg-ramp-tech-deep',
     title: 'text-foreground',
-    dropTint: 'bg-malachite-mid/10',
+    dropTint: 'bg-ramp-tech-deep/10',
     srLabel: 'à relancer',
   },
-  close: {
-    dot: 'bg-malachite',
-    rail: 'bg-malachite',
+  a_reprogrammer: {
+    dot: 'bg-ramp-tech',
+    rail: 'bg-ramp-tech',
     title: 'text-foreground',
-    dropTint: 'bg-malachite/10',
+    dropTint: 'bg-ramp-tech/10',
+    srLabel: 'à reprogrammer',
+  },
+  close: {
+    dot: 'bg-ramp-plum',
+    rail: 'bg-ramp-plum',
+    title: 'text-foreground',
+    dropTint: 'bg-ramp-plum/10',
     srLabel: 'accord obtenu',
   },
   paye: {
+    // Sortie de rampe : l'or ne se mélange à rien.
     dot: 'bg-gold-ink',
     rail: 'bg-gradient-to-r from-gold-ink to-gold',
     title: 'text-gold-ink',
@@ -69,10 +80,10 @@ export const STAGE_TOKENS: Record<DealStage, StageToken> = {
     srLabel: 'affaire payée',
   },
   perdu: {
-    dot: 'bg-bordeaux',
-    rail: 'bg-bordeaux',
+    dot: 'bg-ramp-bordeaux',
+    rail: 'bg-ramp-bordeaux',
     title: 'text-muted-foreground',
-    dropTint: 'bg-bordeaux/10',
+    dropTint: 'bg-ramp-bordeaux/10',
     srLabel: 'affaire perdue',
   },
 };
